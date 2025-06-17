@@ -253,13 +253,13 @@
       const btnFr = document.getElementById('btn-en');
       const btnEn = document.getElementById('btn-fr');
 
-      if (lang === 'fr') {
-        btnEn.classList.add('active');
-        btnFr.classList.remove('active');
-        window.location.href = 'BP-hub.html'; //lien vers la version fr//
-      } else {
+      if (lang === 'en') {
         btnFr.classList.add('active');
         btnEn.classList.remove('active');
+        window.location.href = 'BP-hub.html'; //lien vers la version fr//
+      } else {
+        btnEn.classList.add('active');
+        btnFr.classList.remove('active');
       }
     }
   </script>
