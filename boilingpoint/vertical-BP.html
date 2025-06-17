@@ -1,23 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Chapitre 1 - Lecture verticale</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
+    html, body {
       margin: 0;
-      background-color: #111;
+      padding: 0;
+      background: #222;
       font-family: sans-serif;
-      color: white;
+      color: #f0f0f0;
+    }
+
+    #infoPanel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #f0f0f0;
+      font-size: 18px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 1;
+      pointer-events: auto;
+      text-shadow: 1px 1px 3px #000;
+      box-sizing: border-box;
+      z-index: 3;
+    }
+
+    #chapterNumber {
+      flex: 0 0 auto;
+    }
+
+    #homeBtn, #modeBtn {
+      background: #f0f0f0;
+      color: #222;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 1px 1px 4px #555;
+      flex: 0 0 auto;
+      margin-left: 10px;
+      display: inline-block;
+      transition: background 0.3s ease;
+    }
+
+    #homeBtn:hover, #modeBtn:hover {
+      background: #ddd;
     }
 
     .container {
-      width: 100%;
       max-width: 900px;
       margin: auto;
-      padding: 20px 10px;
+      padding: 20px 10px 100px; /* espace pour infoPanel */
     }
 
     .page-img {
@@ -27,75 +70,45 @@
       border-radius: 10px;
       box-shadow: 0 0 15px #000;
     }
-
-    .top-bar {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 0 10px #000;
-      text-shadow: 1px 1px 3px #000;
-    }
-
-    .top-bar-title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .top-bar a {
-      color: #222;
-      text-decoration: none;
-      font-weight: bold;
-      background: #f0f0f0;
-      padding: 8px 16px;
-      border-radius: 6px;
-      box-shadow: 1px 1px 4px #555;
-      margin-left: 10px;
-      transition: background 0.3s ease;
-    }
-
-    .top-bar a:hover {
-      background: #ddd;
-    }
-
-    @media (max-width: 600px) {
-      .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .top-bar a {
-        margin-left: 0;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <div class="top-bar-title">📖 Chapitre 1 - Lecture verticale</div>
-    <div>
-      <a href="../index.html">🏠 Accueil</a>
-      <a href="index-BP.html">📖 Mode horizontale</a>
-    </div>
+  <!-- ✅ Barre d'infos en bas -->
+  <div id="infoPanel">
+    <div id="chapterNumber">📖 Chapitre 1</div>
+    <div style="flex:1"></div>
+    <a href="../index.html" id="homeBtn">🏠 Accueil</a>
+    <a href="index-BP.html" id="modeBtn">🖱️ Mode clic</a>
   </div>
 
-  <div class="container">
-    <img src="Page1.png" class="page-img" alt="Page 1">
-    <img src="Page2.png" class="page-img" alt="Page 2">
-    <img src="Page3.png" class="page-img" alt="Page 3">
-    <img src="Page4.png" class="page-img" alt="Page 4">
-    <img src="Page5.png" class="page-img" alt="Page 5">
-    <img src="Page6.png" class="page-img" alt="Page 6">
-    <img src="Page7.png" class="page-img" alt="Page 7">
-    <img src="Page8.png" class="page-img" alt="Page 8">
-    <img src="Page9.png" class="page-img" alt="Page 9">
+  <!-- ✅ Contenu défilable -->
+  <div class="container" id="imageContainer">
+    <!-- Images seront injectées par JavaScript -->
   </div>
 
+  <script>
+    const imageContainer = document.getElementById("imageContainer");
+
+    const images = [
+      "Page1.png",
+      "Page2.png",
+      "Page3.png",
+      "Page4.png",
+      "Page5.png",
+      "Page6.png",
+      "Page7.png",
+      "Page8.png",
+      "Page9.png"
+    ];
+
+    images.forEach((src, i) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = `Page ${i + 1}`;
+      img.className = "page-img";
+      imageContainer.appendChild(img);
+    });
+  </script>
 </body>
 </html>
