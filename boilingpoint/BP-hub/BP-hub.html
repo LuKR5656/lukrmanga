@@ -1,44 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Boiling Point - Hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
+      margin: 0;
       background: #222;
       color: #f0f0f0;
       font-family: sans-serif;
-      padding: 20px;
-      text-align: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
+    header {
+      background: #222;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #444;
+      position: relative;
+      color: #f0f0f0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .home-link {
+      color: #f0f0f0;
+      text-decoration: underline;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Colonne gauche - liste chapitres */
+    .chapters-list {
+      width: 220px;
+      background: #333;
+      padding: 10px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .chapter-link {
+      display: block;
+      background: #f0f0f0;
+      color: #222;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 0 8px #000;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.2s;
+      font-size: 16px;
+      user-select: none;
+    }
+
+    .chapter-link:hover {
+      background: #555;
+      transform: translateY(-3px);
+      color: #f0f0f0;
+    }
+
+    /* Partie centrale - résumé + boutons lecture */
+    .center-content {
+      flex: 1;
+      padding: 20px;
+      text-align: center;
+      overflow-y: auto;
     }
 
     .resume {
       background: #333;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px auto;
-      max-width: 600px;
+      padding: 20px;
+      border-radius: 12px;
       color: #ccc;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      font-size: 18px;
+      line-height: 1.4;
     }
 
     .btn {
       display: inline-block;
       background: #f0f0f0;
       color: #222;
-      padding: 12px 24px;
-      margin: 10px;
+      padding: 14px 28px;
+      margin: 10px 15px;
       font-size: 18px;
       border-radius: 8px;
       text-decoration: none;
       box-shadow: 0 0 8px #000;
       transition: background 0.3s, transform 0.2s;
       font-weight: bold;
+      user-select: none;
     }
 
     .btn:hover {
@@ -47,20 +111,37 @@
       color: #f0f0f0;
     }
 
+    /* Colonne droite - langues + retour accueil */
+    .right-panel {
+      width: 180px;
+      background: #333;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
     .lang-selector {
-      margin-top: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
 
     .lang-btn {
-      background: #333;
+      flex: 1;
+      background: #444;
       color: #ccc;
       border: 2px solid #555;
-      padding: 10px 20px;
-      margin: 0 10px;
+      padding: 12px 0;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      transition: background 0.3s;
+      font-size: 16px;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      user-select: none;
     }
 
     .lang-btn.active {
@@ -69,48 +150,97 @@
       border-color: #f0f0f0;
     }
 
-    .lang-btn:hover {
+    .lang-btn:hover:not(.active) {
       background: #555;
       color: #fff;
     }
 
-    .home-link {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      font-size: 16px;
-      color: #f0f0f0;
-      text-decoration: underline;
+    /* Responsive */
+    @media (max-width: 800px) {
+      main {
+        flex-direction: column;
+      }
+
+      .chapters-list,
+      .right-panel {
+        width: 100%;
+        height: auto;
+        order: 2;
+        padding: 10px 0;
+      }
+
+      .chapters-list {
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      .right-panel {
+        order: 3;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .center-content {
+        order: 1;
+        padding: 15px 10px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <a href="../../index.html" class="home-link">← Retour à l'accueil</a>
+  <header>
+    <a href="../../index.html" class="home-link">← Retour à l'accueil</a>
+    <div>🔥 Boiling Point</div>
+    <div class="lang-selector">
+      <button class="lang-btn active" id="btn-fr" onclick="changeLang('fr')">🇫🇷 Français</button>
+      <button class="lang-btn" id="btn-en" onclick="changeLang('en')">🇬🇧 English</button>
+    </div>
+  </header>
 
-  <h1>🔥 Boiling Point</h1>
+  <main>
+    <nav class="chapters-list" aria-label="Liste des chapitres">
+      <a href="chapitre1.html" class="chapter-link">Chapitre 1</a>
+      <a href="chapitre2.html" class="chapter-link">Chapitre 2</a>
+      <a href="chapitre12.html" class="chapter-link">Chapitre 12</a>
+      <a href="chapitre20.html" class="chapter-link">Chapitre 20</a>
+      <a href="chapitre22.html" class="chapter-link">Chapitre 22</a>
+      <!-- Ajoute ici tes chapitres -->
+    </nav>
 
-  <div class="resume">
-    <strong>Résumé :</strong><br>
-    Une baston dans un colisée.  
-  </div>
+    <section class="center-content" aria-label="Résumé et lectures">
+      <div class="resume">
+        <strong>Résumé :</strong><br />
+        Une baston dans un colisée.
+      </div>
 
-  <div>
-    <a class="btn" href="BP-horizontal-en.html">📖 Lecture Horizontale</a>
-    <a class="btn" href="BP-vertical-en.html">📜 Lecture Verticale</a>
-  </div>
+      <a class="btn" href="BP-horizontal-en.html">📖 Lecture Horizontale</a>
+      <a class="btn" href="BP-vertical-en.html">📜 Lecture Verticale</a>
+    </section>
 
-  <div class="lang-selector">
-    <button class="lang-btn active" onclick="changeLang('fr')"> 🇫🇷 Français</button>
-    <button class="lang-btn" onclick="changeLang('en')"> 🇬🇧 English</button>
-  </div>
+    <aside class="right-panel" aria-label="Langue et navigation">
+      <!-- Peut rester vide ici, car langues et retour sont dans le header -->
+    </aside>
+  </main>
 
   <script>
     function changeLang(lang) {
+      const btnFr = document.getElementById('btn-fr');
+      const btnEn = document.getElementById('btn-en');
+
       if (lang === 'en') {
+        btnEn.classList.add('active');
+        btnFr.classList.remove('active');
+        // Rediriger vers la version anglaise
         window.location.href = 'BP-hub/BP-hub-en.html';
+      } else {
+        btnFr.classList.add('active');
+        btnEn.classList.remove('active');
+        // Rester sur la version française (page actuelle)
+        // Si tu veux revenir à une autre page, tu peux mettre window.location.href = ...
       }
-      // Sinon rester en français
     }
   </script>
 
