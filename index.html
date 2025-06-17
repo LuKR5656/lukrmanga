@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>Mon Manga</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <meta name="google-site-verification" content="OM70LXiUOqob0dZSUBKp5SYn5e27o4Gb39XBurz8HV4" />
-  <meta name="google-adsense-account" content="ca-pub-7285761108794227">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -13,7 +11,6 @@
       background: #222;
       color: #f0f0f0;
       font-family: sans-serif;
-      text-align: center;
       padding: 30px 15px 80px;
       opacity: 0;
       animation: fadeInBody 1s ease-in-out forwards;
@@ -25,13 +22,26 @@
     }
 
     h1 {
+      text-align: center;
       font-size: 32px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
+    }
+
+    .columns {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .column {
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
     }
 
     h2 {
       font-size: 24px;
-      margin-top: 30px;
       margin-bottom: 20px;
       color: #ccc;
       border-bottom: 1px solid #444;
@@ -46,9 +56,9 @@
       margin: 10px auto;
       border-radius: 10px;
       text-decoration: none;
-      max-width: 400px;
+      max-width: 100%;
       box-shadow: 0 0 10px #000;
-      font-size: 20px;
+      font-size: 18px;
       transition: transform 0.2s ease, background 0.3s ease;
     }
 
@@ -57,31 +67,14 @@
       transform: translateY(-4px);
     }
 
-    .special-buttons {
-      margin: 40px 0 20px;
-    }
-
-    .special-buttons a {
+    .special-box {
       background: #f0f0f0;
       color: #222;
-      padding: 12px 24px;
-      margin: 10px;
-      font-size: 18px;
+      padding: 12px 18px;
+      margin: 12px auto;
+      font-size: 16px;
       border-radius: 8px;
-      text-decoration: none;
-      display: inline-block;
       box-shadow: 1px 1px 5px #000;
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-      font-weight: bold;
-    }
-
-    .special-buttons a:hover {
-      background: #555;
-      box-shadow: 0 0 10px #3fa34d80;
-    }
-
-    footer {
-      margin-top: 50px;
     }
 
     #logoTopRight {
@@ -100,19 +93,21 @@
       opacity: 1;
     }
 
+    @media (max-width: 900px) {
+      .columns {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 24px;
       }
 
       .chapter-link {
-        font-size: 18px;
-        padding: 12px;
-      }
-
-      .special-buttons a {
         font-size: 16px;
-        padding: 10px 20px;
+        padding: 12px;
       }
 
       #logoTopRight {
@@ -130,23 +125,29 @@
 
   <h1>Bienvenue sur mon site de lecture de Manga</h1>
 
-  <!-- Section Oneshots -->
-  <h2>📕 One-shots</h2>
-  <a class="chapter-link" href="boilingpoint/index-BP.html">📘 Boiling Point</a>
-  <!-- Ajoute ici d'autres one-shots si besoin -->
+  <div class="columns">
+    <!-- Colonne One-shots -->
+    <div class="column">
+      <h2>📕 One-shots</h2>
+      <a class="chapter-link" href="boilingpoint/index-BP.html">Boiling Point</a>
+      <!-- Ajoute ici d'autres one-shots -->
+    </div>
 
-  <!-- Section Séries -->
-  <h2>📚 Séries</h2>
-  <a class="chapter-link" href="eldorado/index.html">🌟 Eldorado</a>
-  <!-- Tu peux ajouter d'autres séries ici -->
+    <!-- Colonne Séries -->
+    <div class="column">
+      <h2>📚 Séries</h2>
+      <a class="chapter-link" href="eldorado/index.html">🌟 Eldorado</a>
+      <!-- Autres séries -->
+    </div>
 
-  <!-- Boutons spéciaux -->
-  <div class="special-buttons">
-    <a href="chapitre2/index-BP.html">➡️ Dernier Chapitre</a>
+    <!-- Colonne Divers -->
+    <div class="column">
+      <h2>✨ Divers</h2>
+      <div class="special-box">📌 Dernier chapitre : <br><a href="chapitre2/index-BP.html">Chapitre 2</a></div>
+      <div class="special-box">🔗 Contact / Réseaux sociaux</div>
+      <!-- Tu peux ajouter d'autres encadrés ici -->
+    </div>
   </div>
-
-  <!-- Footer vide (à personnaliser au besoin) -->
-  <footer></footer>
 
 </body>
 </html>
