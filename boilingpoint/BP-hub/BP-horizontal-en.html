@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Boiling Point - Lecture</title>
+  <style>
+    body {
+      background: #222;
+      color: #f0f0f0;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .language-toggle {
+      margin-bottom: 30px;
+    }
+
+    .lang-button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .lang-button.active {
+      background-color: #3fa34d;
+      color: white;
+    }
+
+    .lang-button:not(.active) {
+      background-color: #f0f0f0;
+      color: #222;
+    }
+
+    .chapter-link {
+      display: inline-block;
+      background: #f0f0f0;
+      color: #222;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 20px;
+      box-shadow: 0 0 10px #000;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .chapter-link:hover {
+      background: #555;
+      transform: translateY(-4px);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 Boiling Point - One Shot</h1>
+
+  <div class="language-toggle">
+    <button class="lang-button active">Français</button>
+    <a href="../BP-hub-en/index.html">
+      <button class="lang-button">Anglais</button>
+    </a>
+  </div>
+
+  <a class="chapter-link" href="chapitre/index.html">📖 Lire le chapitre</a>
+
+</body>
+</html>
