@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Boiling Point - Hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=2" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%;
@@ -21,19 +21,20 @@
 
     /* Animation de fond */
     @keyframes scrollImages {
-      0% { background-position: 0 0; }
-      100% { background-position: -3000px 0; } /* Ajuster selon la largeur combinée */
+      0% { background-position-x: 0%; }
+      100% { background-position-x: -100%; }
     }
 
     header {
       flex: 0 0 auto;
       min-height: 33vh;
       background-color: transparent;
-      background-image: url("hub/BP-hub/BP-bg.png"); /* image background */
+      background-image: url("BP-hub/BP-bg.png"); /* image background */
       background-repeat: repeat-x;
       background-size: auto 100%; /* hauteur 100% du header */
       background-position: 0 center;
       animation: scrollImages 60s linear infinite;
+      border: 2px dashed red;
 
       padding: 20px 30px;
       display: flex;
@@ -67,9 +68,9 @@
       color: #fff;
       border: none;
       border-radius: 12px;
-      width: 70px;
-      height: 70px;
-      font-size: 30px;
+      width: 90px;
+      height: 90px;
+      font-size: 50px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #000;
