@@ -120,7 +120,7 @@
     <div id="chapterNumber">📖 Chapitre 1</div>
     <div style="flex:1"></div>
     <a href="../index.html" id="homeBtn">🏠 Accueil</a>
-    <a href="index-BP.html" id="modeBtn">🖱️ Mode clic</a>
+    <a href="index-BP.html" id="modeBtn">📖 Lecture horizontale</a>
   </div>
 
   <script>
@@ -134,7 +134,7 @@
       "Page6.png", "Page7.png", "Page8.png", "Page9.png"
     ];
 
-    // Affichage des images
+    // ✅ Ajout des images
     images.forEach((src, i) => {
       const img = document.createElement("img");
       img.src = src;
@@ -143,7 +143,6 @@
       imageContainer.appendChild(img);
     });
 
-    // Gestion du panneau d'infos
     let navMode = false;
 
     function toggleNavigation() {
@@ -152,19 +151,13 @@
       overlay.classList.toggle("visible", navMode);
     }
 
-    // ✅ Toggle navigation sur clic global
-    document.body.addEventListener("click", (e) => {
-      const ignoreClick = e.target.closest("#infoPanel") || e.target.closest("a");
+    // ✅ Clic n'importe où sauf sur un lien ou un bouton => toggle
+    document.addEventListener("click", (e) => {
+      const ignoreClick = e.target.closest("a, #infoPanel");
       if (!ignoreClick) toggleNavigation();
     });
 
-    overlay.addEventListener("click", () => {
-      navMode = false;
-      infoPanel.classList.remove("visible");
-      overlay.classList.remove("visible");
-    });
-
-    // ✅ Masquer l’aide après 2,7 secondes
+    // ✅ Masque l’aide après 2,7 secondes
     window.addEventListener("load", () => {
       setTimeout(() => {
         hint.style.display = "none";
