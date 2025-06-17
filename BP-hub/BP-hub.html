@@ -19,9 +19,22 @@
       height: 100vh;
     }
 
+    /* 🎞️ Animation de fond pour le header */
+    @keyframes scrollImages {
+      0% { background-position-x: 0%; }
+      100% { background-position-x: 100%; }
+    }
+
     header {
-      flex: 0 0 33vh;
-      background: #333;
+      flex: 0 0 auto;
+      min-height: 33vh;
+      background-color: #333;
+      background-image: url("hub/BP-hub/Page4.png"), url("hub/BP-hub/Page2.png"), url("hub/BP-hub/Page9.png");
+      background-repeat: repeat-x;
+      background-size: contain;
+      background-position: 0 center;
+      animation: scrollImages 60s linear infinite;
+
       padding: 20px 30px;
       display: flex;
       flex-direction: column;
@@ -33,7 +46,7 @@
 
     header h1 {
       margin: 0;
-      margin-left: 100px
+      margin-left: 100px;
       font-size: 4rem;
       font-weight: bold;
     }
@@ -185,7 +198,7 @@
 <body>
 
   <header>
-    <button class="home-btn" onclick="window.location.href='BP-hub/BP-hub.html'">📖</BoilingPoint>
+    <button class="home-btn" onclick="window.location.href='BP-hub/BP-hub.html'">📖</button>
     <h1>🔥 Boiling Point / Oneshot</h1>
     <div class="resume">
       Une baston dans un colisée.
