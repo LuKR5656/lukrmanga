@@ -17,6 +17,7 @@
       padding: 30px 15px 80px;
       opacity: 0;
       animation: fadeInBody 1s ease-in-out forwards;
+      position: relative; /* pour que le logo absolu soit relatif au body */
     }
 
     @keyframes fadeInBody {
@@ -81,6 +82,7 @@
       margin-top: 50px;
     }
 
+    /* Ancien style footerLogo conservé au cas où */
     #footerLogo {
       width: 80px;
       opacity: 0.85;
@@ -90,6 +92,23 @@
     #footerLogo:hover {
       opacity: 1;
       transform: scale(1.1);
+    }
+
+    /* Nouveau style pour logo en haut à droite */
+    #logoTopRight {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      opacity: 0.85;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    #logoTopRight:hover {
+      transform: scale(1.1);
+      opacity: 1;
     }
 
     @media (max-width: 600px) {
@@ -106,10 +125,19 @@
         font-size: 16px;
         padding: 10px 20px;
       }
+
+      #logoTopRight {
+        width: 40px;
+        top: 10px;
+        right: 10px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Logo déplacé en haut à droite -->
+  <img src="favicon.png" alt="Logo du site" id="logoTopRight">
 
   <h1>Bienvenue sur mon site de lecture de Manga</h1>
   <h2>Liste des chapitres disponibles</h2>
@@ -125,9 +153,9 @@
     <a href="chapitre2/index-BP.html">➡️ Dernier Chapitre</a>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer (vide ou autre contenu si tu veux) -->
   <footer>
-    <img src="favicon.png" alt="Logo du site" id="footerLogo">
+    <!-- Tu peux garder ou retirer l’image ici si tu veux -->
   </footer>
 
 </body>
