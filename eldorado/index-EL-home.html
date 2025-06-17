@@ -3,18 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <title>Eldorado - Chapitres</title>
+  <link rel="icon" href="../favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: #222;
       color: #f0f0f0;
       font-family: sans-serif;
-      padding: 30px;
+      padding: 30px 15px 80px;
       text-align: center;
     }
 
     h1 {
-      font-size: 28px;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .controls {
       margin-bottom: 30px;
+    }
+
+    .language-select, .home-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px;
+      cursor: pointer;
+      box-shadow: 1px 1px 5px #000;
+      background: #f0f0f0;
+      color: #222;
+      transition: background 0.3s ease;
+    }
+
+    .language-select:hover, .home-button:hover {
+      background: #555;
+      color: #fff;
+    }
+
+    #searchBar {
+      padding: 12px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 18px;
+      margin: 10px auto 30px;
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 0 10px #000;
     }
 
     .chapter-link {
@@ -34,17 +69,79 @@
     .chapter-link:hover {
       background: #555;
       transform: translateY(-4px);
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .chapter-link {
+        font-size: 18px;
+        padding: 12px;
+      }
+
+      #searchBar {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>🌟 Eldorado - Liste des Chapitres</h1>
+  <h1>📚 Eldorado - Liste des Chapitres</h1>
+
+  <!-- Contrôles : recherche, langue, accueil -->
+  <div class="controls">
+    <input type="text" id="searchBar" placeholder="Rechercher un chapitre...">
+    <br>
+    <select class="language-select" id="languageSelect">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+    </select>
+    <a href="../index.html">
+      <button class="home-button">🏠 Accueil</button>
+    </a>
+  </div>
 
   <!-- Liste des chapitres -->
-  <a class="chapter-link" href="chapitre1.html">📖 Chapitre 1</a>
-  <a class="chapter-link" href="chapitre2.html">📖 Chapitre 2</a>
-  <!-- Plus tard : tu pourras ajouter un menu pour la langue -->
+  <div class="chapter-list" id="chapterList">
+    <a class="chapter-link" href="chapitre1.html" data-lang="fr">📖 Chapitre 1</a>
+    <a class="chapter-link" href="chapitre2.html" data-lang="fr">📖 Chapitre 2</a>
+    <a class="chapter-link" href="chapitre1-en.html" data-lang="en" style="display:none;">📖 Chapter 1</a>
+    <a class="chapter-link" href="chapitre2-en.html" data-lang="en" style="display:none;">📖 Chapter 2</a>
+    <!-- Tu peux en ajouter d'autres -->
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchBar');
+    const chapterLinks = document.querySelectorAll('.chapter-link');
+    const languageSelect = document.getElementById('languageSelect');
+
+    // Recherche dynamique
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      chapterLinks.forEach(link => {
+        const text = link.textContent.toLowerCase();
+        if (text.includes(query)) {
+          link.style.display = 'block';
+        } else {
+          link.style.display = 'none';
+        }
+      });
+    });
+
+    // Sélecteur de langue
+    languageSelect.addEventListener('change', () => {
+      const lang = languageSelect.value;
+      chapterLinks.forEach(link => {
+        link.style.display = link.getAttribute('data-lang') === lang ? 'block' : 'none';
+      });
+      // Réinitialiser la recherche
+      searchInput.value = '';
+    });
+  </script>
 
 </body>
 </html>
