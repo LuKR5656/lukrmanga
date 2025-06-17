@@ -19,7 +19,6 @@
       height: 100vh;
     }
 
-    /* Animation de fond */
     @keyframes scrollImages {
       0% { background-position-x: 0%; }
       100% { background-position-x: -100%; }
@@ -36,31 +35,54 @@
       box-sizing: border-box;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
       position: relative;
-      overflow: hidden; /* pour que le flou ne déborde pas */
+      overflow: hidden;
     }
 
-    /* Image de fond floue animée */
     header::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background-image: url("BP-bg.png");
       background-repeat: repeat-x;
-      background-size: 150% 150%; /* zoom du bg */
+      background-size: 150% 150%;
       background-position: 0 center;
       animation: scrollImages 75s linear infinite;
       filter: blur(6px);
       z-index: 0;
     }
 
-    header h1 {
-      margin: 0;
-      margin-left: 120px;
-      font-size: 4rem;
-      font-weight: bold;
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 30px;
       position: relative;
       z-index: 1;
-      background-color: rgba(0, 0, 0, 0.75); /* fond semi-transparent a=opacité */
+    }
+
+    .home-btn {
+      background: #444;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      width: 90px;
+      height: 90px;
+      font-size: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #000;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .home-btn:hover {
+      background: #666;
+      transform: scale(1.08);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.75);
       padding: 10px 20px;
       border-radius: 12px;
       max-width: fit-content;
@@ -74,33 +96,10 @@
       overflow-y: auto;
       position: relative;
       z-index: 1;
-      background-color: rgba(0, 0, 0, 0.75); /* fond semi-transparent a=opacité */
+      background-color: rgba(0, 0, 0, 0.75);
       padding: 10px 20px;
       border-radius: 12px;
       max-width: fit-content;
-    }
-
-    .home-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: #444;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      width: 90px;
-      height: 90px;
-      font-size: 50px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px #000;
-      transition: background 0.3s, transform 0.2s;
-      z-index: 1;
-    }
-
-    .home-btn:hover {
-      background: #666;
-      transform: scale(1.08);
     }
 
     main {
@@ -211,8 +210,6 @@
         width: 70px;
         height: 70px;
         font-size: 30px;
-        top: 10px;
-        left: 10px;
       }
     }
   </style>
@@ -220,8 +217,10 @@
 <body>
 
   <header>
-    <button class="home-btn" onclick="window.location.href='BP-hub/BP-hub.html'">📖</button>
-    <h1>🔥 Boiling Point / Oneshot</h1>
+    <div class="header-top">
+      <button class="home-btn" onclick="window.location.href='BP-hub/BP-hub.html'">📖</button>
+      <h1>🔥 Boiling Point / Oneshot</h1>
+    </div>
     <div class="resume">
       Une baston dans un colisée.
     </div>
@@ -253,6 +252,5 @@
       }
     }
   </script>
-  
 </body>
 </html>
