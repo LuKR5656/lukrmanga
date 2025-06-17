@@ -29,7 +29,7 @@
     }
 
     .top-bar {
-      background-color: #222;
+      background-color: rgba(0, 0, 0, 0.6);
       padding: 10px 20px;
       display: flex;
       justify-content: space-between;
@@ -38,26 +38,47 @@
       top: 0;
       z-index: 10;
       box-shadow: 0 0 10px #000;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .top-bar-title {
+      font-size: 18px;
+      font-weight: bold;
     }
 
     .top-bar a {
-      color: #fff;
+      color: #222;
       text-decoration: none;
       font-weight: bold;
-      background: #444;
-      padding: 6px 12px;
+      background: #f0f0f0;
+      padding: 8px 16px;
       border-radius: 6px;
+      box-shadow: 1px 1px 4px #555;
+      margin-left: 10px;
+      transition: background 0.3s ease;
     }
 
     .top-bar a:hover {
-      background: #666;
+      background: #ddd;
+    }
+
+    @media (max-width: 600px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .top-bar a {
+        margin-left: 0;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
-    <div>📖 Chapitre 1 - Lecture verticale</div>
+    <div class="top-bar-title">📖 Chapitre 1 - Lecture verticale</div>
     <div>
       <a href="../index.html">🏠 Accueil</a>
       <a href="index-BP.html">🔁 Mode clic</a>
@@ -65,7 +86,6 @@
   </div>
 
   <div class="container">
-    <!-- Remplace ou complète les images selon ton chapitre -->
     <img src="Page1.png" class="page-img" alt="Page 1">
     <img src="Page2.png" class="page-img" alt="Page 2">
     <img src="Page3.png" class="page-img" alt="Page 3">
