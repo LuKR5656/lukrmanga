@@ -66,19 +66,19 @@
       color: #fff;
       border: none;
       border-radius: 12px;
-      width: auto; /* pour s'adapter au contenu */
-      height: auto;
-      font-size: 4rem; /* taille proche du titre */
+      width: 90px; /* pour s'adapter au contenu */
+      height: 90px;
+      font-size: 60px; /* taille proche du titre */
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #000;
       transition: background 0.3s, transform 0.2s;
-      padding: 10px 20px; /* pour avoir un bon remplissage */
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
       user-select: none;
+      padding: 0;
+       line-height: 1;
     }
 
     .home-btn:hover {
@@ -100,17 +100,14 @@
 
     .resume {
       flex-grow: 1;
-      margin: 0;
+      margin: 15px 0 0 30px;
       font-size: 1.2rem;
       color: #ccc;
       overflow-y: auto;
       position: relative;
       z-index: 1;
       background-color: rgba(0, 0, 0, 0.75);
-      padding-top: 10px;
-      padding-left: calc(90px + 30px + 20px); /* largeur bouton + gap + padding-left */
-      padding-right: 20px;
-      padding-bottom: 10px;
+      padding: 8px 12px;
       border-radius: 12px;
       max-width: fit-content;
     }
