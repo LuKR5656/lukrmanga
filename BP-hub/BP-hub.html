@@ -53,10 +53,10 @@
 
     .header-top {
       display: flex;
-      align-items: stretch; /* pour que les enfants prennent toute la hauteur */
+      align-items: center; /* centre verticalement le bouton et titre */
       gap: 30px;
       padding-left: 20px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       position: relative;
       z-index: 1;
     }
@@ -100,14 +100,17 @@
 
     .resume {
       flex-grow: 1;
-      margin: 15px 0;
+      margin: 0;
       font-size: 1.2rem;
       color: #ccc;
       overflow-y: auto;
       position: relative;
       z-index: 1;
       background-color: rgba(0, 0, 0, 0.75);
-      padding: 10px 20px;
+      padding-top: 10px;
+      padding-left: calc(90px + 30px + 20px); /* largeur bouton + gap + padding-left */
+      padding-right: 20px;
+      padding-bottom: 10px;
       border-radius: 12px;
       max-width: fit-content;
     }
