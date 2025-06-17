@@ -19,10 +19,10 @@
       height: 100vh;
     }
 
-    /* 🎞️ Animation de fond pour le header */
+    /* Animation de fond */
     @keyframes scrollImages {
-      0% { background-position-x: 0%; }
-      100% { background-position-x: 100%; }
+      0% { background-position: 0 0; }
+      100% { background-position: -3000px 0; } /* Ajuster selon la largeur combinée */
     }
 
     header {
@@ -31,8 +31,8 @@
       background-color: #333;
       background-image: url("hub/BP-hub/Page4.png"), url("hub/BP-hub/Page2.png"), url("hub/BP-hub/Page9.png");
       background-repeat: repeat-x;
-      background-size: contain;
-      background-position: 0 center;
+      background-size: auto 100%;
+      background-position: 0 50%;
       animation: scrollImages 60s linear infinite;
 
       padding: 20px 30px;
@@ -46,7 +46,7 @@
 
     header h1 {
       margin: 0;
-      margin-left: 100px;
+      margin-left: 120px;
       font-size: 4rem;
       font-weight: bold;
     }
@@ -66,19 +66,19 @@
       background: #444;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
+      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+      font-size: 30px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 6px #000;
+      box-shadow: 0 0 10px #000;
       transition: background 0.3s, transform 0.2s;
     }
 
     .home-btn:hover {
       background: #666;
-      transform: scale(1.05);
+      transform: scale(1.08);
     }
 
     main {
@@ -186,9 +186,9 @@
       }
 
       .home-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 26px;
         top: 10px;
         left: 10px;
       }
@@ -208,7 +208,6 @@
   <main>
     <nav class="chapters-list" aria-label="Liste des chapitres">
       <a href="BP-horizontal.html" class="chapter-link">Chapitre 1</a>
-      <!-- Ajoute tes chapitres ici -->
     </nav>
 
     <aside class="right-panel" aria-label="Sélecteur de langue">
@@ -229,7 +228,6 @@
       } else {
         btnFr.classList.add('active');
         btnEn.classList.remove('active');
-        // Rester sur la version française
       }
     }
   </script>
