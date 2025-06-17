@@ -28,6 +28,7 @@
       flex-direction: column;
       justify-content: space-between;
       box-sizing: border-box;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     }
 
     header h1 {
@@ -63,10 +64,11 @@
     /* Liste des chapitres à gauche */
     .chapters-list {
       flex: 2;
-      background: #333;
+      background: #2a2a2a;
       padding: 15px 20px;
       overflow-y: auto;
       box-sizing: border-box;
+      border-right: 2px solid #444;
     }
 
     .chapter-link {
@@ -150,6 +152,8 @@
         flex-direction: row;
         justify-content: center;
         gap: 15px;
+        background: #2e2e2e;
+        border-left: 2px solid #444;
       }
 
       .lang-btn {
@@ -175,9 +179,6 @@
     <nav class="chapters-list" aria-label="Liste des chapitres">
       <a href="chapitre1.html" class="chapter-link">Chapitre 1</a>
       <a href="chapitre2.html" class="chapter-link">Chapitre 2</a>
-      <a href="chapitre12.html" class="chapter-link">Chapitre 12</a>
-      <a href="chapitre20.html" class="chapter-link">Chapitre 20</a>
-      <a href="chapitre22.html" class="chapter-link">Chapitre 22</a>
       <!-- Ajoute tes chapitres ici -->
     </nav>
 
