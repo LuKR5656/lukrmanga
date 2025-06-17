@@ -66,13 +66,19 @@
       color: #fff;
       border: none;
       border-radius: 12px;
-      width: 90px;
-      height: 90px;
-      font-size: 50px;
+      width: auto; /* pour s'adapter au contenu */
+      height: auto;
+      font-size: 4rem; /* taille proche du titre */
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #000;
       transition: background 0.3s, transform 0.2s;
+      padding: 10px 20px; /* pour avoir un bon remplissage */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      user-select: none;
     }
 
     .home-btn:hover {
@@ -88,6 +94,8 @@
       padding: 10px 20px;
       border-radius: 12px;
       max-width: fit-content;
+      display: flex;
+      align-items: center;
     }
 
     .resume {
