@@ -53,8 +53,10 @@
 
     .header-top {
       display: flex;
-      align-items: center;
+      align-items: stretch; /* pour que les enfants prennent toute la hauteur */
       gap: 30px;
+      padding-left: 20px;
+      margin-bottom: 15px;
       position: relative;
       z-index: 1;
     }
@@ -245,7 +247,7 @@
       if (lang === 'en') {
         btnEn.classList.add('active');
         btnFr.classList.remove('active');
-        window.location.href = 'BP-hub/BP-hub-en.html';
+        window.location.href = 'BP-hub-en.html'; //lien vers la version en//
       } else {
         btnFr.classList.add('active');
         btnEn.classList.remove('active');
