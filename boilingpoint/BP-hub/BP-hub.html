@@ -2,76 +2,117 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Boiling Point - Lecture</title>
+  <title>Boiling Point - Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: #222;
       color: #f0f0f0;
       font-family: sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 40px;
     }
 
     h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size: 32px;
+      margin-bottom: 10px;
     }
 
-    .language-toggle {
-      margin-bottom: 30px;
+    .resume {
+      background: #333;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 600px;
+      color: #ccc;
     }
 
-    .lang-button {
-      padding: 10px 20px;
-      margin: 0 10px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-    }
-
-    .lang-button.active {
-      background-color: #3fa34d;
-      color: white;
-    }
-
-    .lang-button:not(.active) {
-      background-color: #f0f0f0;
-      color: #222;
-    }
-
-    .chapter-link {
+    .btn {
       display: inline-block;
       background: #f0f0f0;
       color: #222;
-      padding: 15px 25px;
-      border-radius: 10px;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 8px;
       text-decoration: none;
-      font-size: 20px;
-      box-shadow: 0 0 10px #000;
-      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 8px #000;
+      transition: background 0.3s, transform 0.2s;
+      font-weight: bold;
     }
 
-    .chapter-link:hover {
+    .btn:hover {
       background: #555;
-      transform: translateY(-4px);
-      color: white;
+      transform: translateY(-3px);
+      color: #f0f0f0;
+    }
+
+    .lang-selector {
+      margin-top: 30px;
+    }
+
+    .lang-btn {
+      background: #333;
+      color: #ccc;
+      border: 2px solid #555;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .lang-btn.active {
+      background: #f0f0f0;
+      color: #222;
+      border-color: #f0f0f0;
+    }
+
+    .lang-btn:hover {
+      background: #555;
+      color: #fff;
+    }
+
+    .home-link {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 16px;
+      color: #f0f0f0;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <h1>📘 Boiling Point - One Shot</h1>
+  <a href="../../index.html" class="home-link">← Retour à l'accueil</a>
 
-  <div class="language-toggle">
-    <button class="lang-button active">Français</button>
-    <a href="../BP-hub-en/index.html">
-      <button class="lang-button">Anglais</button>
-    </a>
+  <h1>🔥 Boiling Point</h1>
+
+  <div class="resume">
+    <strong>Résumé :</strong><br>
+    Dans un monde au bord de l’effondrement, un jeune rebelle découvre un secret capable de changer le destin de l’humanité.  
   </div>
 
-  <a class="chapter-link" href="chapitre/index.html">📖 Lire le chapitre</a>
+  <div>
+    <a class="btn" href="BP-horizontal.html">📖 Lecture Horizontale</a>
+    <a class="btn" href="BP-vertical.html">📜 Lecture Verticale</a>
+  </div>
+
+  <div class="lang-selector">
+    <button class="lang-btn active" onclick="changeLang('fr')">🇫🇷 Français</button>
+    <button class="lang-btn" onclick="changeLang('en')">🇬🇧 English</button>
+  </div>
+
+  <script>
+    function changeLang(lang) {
+      if (lang === 'en') {
+        window.location.href = '../BP-hub-en/index.html';
+      }
+      // Sinon rester en français
+    }
+  </script>
 
 </body>
 </html>
