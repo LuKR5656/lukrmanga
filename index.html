@@ -17,7 +17,7 @@
       padding: 30px 15px 80px;
       opacity: 0;
       animation: fadeInBody 1s ease-in-out forwards;
-      position: relative; /* pour que le logo absolu soit relatif au body */
+      position: relative;
     }
 
     @keyframes fadeInBody {
@@ -31,9 +31,11 @@
 
     h2 {
       font-size: 24px;
-      margin-top: 10px;
-      margin-bottom: 30px;
+      margin-top: 30px;
+      margin-bottom: 20px;
       color: #ccc;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
     }
 
     .chapter-link {
@@ -82,19 +84,6 @@
       margin-top: 50px;
     }
 
-    /* Ancien style footerLogo conservé au cas où */
-    #footerLogo {
-      width: 80px;
-      opacity: 0.85;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    #footerLogo:hover {
-      opacity: 1;
-      transform: scale(1.1);
-    }
-
-    /* Nouveau style pour logo en haut à droite */
     #logoTopRight {
       position: absolute;
       top: 15px;
@@ -136,27 +125,28 @@
 </head>
 <body>
 
-  <!-- Logo déplacé en haut à droite -->
+  <!-- Logo en haut à droite -->
   <img src="favicon.png" alt="Logo du site" id="logoTopRight">
 
   <h1>Bienvenue sur mon site de lecture de Manga</h1>
-  <h2>Liste des chapitres disponibles</h2>
 
-  <!-- Liste des chapitres -->
-  <a class="chapter-link" href="boilingpoint/index-BP.html">📘 Boiling Point Oneshot</a>
-  <a class="chapter-link" href="chapitre1/index.html">📘 Chapitre 1</a>
-  <a class="chapter-link" href="chapitre2/index.html">📘 Chapitre 2</a>
-  <!-- Ajouter d'autres chapitres ici -->
+  <!-- Section Oneshots -->
+  <h2>📕 One-shots</h2>
+  <a class="chapter-link" href="boilingpoint/index-BP.html">📘 Boiling Point</a>
+  <!-- Ajoute ici d'autres one-shots si besoin -->
+
+  <!-- Section Séries -->
+  <h2>📚 Séries</h2>
+  <a class="chapter-link" href="eldorado/index.html">🌟 Eldorado</a>
+  <!-- Tu peux ajouter d'autres séries ici -->
 
   <!-- Boutons spéciaux -->
   <div class="special-buttons">
     <a href="chapitre2/index-BP.html">➡️ Dernier Chapitre</a>
   </div>
 
-  <!-- Footer (vide ou autre contenu si tu veux) -->
-  <footer>
-    <!-- Tu peux garder ou retirer l’image ici si tu veux -->
-  </footer>
+  <!-- Footer vide (à personnaliser au besoin) -->
+  <footer></footer>
 
 </body>
 </html>
