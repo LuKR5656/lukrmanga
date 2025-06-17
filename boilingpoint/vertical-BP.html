@@ -12,6 +12,24 @@
       background: #222;
       font-family: sans-serif;
       color: #f0f0f0;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px 10px 100px; /* espace pour le bas */
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-img {
+      width: 100%;
+      display: block;
+      margin: 0 auto 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #000;
     }
 
     #infoPanel {
@@ -26,15 +44,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      opacity: 1;
-      pointer-events: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
       text-shadow: 1px 1px 3px #000;
       box-sizing: border-box;
       z-index: 3;
     }
 
-    #chapterNumber {
-      flex: 0 0 auto;
+    #infoPanel.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     #homeBtn, #modeBtn {
@@ -47,9 +67,7 @@
       font-weight: bold;
       text-decoration: none;
       box-shadow: 1px 1px 4px #555;
-      flex: 0 0 auto;
       margin-left: 10px;
-      display: inline-block;
       transition: background 0.3s ease;
     }
 
@@ -57,24 +75,53 @@
       background: #ddd;
     }
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px 10px 100px; /* espace pour infoPanel */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
-    .page-img {
-      width: 100%;
-      display: block;
-      margin: 0 auto 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #000;
+    #overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #hint {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      opacity: 0;
+      animation: blink 1s ease-in-out infinite;
+      z-index: 999;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ✅ Barre d'infos en bas -->
+  <!-- ✅ Images -->
+  <div class="container" id="imageContainer"></div>
+
+  <!-- ✅ Overlay -->
+  <div id="overlay"></div>
+
+  <!-- ✅ Aide visuelle -->
+  <img id="hint" src="hint.png" alt="Aide à la navigation" />
+
+  <!-- ✅ Barre d'infos -->
   <div id="infoPanel">
     <div id="chapterNumber">📖 Chapitre 1</div>
     <div style="flex:1"></div>
@@ -82,13 +129,11 @@
     <a href="index-BP.html" id="modeBtn">🖱️ Mode clic</a>
   </div>
 
-  <!-- ✅ Contenu défilable -->
-  <div class="container" id="imageContainer">
-    <!-- Images seront injectées par JavaScript -->
-  </div>
-
   <script>
     const imageContainer = document.getElementById("imageContainer");
+    const infoPanel = document.getElementById("infoPanel");
+    const overlay = document.getElementById("overlay");
+    const hint = document.getElementById("hint");
 
     const images = [
       "Page1.png",
@@ -108,6 +153,35 @@
       img.alt = `Page ${i + 1}`;
       img.className = "page-img";
       imageContainer.appendChild(img);
+    });
+
+    // ✅ Affichage/Masquage de la barre d'infos
+    let navMode = false;
+
+    document.addEventListener("click", (e) => {
+      const y = e.clientY;
+      const screenHeight = window.innerHeight;
+      const topZone = screenHeight * 0.3;
+      const bottomZone = screenHeight * 0.7;
+
+      if (y > topZone && y < bottomZone) {
+        navMode = !navMode;
+        infoPanel.classList.toggle("visible", navMode);
+        overlay.classList.toggle("visible", navMode);
+      }
+    });
+
+    overlay.addEventListener("click", () => {
+      navMode = false;
+      infoPanel.classList.remove("visible");
+      overlay.classList.remove("visible");
+    });
+
+    // ✅ Masquer l'aide visuelle après quelques secondes
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        hint.style.display = "none";
+      }, 2700);
     });
   </script>
 </body>
