@@ -15,6 +15,12 @@
       font-family: sans-serif;
       text-align: center;
       padding: 30px 15px 80px;
+      opacity: 0;
+      animation: fadeInBody 1s ease-in-out forwards;
+    }
+
+    @keyframes fadeInBody {
+      to { opacity: 1; }
     }
 
     h1 {
@@ -39,12 +45,13 @@
       text-decoration: none;
       max-width: 400px;
       box-shadow: 0 0 10px #000;
-      transition: background 0.3s ease;
       font-size: 20px;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     .chapter-link:hover {
       background: #555;
+      transform: translateY(-4px);
     }
 
     .special-buttons {
@@ -61,12 +68,13 @@
       text-decoration: none;
       display: inline-block;
       box-shadow: 1px 1px 5px #000;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
       font-weight: bold;
     }
 
     .special-buttons a:hover {
       background: #555;
+      box-shadow: 0 0 10px #3fa34d80;
     }
 
     footer {
@@ -76,11 +84,12 @@
     #footerLogo {
       width: 80px;
       opacity: 0.85;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     #footerLogo:hover {
       opacity: 1;
+      transform: scale(1.1);
     }
 
     @media (max-width: 600px) {
