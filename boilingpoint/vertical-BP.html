@@ -19,7 +19,7 @@
     .container {
       max-width: 900px;
       margin: auto;
-      padding: 20px 10px 100px; /* espace pour le bas */
+      padding: 20px 10px 100px;
       position: relative;
       z-index: 1;
     }
@@ -112,21 +112,15 @@
 </head>
 <body>
 
-  <!-- ✅ Images -->
   <div class="container" id="imageContainer"></div>
-
-  <!-- ✅ Overlay -->
   <div id="overlay"></div>
+  <img id="hint" src="hintvr.png" alt="Aide à la navigation" />
 
-  <!-- ✅ Aide visuelle -->
-  <img id="hint" src="hint.png" alt="Aide à la navigation" />
-
-  <!-- ✅ Barre d'infos -->
   <div id="infoPanel">
     <div id="chapterNumber">📖 Chapitre 1</div>
     <div style="flex:1"></div>
     <a href="../index.html" id="homeBtn">🏠 Accueil</a>
-    <a href="index-BP.html" id="modeBtn">🖱️ Mode clic</a>
+    <a href="index-BP.html" id="modeBtn">📖 Lecture horizontale</a>
   </div>
 
   <script>
@@ -136,17 +130,11 @@
     const hint = document.getElementById("hint");
 
     const images = [
-      "Page1.png",
-      "Page2.png",
-      "Page3.png",
-      "Page4.png",
-      "Page5.png",
-      "Page6.png",
-      "Page7.png",
-      "Page8.png",
-      "Page9.png"
+      "Page1.png", "Page2.png", "Page3.png", "Page4.png", "Page5.png",
+      "Page6.png", "Page7.png", "Page8.png", "Page9.png"
     ];
 
+    // ✅ Ajout des images
     images.forEach((src, i) => {
       const img = document.createElement("img");
       img.src = src;
@@ -155,29 +143,21 @@
       imageContainer.appendChild(img);
     });
 
-    // ✅ Affichage/Masquage de la barre d'infos
     let navMode = false;
 
+    function toggleNavigation() {
+      navMode = !navMode;
+      infoPanel.classList.toggle("visible", navMode);
+      overlay.classList.toggle("visible", navMode);
+    }
+
+    // ✅ Clic n'importe où sauf sur un lien ou un bouton => toggle
     document.addEventListener("click", (e) => {
-      const y = e.clientY;
-      const screenHeight = window.innerHeight;
-      const topZone = screenHeight * 0.3;
-      const bottomZone = screenHeight * 0.7;
-
-      if (y > topZone && y < bottomZone) {
-        navMode = !navMode;
-        infoPanel.classList.toggle("visible", navMode);
-        overlay.classList.toggle("visible", navMode);
-      }
+      const ignoreClick = e.target.closest("a, #infoPanel");
+      if (!ignoreClick) toggleNavigation();
     });
 
-    overlay.addEventListener("click", () => {
-      navMode = false;
-      infoPanel.classList.remove("visible");
-      overlay.classList.remove("visible");
-    });
-
-    // ✅ Masquer l'aide visuelle après quelques secondes
+    // ✅ Masque l’aide après 2,7 secondes
     window.addEventListener("load", () => {
       setTimeout(() => {
         hint.style.display = "none";
