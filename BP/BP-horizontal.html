@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta name="google-site-verification" content="OM70LXiUOqob0dZSUBKp5SYn5e27o4Gb39XBurz8HV4" /> <!-- validation de la propriété -->
-  <meta name="google-adsense-account" content="ca-pub-7285761108794227">    <!-- Adsens -->
   <meta charset="UTF-8" />
   <title>BoilingPoint</title>
   <style>
@@ -71,7 +69,7 @@
       font-weight: bold;
     }
 
-    #homeBtn {
+    .btn {
       background: #f0f0f0;
       color: #222;
       border: none;
@@ -82,10 +80,10 @@
       text-decoration: none;
       box-shadow: 1px 1px 4px #555;
       flex: 0 0 auto;
-      margin-left: auto;
+      margin-left: 10px;
     }
 
-    #homeBtn:hover {
+    .btn:hover {
       background: #ddd;
     }
 
@@ -126,46 +124,47 @@
 </head>
 <body>
   <div id="container">
-    <img id="slide" src="Page1-en.png" alt="Page 1" />
+    <img id="slide" src="" alt="Page" />
   </div>
 
-  <!-- ✅ Overlay semi-transparent -->
   <div id="overlay"></div>
-
-  <!-- ✅ Aide visuelle -->
   <img id="hint" src="hint.png" alt="Aide à la navigation" />
 
-  <div id="infoPanel">  <!-- les infos dans le mode navigation -->
-    <div id="chapterNumber">📖 Boiling Point / Oneshot</div>
-    <div id="pageIndicator">Page 1 / 9</div>
-    <div id="langIndicator" style="display:none; margin-left: 15px; font-weight: bold; font-size: 18px; user-select:none;">English</div>
-    <a href="BP-hub.html" id="homeBtn">🏠 Home</a>
-    <a href="BP-vertical-en.html" id="modeBtn">📖 Vertical mode</a>
+  <div id="infoPanel">
+    <div id="chapterNumber">📖 Boiling Point</div>
+    <div id="pageIndicator">Page</div>
+    <div id="langIndicator" style="margin-left: 15px; font-weight: bold; font-size: 18px;">Langue</div>
+    <a href="BP-hub.html" class="btn">🏠 Accueil</a>
   </div>
 
+  <script src="BP-data.js"></script>
   <script>
-    const images = [
-      "Page9-en.png",
-      "Page8-en.png",
-      "Page7-en.png",
-      "Page6-en.png",
-      "Page5-en.png",
-      "Page4-en.png",
-      "Page3-en.png",
-      "Page2-en.png",
-      "Page1-en.png"  //premiere page !! penser a mettre le "-en"
-    ];
-
-    let currentIndex = images.length - 1;
-
     const slide = document.getElementById("slide");
     const pageIndicator = document.getElementById("pageIndicator");
     const container = document.getElementById("container");
     const infoPanel = document.getElementById("infoPanel");
     const overlay = document.getElementById("overlay");
     const hint = document.getElementById("hint");
+    const langIndicator = document.getElementById("langIndicator");
 
     let navMode = false;
+    let currentIndex = 0;
+    let images = [];
+
+    // 1. Récupérer la langue depuis localStorage
+    const lang = localStorage.getItem("lang") || "fr";
+    langIndicator.textContent = lang === "fr" ? "Français" : "English";
+
+    // 2. Récupérer le chapitre depuis l'URL
+    const params = new URLSearchParams(window.location.search);
+    const chapId = params.get("chap") || "chap1";
+
+    // 3. Charger les images depuis bpPages
+    if (bpPages[chapId] && bpPages[chapId][lang]) {
+      images = [...bpPages[chapId][lang]].reverse(); // pour lecture droite-gauche
+    } else {
+      alert("Chapitre introuvable.");
+    }
 
     function updateSlide() {
       slide.src = images[currentIndex];
@@ -178,20 +177,12 @@
       const clickX = e.clientX - rect.left;
       const width = rect.width;
 
-      const leftZone = width * 0.3;
-      const rightZone = width * 0.7;
-
-      if (clickX > rightZone && !navMode) {
-        // Lecture de droite à gauche
-        if (currentIndex < images.length - 1) {
-          currentIndex++;
-          updateSlide();
-        }
-      } else if (clickX < leftZone && !navMode) {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateSlide();
-        }
+      if (clickX > width * 0.7 && !navMode && currentIndex < images.length - 1) {
+        currentIndex++;
+        updateSlide();
+      } else if (clickX < width * 0.3 && !navMode && currentIndex > 0) {
+        currentIndex--;
+        updateSlide();
       } else {
         navMode = !navMode;
         infoPanel.classList.toggle("visible", navMode);
@@ -216,9 +207,8 @@
       }
     });
 
-    updateSlide();
-
     window.addEventListener("load", () => {
+      updateSlide();
       setTimeout(() => {
         hint.style.display = "none";
       }, 2700);
