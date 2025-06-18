@@ -38,7 +38,7 @@ const bpPages = {
       "BP-chap1/en/page5.png",
       "BP-chap1/en/page6.png",
       "BP-chap1/en/page7.png",
-      "BP-chap1/en/page8.png",
+      "BP-chap1/en/page8.png"
       "BP-chap1/en/page9.png"
     ]
   }
