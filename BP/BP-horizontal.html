@@ -178,10 +178,10 @@
       const width = rect.width;
 
       if (clickX > width * 0.7 && !navMode && currentIndex < images.length - 1) {
-        currentIndex++;
+        currentIndex--;
         updateSlide();
       } else if (clickX < width * 0.3 && !navMode && currentIndex > 0) {
-        currentIndex--;
+        currentIndex++;
         updateSlide();
       } else {
         navMode = !navMode;
@@ -199,10 +199,10 @@
     document.addEventListener("keydown", (e) => {
       if (navMode) return;
       if (e.key === "ArrowRight" && currentIndex < images.length - 1) {
-        currentIndex++;
+        currentIndex--;
         updateSlide();
       } else if (e.key === "ArrowLeft" && currentIndex > 0) {
-        currentIndex--;
+        currentIndex++;
         updateSlide();
       }
     });
