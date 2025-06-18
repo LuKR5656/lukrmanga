@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Boiling Point - Hub</title>
@@ -53,7 +53,7 @@
 
     .header-top {
       display: flex;
-      align-items: center; /* centre verticalement le bouton et titre */
+      align-items: center;
       gap: 30px;
       padding-left: 20px;
       margin-bottom: 10px;
@@ -67,9 +67,9 @@
       color: #fff;
       border: none;
       border-radius: 12px;
-      width: 90px; /* pour s'adapter au contenu */
+      width: 90px;
       height: 90px;
-      font-size: 60px; /* taille proche du titre */
+      font-size: 60px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #000;
@@ -238,30 +238,39 @@
   </header>
 
   <main>
-    <nav class="chapters-list" aria-label="Liste des chapitres">
-      <a href="BP-horizontal-en.html" class="chapter-link">Chapitre 1</a>
+    <nav class="chapters-list" aria-label="Chapter list">
+      <a href="BP-horizontal-en.html" class="chapter-link">Chapter 1</a>
     </nav>
 
-    <aside class="right-panel" aria-label="Sélecteur de langue">
-      <button class="lang-btn active" id="btn-en" onclick="changeLang('fr')"> Français</button> 
-      <button class="lang-btn" id="btn-fr" onclick="changeLang('en')"> English</button>
+    <aside class="right-panel" aria-label="Language selector">
+      <button class="lang-btn" id="btn-fr" onclick="changeLang('fr')">Français</button> 
+      <button class="lang-btn" id="btn-en" onclick="changeLang('en')">English</button>
     </aside>
   </main>
 
   <script>
     function changeLang(lang) {
-      const btnFr = document.getElementById('btn-en');
-      const btnEn = document.getElementById('btn-fr');
-
-      if (lang === 'en') {
-        btnFr.classList.add('active');
-        btnEn.classList.remove('active');
-        window.location.href = 'BP-hub.html'; //lien vers la version fr//
+      if (lang === 'fr') {
+        window.location.href = 'BP-hub.html'; // page française
       } else {
-        btnEn.classList.add('active');
-        btnFr.classList.remove('active');
+        window.location.href = 'BP-hub-en.html'; // page anglaise
       }
     }
+
+    // Détection de la langue active pour surligner le bon bouton
+    window.addEventListener('DOMContentLoaded', () => {
+      const isEnglish = window.location.href.includes('-en');
+      const btnEn = document.getElementById('btn-en');
+      const btnFr = document.getElementById('btn-fr');
+
+      if (isEnglish) {
+        btnEn.classList.add('active');
+        btnFr.classList.remove('active');
+      } else {
+        btnFr.classList.add('active');
+        btnEn.classList.remove('active');
+      }
+    });
   </script>
 </body>
 </html>
