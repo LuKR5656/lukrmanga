@@ -169,7 +169,7 @@
     function updateSlide() {
       slide.src = images[currentIndex];
       slide.alt = `Page ${images.length - currentIndex}`;
-      pageIndicator.textContent = `Page ${images.length - currentIndex} / ${images.length}`;
+      pageIndicator.textContent = `Page ${currentIndex + 1} / ${images.length}`;
     }
 
     container.addEventListener("click", (e) => {
