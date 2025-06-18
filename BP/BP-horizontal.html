@@ -176,19 +176,26 @@
       const rect = container.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const width = rect.width;
-
-      if (clickX > width * 0.7 && !navMode && currentIndex < images.length - 1) {
-        currentIndex--;
-        updateSlide();
-      } else if (clickX < width * 0.3 && !navMode && currentIndex > 0) {
-        currentIndex++;
-        updateSlide();
+    
+      if (!navMode) {
+        if (clickX < width * 0.3 && currentIndex < images.length - 1) {
+          currentIndex++;
+          updateSlide();
+        } else if (clickX > width * 0.7 && currentIndex > 0) {
+          currentIndex--;
+          updateSlide();
+        } else {
+          navMode = !navMode;
+          infoPanel.classList.toggle("visible", navMode);
+          overlay.classList.toggle("visible", navMode);
+        }
       } else {
-        navMode = !navMode;
-        infoPanel.classList.toggle("visible", navMode);
-        overlay.classList.toggle("visible", navMode);
+        navMode = false;
+        infoPanel.classList.remove("visible");
+        overlay.classList.remove("visible");
       }
     });
+
 
     overlay.addEventListener("click", () => {
       navMode = false;
