@@ -249,33 +249,42 @@
   <!-- 🔌 Scripts -->
   <script src="BP-data.js"></script>
   <script>
-    // Récupération de la langue (ou FR par défaut)
-    const lang = localStorage.getItem('lang') || 'fr';
-    const content = bpContent[lang];
-
-    // Mise à jour du contenu
-    document.getElementById('manga-title').innerText = content.title;
-    document.getElementById('manga-resume').innerText = content.resume;
-
-    // Génération des chapitres
-    const chapterList = document.getElementById('chapter-list');
-    content.chapters.forEach(ch => {
-      const link = document.createElement('a');
-      link.className = 'chapter-link';
-      link.href = ch.link;
-      link.innerText = ch.name;
-      chapterList.appendChild(link);
-    });
-
-    // Boutons actifs
-    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-
     // Fonction pour changer de langue
     function changeLang(l) {
       localStorage.setItem('lang', l);
-      location.reload(); // recharge la page pour mettre à jour le contenu
+      location.reload(); // recharge la page
     }
+  
+    // DOM chargé
+    window.addEventListener('DOMContentLoaded', () => {
+      const lang = localStorage.getItem('lang') || 'fr';
+      const content = (bpContent && bpContent[lang]) || null;
+  
+      const chapterList = document.getElementById('chapter-list');
+      const title = document.getElementById('manga-title');
+      const resume = document.getElementById('manga-resume');
+      const btnFr = document.getElementById('btn-fr');
+      const btnEn = document.getElementById('btn-en');
+  
+      if (content) {
+        title.innerText = content.title;
+        resume.innerText = content.resume;
+  
+        content.chapters.forEach(ch => {
+          const link = document.createElement('a');
+          link.className = 'chapter-link';
+          link.href = ch.link;
+          link.innerText = ch.name;
+          chapterList.appendChild(link);
+        });
+      } else {
+        title.innerText = "Erreur de chargement";
+        resume.innerText = "Le contenu du hub est introuvable pour la langue sélectionnée.";
+      }
+  
+      btnFr.classList.toggle('active', lang === 'fr');
+      btnEn.classList.toggle('active', lang === 'en');
+    });
   </script>
 </body>
 </html>
