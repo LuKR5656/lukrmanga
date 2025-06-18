@@ -226,45 +226,55 @@
   </style>
 </head>
 <body>
-
   <header>
     <div class="header-top">
-      <button class="home-btn" onclick="window.location.href='../index.html'">📖</button>
-      <h1>🔥 Boiling Point / Oneshot</h1>
+      <button class="home-btn" onclick="window.location.href='../index.html'">🏠</button>
+      <h1 id="manga-title">Titre par défaut</h1>
     </div>
-    <div class="resume">
-      Une baston dans un colisée.
-    </div>
+    <div class="resume" id="manga-resume">Résumé par défaut</div>
   </header>
 
   <main>
-    <nav class="chapters-list" aria-label="Liste des chapitres">
-      <a href="BP-horizontal.html" class="chapter-link">Chapitre 1</a>
-    </nav>
-
+    <nav class="chapters-list" id="chapter-list" aria-label="Liste des chapitres"></nav>
     <aside class="right-panel" aria-label="Sélecteur de langue">
-      <button class="lang-btn active" id="btn-fr" onclick="changeLang('fr')"> Français</button> 
-      <button class="lang-btn" id="btn-en" onclick="changeLang('en')"> English</button>
+      <button class="lang-btn" id="btn-fr" onclick="changeLang('fr')">Français</button>
+      <button class="lang-btn" id="btn-en" onclick="changeLang('en')">English</button>
     </aside>
   </main>
 
   <footer style="text-align:right; padding: 10px; font-size: 0.7em; color: #aaa;">
-  © 2025 LuKR. Tous droits réservés.
+    © 2025 LuKR. All rights reserved.
   </footer>
 
+  <!-- 🔌 Scripts -->
+  <script src="BP-data.js"></script>
   <script>
-    function changeLang(lang) {
-      const btnFr = document.getElementById('btn-fr');
-      const btnEn = document.getElementById('btn-en');
+    // Récupération de la langue (ou FR par défaut)
+    const lang = localStorage.getItem('lang') || 'fr';
+    const content = bpContent[lang];
 
-      if (lang === 'en') {
-        btnEn.classList.add('active');
-        btnFr.classList.remove('active');
-        window.location.href = 'BP-hub-en.html'; //lien vers la version en//
-      } else {
-        btnFr.classList.add('active');
-        btnEn.classList.remove('active');
-      }
+    // Mise à jour du contenu
+    document.getElementById('manga-title').innerText = content.title;
+    document.getElementById('manga-resume').innerText = content.resume;
+
+    // Génération des chapitres
+    const chapterList = document.getElementById('chapter-list');
+    content.chapters.forEach(ch => {
+      const link = document.createElement('a');
+      link.className = 'chapter-link';
+      link.href = ch.link;
+      link.innerText = ch.name;
+      chapterList.appendChild(link);
+    });
+
+    // Boutons actifs
+    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+    // Fonction pour changer de langue
+    function changeLang(l) {
+      localStorage.setItem('lang', l);
+      location.reload(); // recharge la page pour mettre à jour le contenu
     }
   </script>
 </body>
