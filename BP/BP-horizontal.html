@@ -199,10 +199,10 @@
     document.addEventListener("keydown", (e) => {
       if (navMode) return;
       if (e.key === "ArrowRight" && currentIndex < images.length - 1) {
-        currentIndex--;
+        currentIndex++;
         updateSlide();
       } else if (e.key === "ArrowLeft" && currentIndex > 0) {
-        currentIndex++;
+        currentIndex--;
         updateSlide();
       }
     });
