@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta name="google-site-verification" content="OM70LXiUOqob0dZSUBKp5SYn5e27o4Gb39XBurz8HV4" /> <!-- validation de la propriété -->
-  <meta name="google-adsense-account" content="ca-pub-7285761108794227">    <!-- Adsens -->
+  <meta name="google-site-verification" content="OM70LXiUOqob0dZSUBKp5SYn5e27o4Gb39XBurz8HV4" />
+  <meta name="google-adsense-account" content="ca-pub-7285761108794227">
   <meta charset="UTF-8" />
   <title>BoilingPoint</title>
   <style>
@@ -71,7 +71,7 @@
       font-weight: bold;
     }
 
-    #homeBtn {
+    .btn {
       background: #f0f0f0;
       color: #222;
       border: none;
@@ -82,10 +82,10 @@
       text-decoration: none;
       box-shadow: 1px 1px 4px #555;
       flex: 0 0 auto;
-      margin-left: auto;
+      margin-left: 10px;
     }
 
-    #homeBtn:hover {
+    .btn:hover {
       background: #ddd;
     }
 
@@ -129,18 +129,15 @@
     <img id="slide" src="Page1.png" alt="Page 1" />
   </div>
 
-  <!-- ✅ Overlay semi-transparent -->
   <div id="overlay"></div>
-
-  <!-- ✅ Aide visuelle -->
   <img id="hint" src="hint.png" alt="Aide à la navigation" />
 
-  <div id="infoPanel">  <!-- les infos dans le mode navigation -->
+  <div id="infoPanel">
     <div id="chapterNumber">📖 Boiling Point / Oneshot</div>
     <div id="pageIndicator">Page 1 / 9</div>
     <div id="langIndicator" style="display:none; margin-left: 15px; font-weight: bold; font-size: 18px; user-select:none;">Français</div>
-    <a href="BP-hub.html" id="homeBtn">🏠 Accueil</a>
-    <a href="BP-horizontal-en.html" id="modeBtn">📖 Mode vertical</a>
+    <a href="BP-hub.html" class="btn">🏠 Accueil</a>
+    <a href="BP-horizontal-en.html" class="btn">📖 Mode vertical</a>
   </div>
 
   <script>
@@ -153,7 +150,7 @@
       "Page4.png",
       "Page3.png",
       "Page2.png",
-      "Page1.png"  //premiere page
+      "Page1.png"
     ];
 
     let currentIndex = images.length - 1;
@@ -182,7 +179,6 @@
       const rightZone = width * 0.7;
 
       if (clickX > rightZone && !navMode) {
-        // Lecture de droite à gauche
         if (currentIndex < images.length - 1) {
           currentIndex++;
           updateSlide();
