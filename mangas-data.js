@@ -1,14 +1,15 @@
 const mangas = [
   {
-    id: "bp", // Identifiant utilisé dans l'URL ?manga=bp
-    title: "Boiling Point", // Titre du manga affiché
-    tag: "Oneshot", // Oneshot ou Serie
+    id: "bp",
+    title: "Boiling Point",
+    tag: "Oneshot",
     resume: {
       fr: "Une baston dans un colisée.",
       en: "A brawl in a coliseum."
     },
     chapters: [
       {
+        id: "bp-1",  // <-- ajouté
         number: 1,
         title: {
           fr: "BoilingPoint Oneshot",
@@ -18,8 +19,8 @@ const mangas = [
       }
     ],
     assets: {
-      cover: "assets/cover/BP-cover.png",      // pour page d'accueil
-      background: "assets/background/BP-bg.png" // pour le header animé du hub
+      cover: "assets/cover/BP-cover.png",
+      background: "assets/background/BP-bg.png"
     }
   },
   {
@@ -32,6 +33,7 @@ const mangas = [
     },
     chapters: [
       {
+        id: "eldorado-1",  // <-- ajouté
         number: 1,
         title: {
           fr: "Départ",
@@ -40,6 +42,7 @@ const mangas = [
         path: "reader.html"
       },
       {
+        id: "eldorado-2",  // <-- ajouté
         number: 2,
         title: {
           fr: "L’île",
