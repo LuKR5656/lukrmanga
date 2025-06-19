@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lecteur Manga</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 100%;
+      margin-bottom: 50px;
+    }
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+    .title {
+      margin: 20px 0;
+      font-size: 2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="title" id="chapterTitle">Chargement...</div>
+  <div class="image-container" id="pagesContainer"></div>
+
+  <script src="mangas-data.js"></script>
+  <script>
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    const chapterId = getParam("chap");
+    const lang = getParam("lang") || "fr"; // Par défaut français
+
+    const pagesContainer = document.getElementById("pagesContainer");
+    const chapterTitle = document.getElementById("chapterTitle");
+
+    const chapterData = (() => {
+      for (const manga of mangas) {
+        for (const chap of manga.chapters) {
+          if (chap.id === chapterId) {
+            return { mangaTitle: manga.title, chap };
+          }
+        }
+      }
+      return null;
+    })();
+
+    if (!chapterData) {
+      chapterTitle.textContent = "Chapitre introuvable.";
+    } else {
+      const { mangaTitle, chap } = chapterData;
+      chapterTitle.textContent = `${mangaTitle} — ${chap.title}`;
+
+      const pages = chap.pages[lang];
+      if (!pages || pages.length === 0) {
+        pagesContainer.innerHTML = "<p>Pas de pages pour cette langue.</p>";
+      } else {
+        for (const page of pages) {
+          const img = document.createElement("img");
+          img.src = page;
+          img.alt = "Page";
+          pagesContainer.appendChild(img);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
