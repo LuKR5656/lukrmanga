@@ -165,7 +165,7 @@
       const link = document.createElement("a");
       link.className = "chapter-link";
       link.href = manga.hub;
-      link.textContent = (manga.tag === "Oneshot" ? "🔥" : "🌟") + manga.title;
+      link.textContent = manga.title;
 
       if (manga.tag === "Oneshot") {
         oneshotsList.appendChild(link);
