@@ -18,8 +18,8 @@ const mangas = [
       }
     ],
     assets: {
-      cover: "assets/bp-cover.png",      // pour page d'accueil
-      background: "assets/bp-background.png" // pour le header animé du hub
+      cover: "assets/bp/BP-cover.png",      // pour page d'accueil
+      background: "assets/bp/BP-bg.png" // pour le header animé du hub
     }
   },
   {
@@ -45,12 +45,12 @@ const mangas = [
           fr: "L’île",
           en: "The Island"
         },
-        path: "reader.html"
+        path: "manga-reader.html"
       }
     ],
     assets: {
-      cover: "assets/eldorado-cover.png",
-      background: "assets/eldorado-background.png"
+      cover: "assets/el/EL-cover.png",
+      background: "assets/el/EL-bg.png"
     }
   }
 ];
