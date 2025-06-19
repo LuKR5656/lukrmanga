@@ -17,28 +17,8 @@ const mangas = [
         },
         path: "reader.html",
         pages: {
-          fr: [
-            "pages/bp/fr/page1.jpg",
-            "pages/bp/fr/page2.jpg",
-            "pages/bp/fr/page3.jpg",
-            "pages/bp/fr/page4.jpg",
-            "pages/bp/fr/page5.jpg",
-            "pages/bp/fr/page6.jpg",
-            "pages/bp/fr/page7.jpg",
-            "pages/bp/fr/page8.jpg",
-            "pages/bp/fr/page9.jpg",
-          ],
-          en: [
-            "pages/bp/en/page1.jpg",
-            "pages/bp/en/page2.jpg",
-            "pages/bp/en/page3.jpg",
-            "pages/bp/en/page4.jpg",
-            "pages/bp/en/page5.jpg",
-            "pages/bp/en/page6.jpg",
-            "pages/bp/en/page7.jpg",
-            "pages/bp/en/page8.jpg",
-            "pages/bp/en/page9.jpg",
-          ]
+          fr: "pages/bp/fr/",
+          en: "pages/bp/en/"
         }
       }
     ],
@@ -65,14 +45,8 @@ const mangas = [
         },
         path: "reader.html",
         pages: {
-          fr: [
-            "assets/mangas/eldorado/chap1/page1.jpg",
-            "assets/mangas/eldorado/chap1/page2.jpg"
-          ],
-          en: [
-            "assets/mangas/eldorado/chap1/en/page1.jpg",
-            "assets/mangas/eldorado/chap1/en/page2.jpg"
-          ]
+          fr: "assets/mangas/eldorado/chap1/",
+          en: "assets/mangas/eldorado/chap1/en/"
         }
       },
       {
@@ -84,13 +58,8 @@ const mangas = [
         },
         path: "reader.html",
         pages: {
-          fr: [
-            "assets/mangas/eldorado/chap2/page1.jpg",
-            "assets/mangas/eldorado/chap2/page2.jpg"
-          ],
-          en: [
-            "assets/mangas/eldorado/chap2/en/page1.jpg"
-          ]
+          fr: "assets/mangas/eldorado/chap2/",
+          en: "assets/mangas/eldorado/chap2/en/"
         }
       }
     ],
