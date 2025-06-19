@@ -70,21 +70,32 @@
     }
 
     .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      border: none;
       background: #f0f0f0;
       color: #222;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none;
       box-shadow: 1px 1px 4px #555;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1.2;
+      font-family: sans-serif;
       flex: 0 0 auto;
       margin-left: 10px;
+      user-select: none;
     }
 
     .btn:hover {
       background: #ddd;
+    }
+
+    button.btn {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
     }
 
     #hint {
@@ -134,7 +145,7 @@
     <div id="chapterNumber">📖 Boiling Point</div>
     <div id="pageIndicator">Page</div>
     <div id="langIndicator" style="margin-left: 15px; font-weight: bold; font-size: 18px;">Langue</div>
-    <a href="BP-hub.html" class="btn">🏠 Accueil</a>
+    <a href="BP-hub.html" class="btn" id="btnAccueil">🏠 Accueil</a>
     <button id="toggleMode" class="btn">↔️ Mode de lecture</button>
   </div>
 
@@ -148,6 +159,9 @@
     const hint = document.getElementById("hint");
     const langIndicator = document.getElementById("langIndicator");
 
+    const btnAccueil = document.getElementById("btnAccueil");
+    const btnToggle = document.getElementById("toggleMode");
+
     let navMode = false;
     let currentIndex = 0;
     let images = [];
@@ -155,6 +169,15 @@
     // 1. Récupérer la langue depuis localStorage
     const lang = localStorage.getItem("lang") || "fr";
     langIndicator.textContent = lang === "fr" ? "Français" : "English";
+
+    // Mise à jour des textes des boutons selon la langue
+    if (lang === 'fr') {
+      btnAccueil.textContent = '🏠 Accueil';
+      btnToggle.textContent = '↔️ Mode de lecture';
+    } else if (lang === 'en') {
+      btnAccueil.textContent = '🏠 Home';
+      btnToggle.textContent = '↔️ Reading Mode';
+    }
 
     // 2. Récupérer le chapitre depuis l'URL
     const params = new URLSearchParams(window.location.search);
@@ -191,8 +214,7 @@
       const clickX = e.clientX - rect.left;
       const width = rect.width;
 
-      // Pour lecture droite à gauche, clic gauche => page suivante (index++)
-      // clic droit => page précédente (index--)
+      // Lecture droite à gauche : clic gauche -> page suivante, clic droit -> page précédente
       if (clickX < width * 0.3 && currentIndex < images.length - 1) {
         currentIndex++;
         updateSlide();
@@ -230,7 +252,7 @@
       }, 2700);
     });
 
-    document.getElementById("toggleMode").addEventListener("click", () => {
+    btnToggle.addEventListener("click", () => {
       const currentURL = window.location.href;
       if (currentURL.includes("BP-horizontal")) {
         window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
