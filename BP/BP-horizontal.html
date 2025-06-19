@@ -220,6 +220,15 @@
       setTimeout(() => {
         hint.style.display = "none";
       }, 2700);
+
+    document.getElementById("toggleMode").addEventListener("click", () => {
+      const currentURL = window.location.href;
+    
+      if (currentURL.includes("BP-horizontal")) {
+        window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
+      } else {
+        window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
+      }
     });
   </script>
 </body>
