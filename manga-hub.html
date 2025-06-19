@@ -42,6 +42,7 @@
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("cover/bp-background.jpg"); /* dynamiquement modifié plus bas */
       background-repeat: repeat-x;
       background-size: 150% 150%;
       background-position: 0 center;
@@ -52,7 +53,7 @@
 
     .header-top {
       display: flex;
-      align-items: center; /* centre verticalement le bouton et titre */
+      align-items: center;
       gap: 30px;
       padding-left: 20px;
       margin-bottom: 10px;
@@ -61,7 +62,6 @@
     }
 
     .home-btn {
-      margin: 0;
       background: #444;
       color: #fff;
       border: none;
@@ -228,9 +228,9 @@
   <header>
     <div class="header-top">
       <button class="home-btn" onclick="window.location.href='index.html'">🏠</button>
-      <h1 id="manga-title">Titre par défaut</h1>
+      <h1 id="manga-title">Chargement…</h1>
     </div>
-    <div class="resume" id="manga-resume">Résumé par défaut</div>
+    <div class="resume" id="manga-resume">Chargement du résumé…</div>
   </header>
 
   <main>
@@ -245,118 +245,53 @@
     © 2025 LuKR. All rights reserved.
   </footer>
 
+  <script src="mangas-data.js"></script>
   <script>
-    // Récupère le paramètre id dans l'URL
     function getParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
-      const mangaKey = urlParams.get('manga');
+      return urlParams.get(param);
     }
 
-    // Change la langue et reload la page
-    function changeLang(lang) {
-      localStorage.setItem('lang', lang);
+    function changeLang(l) {
+      localStorage.setItem('lang', l);
       location.reload();
     }
 
-    // Charge dynamiquement un script JS
-    function loadScript(src, callback) {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = callback;
-      script.onerror = () => {
-        alert("Erreur : impossible de charger les données du manga.");
-      };
-      document.head.appendChild(script);
-    }
-
-    // Met à jour le background animé du header avec l'image de fond du manga
-    function updateHeaderBackground(imagePath) {
-      const header = document.querySelector('header');
-      header.style.setProperty('--bg-image', `url('${imagePath}')`);
-      header.style.backgroundImage = 'none'; // on désactive pour éviter conflit
-      // On utilise le pseudo-élément ::before, donc on modifie directement son style via CSS variables
-      // Ici on modifie inline l'attribut style pour l'animation du background en JS
-      // Comme ce n'est pas possible, on modifie le style directement du ::before via un style <style> ajouté.
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
-      const mangaId = getParam('id');
-      if (!mangaId) {
-        alert("Erreur : aucun manga spécifié.");
+      const mangaId = getParam('manga');
+      const lang = localStorage.getItem('lang') || 'fr';
+
+      const manga = mangas.find(m => m.id === mangaId);
+
+      const titleEl = document.getElementById("manga-title");
+      const resumeEl = document.getElementById("manga-resume");
+      const chapterList = document.getElementById("chapter-list");
+      const btnFr = document.getElementById("btn-fr");
+      const btnEn = document.getElementById("btn-en");
+
+      if (!manga) {
+        titleEl.textContent = "Erreur : aucun manga spécifié.";
+        resumeEl.textContent = "";
         return;
       }
 
-      const lang = localStorage.getItem('lang') || 'fr';
-      const titleElem = document.getElementById('manga-title');
-      const resumeElem = document.getElementById('manga-resume');
-      const chapterList = document.getElementById('chapter-list');
-      const btnFr = document.getElementById('btn-fr');
-      const btnEn = document.getElementById('btn-en');
-      const header = document.querySelector('header');
+      // Fond dynamique selon le manga
+      document.querySelector("header::before");
+      document.querySelector("header").style.setProperty('--bg', `url('cover/${manga.id}-background.jpg')`);
 
-      btnFr.classList.toggle('active', lang === 'fr');
-      btnEn.classList.toggle('active', lang === 'en');
+      titleEl.textContent = manga.title;
+      resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
 
-      // Chargement du fichier JS des données dynamiquement
-      loadScript(`data/${mangaId}-data.js`, () => {
-        // Chaque fichier data doit définir un objet global "mangaData"
-        if (!window.mangaData) {
-          alert("Erreur : données du manga introuvables ou mal formatées.");
-          return;
-        }
-
-        const content = window.mangaData[lang] || window.mangaData['fr'] || null;
-        if (!content) {
-          titleElem.textContent = "Erreur de chargement";
-          resumeElem.textContent = "Le contenu du hub est introuvable pour la langue sélectionnée.";
-          return;
-        }
-
-        titleElem.textContent = content.title;
-        resumeElem.textContent = content.resume;
-
-        // Background animé
-        if(content.bgImage) {
-          header.style.setProperty('--bg-image-url', `url('${content.bgImage}')`);
-          // Appliquer le background au ::before via ajout/modification du style
-          const styleId = 'dynamic-bg-style';
-          let styleTag = document.getElementById(styleId);
-          if (!styleTag) {
-            styleTag = document.createElement('style');
-            styleTag.id = styleId;
-            document.head.appendChild(styleTag);
-          }
-          styleTag.textContent = `
-            header::before {
-              background-image: url('${content.bgImage}');
-              background-repeat: repeat-x;
-              background-size: 150% 150%;
-              background-position: 0 center;
-              animation: scrollImages 75s linear infinite;
-              filter: blur(6px);
-              z-index: 0;
-              content: "";
-              position: absolute;
-              top: 0; left: 0; right: 0; bottom: 0;
-            }
-          `;
-        }
-
-        // Nettoyer la liste précédente
-        chapterList.innerHTML = "";
-
-        // Remplir la liste des chapitres
-        content.chapters.forEach(ch => {
-          const a = document.createElement('a');
-          a.className = 'chapter-link';
-          a.href = ch.link;
-          a.textContent = ch.name;
-          chapterList.appendChild(a);
-        });
-
-        // Nettoyer mangaData pour éviter conflit si on change de manga (au reload c'est ok)
-        delete window.mangaData;
+      manga.chapters.forEach(chap => {
+        const link = document.createElement("a");
+        link.className = "chapter-link";
+        link.href = `reader/manga-reader.html?chap=${chap.id}&lang=${lang}&mode=vertical`;
+        link.textContent = chap.title;
+        chapterList.appendChild(link);
       });
+
+      btnFr.classList.toggle("active", lang === "fr");
+      btnEn.classList.toggle("active", lang === "en");
     });
   </script>
 </body>
