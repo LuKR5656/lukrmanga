@@ -14,7 +14,7 @@ const mangas = [
           fr: "BoiloingPoint Oneshot",
           en: "BoiloingPoint Oneshot"
         },
-        path: "BP/reader.html"
+        path: "reader.html"
       }
     ],
     assets: {
@@ -37,7 +37,7 @@ const mangas = [
           fr: "Départ",
           en: "Departure"
         },
-        path: "eldorado/chap1/reader.html"
+        path: "reader.html"
       },
       {
         number: 2,
@@ -45,7 +45,7 @@ const mangas = [
           fr: "L’île",
           en: "The Island"
         },
-        path: "eldorado/chap2/reader.html"
+        path: "reader.html"
       }
     ],
     assets: {
