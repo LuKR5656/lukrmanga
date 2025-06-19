@@ -18,8 +18,8 @@ const mangas = [
       }
     ],
     assets: {
-      cover: "assets/bp/BP-cover.png",      // pour page d'accueil
-      background: "assets/bp/BP-bg.png" // pour le header animé du hub
+      cover: "assets/cover/BP-cover.png",      // pour page d'accueil
+      background: "assets/background/BP-bg.png" // pour le header animé du hub
     }
   },
   {
@@ -49,8 +49,8 @@ const mangas = [
       }
     ],
     assets: {
-      cover: "assets/el/EL-cover.png",
-      background: "assets/el/EL-bg.png"
+      cover: "assets/cover/EL-cover.png",
+      background: "assets/background/EL-bg.png"
     }
   }
 ];
