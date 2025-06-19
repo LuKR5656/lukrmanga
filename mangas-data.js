@@ -4,15 +4,15 @@ const mangas = [
     title: "Boiling Point", // Titre du manga affiché
     tag: "Oneshot", // Oneshot ou Serie
     resume: {
-      fr: "Un thriller explosif sur fond de tensions bouillantes.",
-      en: "An explosive thriller amid boiling tensions."
+      fr: "Une baston dans un colisée.",
+      en: "A brawl in a coliseum."
     },
     chapters: [
       {
         number: 1,
         title: {
-          fr: "Unique Chapitre",
-          en: "One-shot"
+          fr: "BoiloingPoint Oneshot",
+          en: "BoiloingPoint Oneshot"
         },
         path: "BP/reader.html"
       }
