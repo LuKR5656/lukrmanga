@@ -1,4 +1,4 @@
-// BP-data.j
+// BP-data.js
 
 const bpContent = {
   fr: {
