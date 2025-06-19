@@ -5,14 +5,14 @@ const bpContent = {
     title: "🔥 Boiling Point / Oneshot",
     resume: "Une baston dans un colisée.",
     chapters: [
-      { name: "Chapitre 1", link: "BP-horizontal.html?chap=chap1" },
+      { id: "chap1", name: "Chapitre 1", link: "BP-reader.html?chap=chap1&lang=fr" }
     ]
   },
   en: {
     title: "🔥 Boiling Point / Oneshot",
     resume: "A fight in a colosseum.",
     chapters: [
-      { name: "Chapter 1", link: "BP-horizontal.html?chap=chap1" },
+      { id: "chap1", name: "Chapter 1", link: "BP-reader.html?chap=chap1&lang=en" }
     ]
   }
 };
