@@ -73,14 +73,13 @@
     }
 
     const chapterId = getParam("chap");
-    const lang = getParam("lang") || "fr"; // Par défaut français
-    const mode = getParam("mode") || "vertical"; // lecture verticale ou horizontale
+    const lang = getParam("lang") || "fr";
+    const mode = getParam("mode") || "vertical";
 
     const pagesContainer = document.getElementById("pagesContainer");
     const chapterTitle = document.getElementById("chapterTitle");
     const hintImage = document.getElementById("hintImage");
 
-    // Sélectionne le bon hint selon le mode
     if (mode === "horizontal") {
       hintImage.src = "../assets/hint-horizontal.png";
       hintImage.alt = "Hint horizontal";
@@ -100,22 +99,45 @@
       return null;
     })();
 
+    async function loadPages(basePath, container) {
+      let index = 1;
+      let found = true;
+
+      while (found) {
+        const img = document.createElement("img");
+        const fileName = `page${index}.jpg`;
+        img.src = `${basePath}${fileName}`;
+        img.alt = `Page ${index}`;
+
+        found = await new Promise(resolve => {
+          img.onload = () => {
+            container.appendChild(img);
+            resolve(true);
+          };
+          img.onerror = () => resolve(false);
+        });
+
+        index++;
+      }
+
+      const endMessage = document.createElement("p");
+      endMessage.textContent = "Fin du chapitre.";
+      endMessage.style.marginTop = "30px";
+      container.appendChild(endMessage);
+    }
+
     if (!chapterData) {
       chapterTitle.textContent = "Chapitre introuvable.";
     } else {
       const { mangaTitle, chap } = chapterData;
-      chapterTitle.textContent = `${mangaTitle} — ${chap.title}`;
+      const chapterName = chap.title?.[lang] || chap.title;
+      chapterTitle.textContent = `${mangaTitle} — ${chapterName}`;
 
-      const pages = chap.pages?.[lang];
-      if (!pages || pages.length === 0) {
+      const basePath = chap.pages?.[lang];
+      if (!basePath) {
         pagesContainer.innerHTML = "<p>Pas de pages pour cette langue.</p>";
       } else {
-        for (const page of pages) {
-          const img = document.createElement("img");
-          img.src = page;
-          img.alt = "Page";
-          pagesContainer.appendChild(img);
-        }
+        loadPages(basePath, pagesContainer);
       }
     }
   </script>
