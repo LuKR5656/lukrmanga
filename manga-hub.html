@@ -260,49 +260,52 @@
     window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('manga');
       const lang = localStorage.getItem('lang') || 'fr';
-
+    
       const manga = mangas.find(m => m.id === mangaId);
-
+    
       const titleEl = document.getElementById("manga-title");
       const resumeEl = document.getElementById("manga-resume");
       const chapterList = document.getElementById("chapter-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
-
+    
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
         return;
       }
-
+    
       // Injection CSS dynamique pour le background animé du header::before
       const bgStyle = document.createElement("style");
       bgStyle.innerHTML = `
         header::before {
-          background-image: url('cover/${manga.id}-background.jpg');
+          background-image: url('${manga.assets.background}');
         }
       `;
       document.head.appendChild(bgStyle);
-
+    
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
-
+    
+      chapterList.innerHTML = ''; // Nettoyer avant ajout
+    
       manga.chapters.forEach(chap => {
         const link = document.createElement("a");
         link.className = "chapter-link";
-
-        // IMPORTANT : lien vers reader.html dans même dossier + chap id et lang
-        link.href = `reader.html?chap=${chap.number}&lang=${lang}&mode=vertical`;
-
-        // Affichage du titre du chapitre dans la langue, sinon fallback
-        link.textContent = chap.title?.[lang] || "Chapitre";
-
+    
+        // Utiliser chap.path pour le lien
+        link.href = `${chap.path}?chap=${chap.number}&lang=${lang}&mode=vertical`;
+    
+        // Afficher titre du chapitre avec fallback "Chapitre X"
+        link.textContent = chap.title?.[lang] || `Chapitre ${chap.number}`;
+    
         chapterList.appendChild(link);
       });
-
+    
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
     });
+
   </script>
 </body>
 </html>
