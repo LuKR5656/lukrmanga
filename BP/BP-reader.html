@@ -2,27 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>BoilingPoint</title>
+  <title>BoilingPoint - Reader</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
       background: #222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+      color: #f0f0f0;
       font-family: sans-serif;
       user-select: none;
+      overflow: hidden;
     }
 
     #container {
       max-width: 90vw;
       max-height: 100vh;
       position: relative;
-      z-index: 1;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
+    /* IMAGE SLIDE - horizontal */
     #slide {
       max-height: 100vh;
       max-width: 100vw;
@@ -31,15 +34,41 @@
       cursor: pointer;
       display: block;
       margin: auto;
+      user-select: none;
+      transition: opacity 0.3s ease;
     }
 
+    /* CONTAINER FOR VERTICAL MODE */
+    #pagesContainer {
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      display: none; /* hidden by default, only for vertical mode */
+      scroll-behavior: smooth;
+      box-sizing: border-box;
+      padding-top: 60px;
+      padding-bottom: 60px;
+      background: #222;
+    }
+
+    #pagesContainer img.page {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto 15px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #000;
+      user-select: none;
+    }
+
+    /* INFO PANEL + BUTTONS */
     #infoPanel {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      color: #f0f0f0;
+      background: rgba(0, 0, 0, 0.7);
       font-size: 18px;
       padding: 10px 20px;
       display: flex;
@@ -50,7 +79,8 @@
       transition: opacity 0.3s ease;
       text-shadow: 1px 1px 3px #000;
       box-sizing: border-box;
-      z-index: 3;
+      z-index: 1001;
+      user-select: none;
     }
 
     #infoPanel.visible {
@@ -60,13 +90,19 @@
 
     #chapterNumber {
       flex: 0 0 auto;
+      font-weight: bold;
     }
 
     #pageIndicator {
-      margin: 0 auto;
-      font-weight: bold;
-      text-align: center;
       flex: 1;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #langIndicator {
+      flex: 0 0 auto;
+      margin-left: 15px;
+      font-weight: bold;
     }
 
     .btn {
@@ -83,7 +119,6 @@
       text-align: center;
       line-height: 1.2;
       font-family: sans-serif;
-      flex: 0 0 auto;
       margin-left: 10px;
       user-select: none;
     }
@@ -98,6 +133,27 @@
       -moz-appearance: none;
     }
 
+    /* OVERLAY */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    #overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* HINT blinking */
     #hint {
       position: fixed;
       top: 50%;
@@ -106,7 +162,8 @@
       width: 200px;
       opacity: 0;
       animation: blink 1s ease-in-out infinite;
-      z-index: 999;
+      z-index: 1100;
+      user-select: none;
     }
 
     @keyframes blink {
@@ -114,28 +171,58 @@
       50% { opacity: 1; }
     }
 
-    #overlay {
+    /* POPUP last page */
+    #endPopup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 2;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #333;
+      border: 2px solid #f0f0f0;
+      border-radius: 10px;
+      padding: 20px;
+      width: 80vw;
+      max-width: 400px;
+      text-align: center;
+      color: #f0f0f0;
+      box-shadow: 0 0 20px #fff;
+      z-index: 1101;
+      display: none;
+      user-select: none;
     }
 
-    #overlay.visible {
-      opacity: 1;
-      pointer-events: auto;
+    #endPopup button, #endPopup a {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      border: none;
+      background: #f0f0f0;
+      color: #222;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
+
+    #endPopup button:hover, #endPopup a:hover {
+      background: #ddd;
+    }
+
+    #pubBox {
+      margin-top: 15px;
+      border: 1px solid #999;
+      padding: 10px;
+      min-height: 80px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
   </style>
 </head>
 <body>
   <div id="container">
     <img id="slide" src="" alt="Page" />
+    <div id="pagesContainer"></div>
   </div>
 
   <div id="overlay"></div>
@@ -144,69 +231,153 @@
   <div id="infoPanel">
     <div id="chapterNumber">📖 Boiling Point</div>
     <div id="pageIndicator">Page</div>
-    <div id="langIndicator" style="margin-left: 15px; font-weight: bold; font-size: 18px;">Langue</div>
-    <a href="BP-hub.html" class="btn" id="btnAccueil">🏠 Accueil</a>
+    <div id="langIndicator">Langue</div>
+    <a href="#" class="btn" id="btnAccueil">🏠 Accueil</a>
     <button id="toggleMode" class="btn">↔️ Mode de lecture</button>
+  </div>
+
+  <div id="endPopup">
+    <div>Vous avez atteint la fin du chapitre.</div>
+    <a href="#" id="btnEndHome">🏠 Retour à l'accueil</a>
+    <div id="pubBox">[Espace publicité]</div>
   </div>
 
   <script src="BP-data.js"></script>
   <script>
-    const slide = document.getElementById("slide");
-    const pageIndicator = document.getElementById("pageIndicator");
+    // --- Init variables ---
     const container = document.getElementById("container");
+    const slide = document.getElementById("slide");
+    const pagesContainer = document.getElementById("pagesContainer");
     const infoPanel = document.getElementById("infoPanel");
     const overlay = document.getElementById("overlay");
     const hint = document.getElementById("hint");
     const langIndicator = document.getElementById("langIndicator");
-
     const btnAccueil = document.getElementById("btnAccueil");
     const btnToggle = document.getElementById("toggleMode");
+    const endPopup = document.getElementById("endPopup");
+    const btnEndHome = document.getElementById("btnEndHome");
+    const pubBox = document.getElementById("pubBox");
 
     let navMode = false;
     let currentIndex = 0;
     let images = [];
+    let mode = "horizontal"; // "horizontal" or "vertical"
 
-    // 1. Récupérer la langue depuis localStorage
-    const lang = localStorage.getItem("lang") || "fr";
-    langIndicator.textContent = lang === "fr" ? "Français" : "English";
-
-    // Mise à jour des textes des boutons selon la langue
-    if (lang === 'fr') {
-      btnAccueil.textContent = '🏠 Accueil';
-      btnToggle.textContent = '↔️ Mode de lecture';
-    } else if (lang === 'en') {
-      btnAccueil.textContent = '🏠 Home';
-      btnToggle.textContent = '↔️ Reading Mode';
-    }
-
-    // 2. Récupérer le chapitre depuis l'URL
+    // --- Get URL params ---
     const params = new URLSearchParams(window.location.search);
     const chapId = params.get("chap") || "chap1";
 
-    // 3. Charger les images depuis bpPages
-    console.log("Langue détectée :", lang);
-    console.log("Chapitre demandé :", chapId);
+    // Lang param with default "fr"
+    let lang = params.get("lang");
+    if (!lang || (lang !== "fr" && lang !== "en")) {
+      lang = "fr";
+    }
 
+    // Update lang indicator text
+    langIndicator.textContent = lang === "fr" ? "Français" : "English";
+
+    // Update buttons text by lang
+    function updateButtonTexts() {
+      if (lang === 'fr') {
+        btnAccueil.textContent = '🏠 Accueil';
+        btnToggle.textContent = mode === "horizontal" ? '↔️ Mode vertical' : '↔️ Mode horizontal';
+        btnEndHome.textContent = '🏠 Retour à l\'accueil';
+      } else {
+        btnAccueil.textContent = '🏠 Home';
+        btnToggle.textContent = mode === "horizontal" ? '↔️ Vertical Mode' : '↔️ Horizontal Mode';
+        btnEndHome.textContent = '🏠 Back to Home';
+      }
+    }
+
+    updateButtonTexts();
+
+    // Set accueil link with lang & chapter
+    btnAccueil.href = `BP-hub.html?lang=${lang}`;
+    btnEndHome.href = `BP-hub.html?lang=${lang}`;
+
+    // --- Load images for chapter & lang ---
     if (bpPages[chapId] && bpPages[chapId][lang]) {
       images = [...bpPages[chapId][lang]];
-      console.log("Pages disponibles :", bpPages[chapId]);
-      console.log("Images chargées :", images);
     } else {
-      alert("Chapitre introuvable.");
-      console.error("Chapitre introuvable :", chapId, "lang:", lang);
+      alert(lang === "fr" ? "Chapitre introuvable." : "Chapter not found.");
+      console.error("Chapitre introuvable:", chapId, "lang:", lang);
     }
 
+    // --- Functions ---
+
+    // Update slide for horizontal mode
     function updateSlide() {
-      slide.src = images[currentIndex];
-      slide.alt = `Page ${currentIndex + 1}`;
-      pageIndicator.textContent = `Page ${currentIndex + 1} / ${images.length}`;
+      if (currentIndex < 0) currentIndex = 0;
+      if (currentIndex >= images.length) {
+        // Show popup end
+        showEndPopup();
+        currentIndex = images.length - 1;
+        return;
+      }
+      slide.style.opacity = 0;
+      setTimeout(() => {
+        slide.src = images[currentIndex];
+        slide.alt = `Page ${currentIndex + 1}`;
+        slide.style.opacity = 1;
+      }, 150);
+      updatePageIndicator();
     }
 
-    container.addEventListener("click", (e) => {
-      if(navMode) {
-        navMode = false;
-        infoPanel.classList.remove("visible");
-        overlay.classList.remove("visible");
+    // Update page indicator text
+    function updatePageIndicator() {
+      pageIndicator.textContent = (mode === "horizontal")
+        ? `Page ${currentIndex + 1} / ${images.length}`
+        : `Pages: ${images.length}`;
+    }
+
+    // Show overlay info panel and navigation mode
+    function showNavOverlay() {
+      navMode = true;
+      infoPanel.classList.add("visible");
+      overlay.classList.add("visible");
+    }
+
+    // Hide overlay info panel
+    function hideNavOverlay() {
+      navMode = false;
+      infoPanel.classList.remove("visible");
+      overlay.classList.remove("visible");
+    }
+
+    // Show end popup
+    function showEndPopup() {
+      endPopup.style.display = "block";
+      overlay.classList.add("visible");
+      navMode = true;
+    }
+
+    // Hide end popup
+    function hideEndPopup() {
+      endPopup.style.display = "none";
+      overlay.classList.remove("visible");
+      navMode = false;
+    }
+
+    // Load vertical images into container
+    function loadVerticalPages() {
+      pagesContainer.innerHTML = "";
+      images.forEach((src, idx) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = `Page ${idx + 1}`;
+        img.className = "page";
+        pagesContainer.appendChild(img);
+      });
+    }
+
+    // --- Event Listeners ---
+
+    // Container click in horizontal mode to navigate pages
+    container.addEventListener("click", e => {
+      if (mode !== "horizontal") return;
+
+      if (navMode) {
+        hideNavOverlay();
         return;
       }
 
@@ -214,28 +385,35 @@
       const clickX = e.clientX - rect.left;
       const width = rect.width;
 
-      // Lecture droite à gauche : clic gauche -> page suivante, clic droit -> page précédente
+      // Click left = next page
       if (clickX < width * 0.3 && currentIndex < images.length - 1) {
         currentIndex++;
         updateSlide();
-      } else if (clickX > width * 0.7 && currentIndex > 0) {
+      }
+      // Click right = prev page
+      else if (clickX > width * 0.7 && currentIndex > 0) {
         currentIndex--;
         updateSlide();
-      } else {
-        navMode = true;
-        infoPanel.classList.add("visible");
-        overlay.classList.add("visible");
+      }
+      else {
+        showNavOverlay();
       }
     });
 
+    // Overlay click closes nav mode or end popup
     overlay.addEventListener("click", () => {
-      navMode = false;
-      infoPanel.classList.remove("visible");
-      overlay.classList.remove("visible");
+      if (endPopup.style.display === "block") {
+        hideEndPopup();
+      } else {
+        hideNavOverlay();
+      }
     });
 
-    document.addEventListener("keydown", (e) => {
+    // Keyboard navigation in horizontal mode
+    document.addEventListener("keydown", e => {
       if (navMode) return;
+      if (mode !== "horizontal") return;
+
       if (e.key === "ArrowRight" && currentIndex < images.length - 1) {
         currentIndex++;
         updateSlide();
@@ -245,21 +423,74 @@
       }
     });
 
-    window.addEventListener("load", () => {
-      updateSlide();
-      setTimeout(() => {
-        hint.style.display = "none";
-      }, 2700);
+    // Toggle mode button
+    btnToggle.addEventListener("click", e => {
+      e.preventDefault();
+      if (mode === "horizontal") {
+        // Switch to vertical
+        mode = "vertical";
+        slide.style.display = "none";
+        pagesContainer.style.display = "block";
+        container.style.justifyContent = "flex-start";
+        container.style.alignItems = "flex-start";
+        hideNavOverlay();
+        hideEndPopup();
+        loadVerticalPages();
+        pageIndicator.textContent = lang === "fr" ? `Pages: ${images.length}` : `Pages: ${images.length}`;
+      } else {
+        // Switch to horizontal
+        mode = "horizontal";
+        pagesContainer.style.display = "none";
+        slide.style.display = "block";
+        container.style.justifyContent = "center";
+        container.style.alignItems = "center";
+        hideNavOverlay();
+        hideEndPopup();
+        updateSlide();
+      }
+      updateButtonTexts();
     });
 
-    btnToggle.addEventListener("click", () => {
-      const currentURL = window.location.href;
-      if (currentURL.includes("BP-horizontal")) {
-        window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
-      } else {
-        window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
+    // When scroll in vertical mode, update page indicator approx.
+    pagesContainer.addEventListener("scroll", () => {
+      if (mode !== "vertical") return;
+      const scrollTop = pagesContainer.scrollTop;
+      const containerHeight = pagesContainer.clientHeight;
+      let pageNum = 1;
+      const imagesEls = pagesContainer.querySelectorAll("img.page");
+      for (let i = 0; i < imagesEls.length; i++) {
+        const img = imagesEls[i];
+        const offsetTop = img.offsetTop;
+        if (scrollTop + containerHeight / 2 >= offsetTop) {
+          pageNum = i + 1;
+        }
       }
+      pageIndicator.textContent = lang === "fr"
+        ? `Page ${pageNum} / ${images.length}`
+        : `Page ${pageNum} / ${images.length}`;
     });
+
+    // Btn retour accueil conserve la langue
+    btnAccueil.href = `BP-hub.html?lang=${lang}`;
+    btnEndHome.href = `BP-hub.html?lang=${lang}`;
+
+    // Start hint animation and auto hide after 5 seconds
+    hint.style.opacity = 1;
+    setTimeout(() => {
+      hint.style.opacity = 0;
+    }, 5000);
+
+    // Init display
+    if (mode === "horizontal") {
+      pagesContainer.style.display = "none";
+      slide.style.display = "block";
+      updateSlide();
+    } else {
+      pagesContainer.style.display = "block";
+      slide.style.display = "none";
+      loadVerticalPages();
+    }
+
   </script>
 </body>
 </html>
