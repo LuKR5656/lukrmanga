@@ -12,7 +12,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
+
     .image-container {
       display: flex;
       flex-direction: column;
@@ -20,6 +22,7 @@
       max-width: 100%;
       margin-bottom: 50px;
     }
+
     .image-container img {
       max-width: 100%;
       height: auto;
@@ -27,15 +30,40 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
+
     .title {
       margin: 20px 0;
       font-size: 2em;
+    }
+
+    .hint-zone {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      opacity: 0.7;
+    }
+
+    .hint-zone img {
+      width: 100px;
+      height: auto;
+    }
+
+    @media (max-width: 600px) {
+      .hint-zone img {
+        width: 70px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="title" id="chapterTitle">Chargement...</div>
   <div class="image-container" id="pagesContainer"></div>
+
+  <!-- Hint display area -->
+  <div class="hint-zone" id="hintZone">
+    <img id="hintImage" src="" alt="Hint">
+  </div>
 
   <script src="mangas-data.js"></script>
   <script>
@@ -46,9 +74,20 @@
 
     const chapterId = getParam("chap");
     const lang = getParam("lang") || "fr"; // Par défaut français
+    const mode = getParam("mode") || "vertical"; // lecture verticale ou horizontale
 
     const pagesContainer = document.getElementById("pagesContainer");
     const chapterTitle = document.getElementById("chapterTitle");
+    const hintImage = document.getElementById("hintImage");
+
+    // Sélectionne le bon hint selon le mode
+    if (mode === "horizontal") {
+      hintImage.src = "../assets/hint-horizontal.png";
+      hintImage.alt = "Hint horizontal";
+    } else {
+      hintImage.src = "../assets/hint-vertical.png";
+      hintImage.alt = "Hint vertical";
+    }
 
     const chapterData = (() => {
       for (const manga of mangas) {
@@ -67,7 +106,7 @@
       const { mangaTitle, chap } = chapterData;
       chapterTitle.textContent = `${mangaTitle} — ${chap.title}`;
 
-      const pages = chap.pages[lang];
+      const pages = chap.pages?.[lang];
       if (!pages || pages.length === 0) {
         pagesContainer.innerHTML = "<p>Pas de pages pour cette langue.</p>";
       } else {
