@@ -237,6 +237,7 @@
 
   <div id="endPopup">
     <div>Vous avez atteint la fin du chapitre.</div>
+    <div>Merci de votre lecture.</div>
     <a href="#" id="btnEndHome">🏠 Retour à l'accueil</a>
     <div id="pubBox">[Espace publicité]</div>
   </div>
@@ -280,7 +281,7 @@
       if (lang === 'fr') {
         btnAccueil.textContent = '🏠 Accueil';
         btnToggle.textContent = mode === "horizontal" ? '↔️ Mode vertical' : '↔️ Mode horizontal';
-        btnEndHome.textContent = '🏠 Retour à l\'accueil';
+        btnEndHome.textContent = '🏠 Retour à l'accueil';
       } else {
         btnAccueil.textContent = '🏠 Home';
         btnToggle.textContent = mode === "horizontal" ? '↔️ Vertical Mode' : '↔️ Horizontal Mode';
@@ -478,7 +479,7 @@
     setTimeout(() => {
       hint.style.opacity = 0;
       hint.style.display = "none";
-    }, 2500);
+    }, 1500);
 
     // Init display
     if (mode === "horizontal") {
