@@ -152,17 +152,17 @@
     let currentIndex = 0;
     let images = [];
 
-    // 1. Récupérer la langue depuis localStorage
+    // Langue
     const lang = localStorage.getItem("lang") || "fr";
     langIndicator.textContent = lang === "fr" ? "Français" : "English";
 
-    // 2. Récupérer le chapitre depuis l'URL
+    // Chapitre
     const params = new URLSearchParams(window.location.search);
     const chapId = params.get("chap") || "chap1";
 
-    // 3. Charger les images depuis bpPages
+    // Pages
     if (bpPages[chapId] && bpPages[chapId][lang]) {
-      images = [...bpPages[chapId][lang]].reverse(); // pour lecture droite-gauche
+      images = [...bpPages[chapId][lang]].reverse(); // droite à gauche
     } else {
       alert("Chapitre introuvable.");
     }
@@ -177,7 +177,7 @@
       const rect = container.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const width = rect.width;
-    
+
       if (!navMode) {
         if (clickX < width * 0.3 && currentIndex < images.length - 1) {
           currentIndex++;
@@ -196,7 +196,6 @@
         overlay.classList.remove("visible");
       }
     });
-
 
     overlay.addEventListener("click", () => {
       navMode = false;
@@ -221,14 +220,16 @@
         hint.style.display = "none";
       }, 2700);
 
-    document.getElementById("toggleMode").addEventListener("click", () => {
-      const currentURL = window.location.href;
-    
-      if (currentURL.includes("BP-horizontal")) {
-        window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
-      } else {
-        window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
-      }
+      // Ajout bouton mode de lecture
+      document.getElementById("toggleMode").addEventListener("click", () => {
+        const currentURL = window.location.href;
+
+        if (currentURL.includes("BP-horizontal")) {
+          window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
+        } else {
+          window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
+        }
+      });
     });
   </script>
 </body>
