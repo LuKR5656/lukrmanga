@@ -260,21 +260,21 @@
     window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('manga');
       const lang = localStorage.getItem('lang') || 'fr';
-
+    
       const manga = mangas.find(m => m.id === mangaId);
-
+    
       const titleEl = document.getElementById("manga-title");
       const resumeEl = document.getElementById("manga-resume");
       const chapterList = document.getElementById("chapter-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
-
+    
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
         return;
       }
-
+    
       // Injection CSS dynamique pour le background animé du header::before
       const bgStyle = document.createElement("style");
       bgStyle.innerHTML = `
@@ -283,28 +283,28 @@
         }
       `;
       document.head.appendChild(bgStyle);
-
+    
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
-
+    
       chapterList.innerHTML = ''; // Nettoyer avant ajout
-
+    
       manga.chapters.forEach(chap => {
         const link = document.createElement("a");
         link.className = "chapter-link";
-
-        // Ici : lien vers reader.html avec params nécessaires
-        link.href = `reader.html?manga=${mangaId}&chap=${chap.number}&lang=${lang}&mode=vertical`;
-
-        // Affichage du titre du chapitre dans la langue, ou fallback
+    
+        // MODIFICATION ICI : passer chap.id et non chap.number
+        link.href = `${chap.path}?chap=${chap.id}&lang=${lang}&mode=vertical`;
+    
         link.textContent = chap.title?.[lang] || `Chapitre ${chap.number}`;
-
+    
         chapterList.appendChild(link);
       });
-
+    
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
     });
+
   </script>
 </body>
 </html>
