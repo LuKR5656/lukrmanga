@@ -11,8 +11,8 @@ const mangas = [
       {
         number: 1,
         title: {
-          fr: "BoiloingPoint Oneshot",
-          en: "BoiloingPoint Oneshot"
+          fr: "BoilingPoint Oneshot",
+          en: "BoilingPoint Oneshot"
         },
         path: "reader.html"
       }
