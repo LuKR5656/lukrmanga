@@ -164,7 +164,7 @@
     mangas.forEach(manga => {
       const link = document.createElement("a");
       link.className = "chapter-link";
-      link.href = `manga-hub.html?id=${manga.id}`;
+      link.href = `manga-hub.html?manga=${manga.id}`;
       link.textContent = manga.title;
 
       if (manga.tag === "Oneshot") {
