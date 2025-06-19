@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>LuKR Manga</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="hXcv-MAKgxsY5IuBFWkHVUBL7OW8N6uC2shHS5oObXo" />  <!-- Baliste Meta Google --> 
-  <meta name="google-adsense-account" content="ca-pub-7285761108794227"> <!-- adsens balise-->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7285761108794227"crossorigin="anonymous"></script> <!-- adsens code-->
   
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7285761108794227"
+    crossorigin="anonymous"></script>
+  <meta name="google-site-verification" content="hXcv-MAKgxsY5IuBFWkHVUBL7OW8N6uC2shHS5oObXo" />
+  <meta name="google-adsense-account" content="ca-pub-7285761108794227" />
+
   <style>
+    /* Style : identique à ta version d’origine */
     html, body {
       height: 100%;
       margin: 0;
@@ -19,7 +22,6 @@
       color: #f0f0f0;
       font-family: sans-serif;
     }
-
     body {
       flex: 1;
       padding: 30px 15px 80px;
@@ -27,30 +29,25 @@
       animation: fadeInBody 1s ease-in-out forwards;
       position: relative;
     }
-
     @keyframes fadeInBody {
       to { opacity: 1; }
     }
-
     h1 {
       text-align: center;
       font-size: 32px;
       margin-bottom: 30px;
     }
-
     .columns {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
       gap: 30px;
     }
-
     .column {
       flex: 1;
       min-width: 250px;
       max-width: 300px;
     }
-
     h2 {
       font-size: 24px;
       margin-bottom: 20px;
@@ -58,7 +55,6 @@
       border-bottom: 1px solid #444;
       padding-bottom: 5px;
     }
-
     .chapter-link {
       display: block;
       background: #f0f0f0;
@@ -72,12 +68,10 @@
       font-size: 18px;
       transition: transform 0.2s ease, background 0.3s ease;
     }
-
     .chapter-link:hover {
       background: #555;
       transform: translateY(-4px);
     }
-
     .special-box {
       background: #f0f0f0;
       color: #222;
@@ -87,7 +81,6 @@
       border-radius: 8px;
       box-shadow: 1px 1px 5px #000;
     }
-
     #logoTopRight {
       position: absolute;
       top: 15px;
@@ -98,12 +91,10 @@
       transition: transform 0.3s ease, opacity 0.3s ease;
       z-index: 1000;
     }
-
     #logoTopRight:hover {
       transform: scale(1.1);
       opacity: 1;
     }
-
     footer {
       margin-top: auto;
       text-align: right;
@@ -111,24 +102,20 @@
       font-size: 0.7em;
       color: #aaa;
     }
-
     @media (max-width: 900px) {
       .columns {
         flex-direction: column;
         align-items: center;
       }
     }
-
     @media (max-width: 600px) {
       h1 {
         font-size: 24px;
       }
-
       .chapter-link {
         font-size: 16px;
         padding: 12px;
       }
-
       #logoTopRight {
         width: 40px;
         top: 10px;
@@ -139,32 +126,29 @@
 </head>
 <body>
 
-  <!-- Logo en haut à droite -->
-  <img src="favicon.png" alt="Logo du site" id="logoTopRight">
+  <!-- Logo -->
+  <img src="favicon.png" alt="Logo du site" id="logoTopRight" />
 
   <h1>Bienvenue sur mon site de lecture de Manga</h1>
 
   <div class="columns">
-    <!-- Colonne One-shots -->
+    <!-- Oneshots -->
     <div class="column">
       <h2>📕 Mes One-shots</h2>
-      <a class="chapter-link" href="BP/BP-hub.html">🔥Boiling Point</a>
-      <!-- Ajoute ici d'autres one-shots -->
+      <div id="oneshotsList"></div>
     </div>
 
-    <!-- Colonne Séries -->
+    <!-- Séries -->
     <div class="column">
       <h2>📚 Mes Séries</h2>
-      <a class="chapter-link" href="eldorado/EL-hub.html">🌟Eldorado</a>
-      <!-- Autres séries -->
+      <div id="seriesList"></div>
     </div>
 
-    <!-- Colonne Divers -->
+    <!-- Divers -->
     <div class="column">
       <h2>✨ Divers</h2>
-      <a class="chapter-link" href="BP-hub/BP-hub.html">📌Derniere Sortie</a>
-      <a class="chapter-link" href="https://x.com/LuKRvl" target="_blank">🐦Suis-moi sur X</a>
-      <!-- Tu peux ajouter d'autres encadrés ici -->
+      <a class="chapter-link" href="BP-hub/BP-hub.html">📌Dernière Sortie</a>
+      <a class="chapter-link" href="https://x.com/LuKRvl" target="_blank">🐦 Suis-moi sur X</a>
     </div>
   </div>
 
@@ -172,5 +156,23 @@
     © 2025 LuKR. All rights reserved.
   </footer>
 
+  <script src="mangas-data.js"></script>
+  <script>
+    const oneshotsList = document.getElementById("oneshotsList");
+    const seriesList = document.getElementById("seriesList");
+
+    mangas.forEach(manga => {
+      const link = document.createElement("a");
+      link.className = "chapter-link";
+      link.href = manga.hub;
+      link.textContent = (manga.tag === "Oneshot" ? "🔥" : "🌟") + manga.title;
+
+      if (manga.tag === "Oneshot") {
+        oneshotsList.appendChild(link);
+      } else {
+        seriesList.appendChild(link);
+      }
+    });
+  </script>
 </body>
 </html>
