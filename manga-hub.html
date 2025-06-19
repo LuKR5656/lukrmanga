@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Manga - LuKR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background: #111; color: #fff; font-family: sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .chapter-list a {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #333;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    .chapter-list a:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="mangaTitle">Chargement...</h1>
+  <div class="chapter-list" id="chapterList"></div>
+
+  <script src="mangas-data.js"></script>
+  <script>
+    // Récupérer ID depuis l'URL
+    const params = new URLSearchParams(window.location.search);
+    const mangaId = params.get("id");
+
+    // Trouver le manga dans les données
+    const manga = mangas.find(m => m.id === mangaId);
+
+    if (manga) {
+      document.title = manga.title + " - LuKR";
+      document.getElementById("mangaTitle").textContent = manga.title;
+
+      const list = document.getElementById("chapterList");
+      manga.chapters.forEach((chapter, i) => {
+        const a = document.createElement("a");
+        a.href = chapter.path;
+        a.textContent = `Chapitre ${chapter.number} : ${chapter.title}`;
+        list.appendChild(a);
+      });
+    } else {
+      document.getElementById("mangaTitle").textContent = "Manga introuvable";
+    }
+  </script>
+</body>
+</html>
