@@ -292,7 +292,7 @@
         link.className = "chapter-link";
 
         // IMPORTANT : lien vers reader.html dans même dossier + chap id et lang
-        link.href = `reader.html?chap=${chap.id}&lang=${lang}&mode=vertical`;
+        link.href = `reader.html?chap=${chap.number}&lang=${lang}&mode=vertical`;
 
         // Affichage du titre du chapitre dans la langue, sinon fallback
         link.textContent = chap.title?.[lang] || "Chapitre";
