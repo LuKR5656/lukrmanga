@@ -42,7 +42,7 @@
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url("cover/bp-background.jpg"); /* dynamiquement modifié plus bas */
+      background-image: inherit;
       background-repeat: repeat-x;
       background-size: 150% 150%;
       background-position: 0 center;
@@ -276,8 +276,10 @@
       }
 
       // Fond dynamique selon le manga
-      document.querySelector("header::before");
-      document.querySelector("header").style.setProperty('--bg', `url('cover/${manga.id}-background.jpg')`);
+      document.querySelector("header").style.setProperty(
+        "backgroundImage",
+        `url('cover/${manga.id}-background.jpg')`
+      );
 
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
