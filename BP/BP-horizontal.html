@@ -152,48 +152,57 @@
     let currentIndex = 0;
     let images = [];
 
-    // Langue
+    // 1. Récupérer la langue depuis localStorage
     const lang = localStorage.getItem("lang") || "fr";
     langIndicator.textContent = lang === "fr" ? "Français" : "English";
 
-    // Chapitre
+    // 2. Récupérer le chapitre depuis l'URL
     const params = new URLSearchParams(window.location.search);
     const chapId = params.get("chap") || "chap1";
 
-    // Pages
+    // 3. Charger les images depuis bpPages
+    console.log("Langue détectée :", lang);
+    console.log("Chapitre demandé :", chapId);
+
     if (bpPages[chapId] && bpPages[chapId][lang]) {
-      images = [...bpPages[chapId][lang]].reverse(); // droite à gauche
+      images = [...bpPages[chapId][lang]];
+      console.log("Pages disponibles :", bpPages[chapId]);
+      console.log("Images chargées :", images);
     } else {
       alert("Chapitre introuvable.");
+      console.error("Chapitre introuvable :", chapId, "lang:", lang);
     }
 
     function updateSlide() {
       slide.src = images[currentIndex];
-      slide.alt = `Page ${images.length - currentIndex}`;
+      slide.alt = `Page ${currentIndex + 1}`;
       pageIndicator.textContent = `Page ${currentIndex + 1} / ${images.length}`;
     }
 
     container.addEventListener("click", (e) => {
+      if(navMode) {
+        navMode = false;
+        infoPanel.classList.remove("visible");
+        overlay.classList.remove("visible");
+        return;
+      }
+
       const rect = container.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const width = rect.width;
 
-      if (!navMode) {
-        if (clickX < width * 0.3 && currentIndex < images.length - 1) {
-          currentIndex++;
-          updateSlide();
-        } else if (clickX > width * 0.7 && currentIndex > 0) {
-          currentIndex--;
-          updateSlide();
-        } else {
-          navMode = !navMode;
-          infoPanel.classList.toggle("visible", navMode);
-          overlay.classList.toggle("visible", navMode);
-        }
+      // Pour lecture droite à gauche, clic gauche => page suivante (index++)
+      // clic droit => page précédente (index--)
+      if (clickX < width * 0.3 && currentIndex < images.length - 1) {
+        currentIndex++;
+        updateSlide();
+      } else if (clickX > width * 0.7 && currentIndex > 0) {
+        currentIndex--;
+        updateSlide();
       } else {
-        navMode = false;
-        infoPanel.classList.remove("visible");
-        overlay.classList.remove("visible");
+        navMode = true;
+        infoPanel.classList.add("visible");
+        overlay.classList.add("visible");
       }
     });
 
@@ -219,17 +228,15 @@
       setTimeout(() => {
         hint.style.display = "none";
       }, 2700);
+    });
 
-      // Ajout bouton mode de lecture
-      document.getElementById("toggleMode").addEventListener("click", () => {
-        const currentURL = window.location.href;
-
-        if (currentURL.includes("BP-horizontal")) {
-          window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
-        } else {
-          window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
-        }
-      });
+    document.getElementById("toggleMode").addEventListener("click", () => {
+      const currentURL = window.location.href;
+      if (currentURL.includes("BP-horizontal")) {
+        window.location.href = currentURL.replace("BP-horizontal", "BP-vertical");
+      } else {
+        window.location.href = currentURL.replace("BP-vertical", "BP-horizontal");
+      }
     });
   </script>
 </body>
