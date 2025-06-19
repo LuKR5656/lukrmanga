@@ -249,7 +249,7 @@
     // Récupère le paramètre id dans l'URL
     function getParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+      const mangaKey = urlParams.get('manga');
     }
 
     // Change la langue et reload la page
