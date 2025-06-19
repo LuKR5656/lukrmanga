@@ -288,7 +288,7 @@
         const link = document.createElement("a");
         link.className = "chapter-link";
         link.href = `reader/manga-reader.html?chap=${chap.id}&lang=${lang}&mode=vertical`;
-        link.textContent = chap.title;
+        link.textContent = chap.title?.[lang] || "Chapitre";
         chapterList.appendChild(link);
       });
 
