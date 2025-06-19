@@ -42,13 +42,13 @@
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-image: inherit;
       background-repeat: repeat-x;
       background-size: 150% 150%;
       background-position: 0 center;
       animation: scrollImages 75s linear infinite;
       filter: blur(6px);
       z-index: 0;
+      /* background-image sera injecté dynamiquement via JS */
     }
 
     .header-top {
@@ -275,11 +275,14 @@
         return;
       }
 
-      // Fond dynamique selon le manga
-      document.querySelector("header").style.setProperty(
-        "backgroundImage",
-        `url('cover/${manga.id}-background.jpg')`
-      );
+      // Injection CSS dynamique pour le background animé du header::before
+      const bgStyle = document.createElement("style");
+      bgStyle.innerHTML = `
+        header::before {
+          background-image: url('cover/${manga.id}-background.jpg');
+        }
+      `;
+      document.head.appendChild(bgStyle);
 
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
@@ -287,8 +290,13 @@
       manga.chapters.forEach(chap => {
         const link = document.createElement("a");
         link.className = "chapter-link";
+
+        // IMPORTANT : lien vers reader.html dans même dossier + chap id et lang
         link.href = `reader.html?chap=${chap.id}&lang=${lang}&mode=vertical`;
+
+        // Affichage du titre du chapitre dans la langue, sinon fallback
         link.textContent = chap.title?.[lang] || "Chapitre";
+
         chapterList.appendChild(link);
       });
 
