@@ -35,7 +35,6 @@
       display: block;
       margin: auto;
       user-select: none;
-      transition: opacity 0.3s ease;
     }
 
     /* CONTAINER FOR VERTICAL MODE */
@@ -306,21 +305,17 @@
     // --- Functions ---
 
     // Update slide for horizontal mode
-    function updateSlide() {
-      if (currentIndex < 0) currentIndex = 0;
-      if (currentIndex >= images.length) {
-        // Show popup end
-        showEndPopup();
-        currentIndex = images.length - 1;
-        return;
-      }
-      slide.style.opacity = 0;
-      setTimeout(() => {
-        slide.src = images[currentIndex];
-        slide.alt = `Page ${currentIndex + 1}`;
-        slide.style.opacity = 1;
-      }, 150);
-      updatePageIndicator();
+   function updateSlide() {
+    if (currentIndex >= images.length) {
+      currentIndex = images.length - 1; // corriger l'index
+      showEndPopup(); // montrer le popup
+      return;
+    }
+    if (currentIndex < 0) currentIndex = 0;
+       
+       slide.src = images[currentIndex];
+       slide.alt = `Page ${currentIndex + 1}`;
+       updatePageIndicator();
     }
 
     // Update page indicator text
@@ -386,9 +381,13 @@
       const width = rect.width;
 
       // Click left = next page
-      if (clickX < width * 0.3 && currentIndex < images.length - 1) {
-        currentIndex++;
-        updateSlide();
+      if (clickX < width * 0.3) {
+        if (currentIndex < images.length - 1) {
+          currentIndex++;
+          updateSlide();
+        } else {
+          showEndPopup(); // appeler endpopup si on est à la dernière page
+        }
       }
       // Click right = prev page
       else if (clickX > width * 0.7 && currentIndex > 0) {
@@ -478,7 +477,8 @@
     hint.style.opacity = 1;
     setTimeout(() => {
       hint.style.opacity = 0;
-    }, 5000);
+      hint.style.display = "none";
+    }, 2500);
 
     // Init display
     if (mode === "horizontal") {
