@@ -15,18 +15,18 @@
     }
 
     .vertical-container {
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       width: 100vw;
+      height: 100vh;
       overflow-y: auto;
       padding-bottom: 80px;
     }
 
     .vertical-container img {
-      max-width: 100vw;
+      width: 100%;
       height: auto;
-      margin: 10px 0;
     }
 
     .horizontal-container {
@@ -112,9 +112,9 @@
   <div class="horizontal-container" id="horizontalContainer">
     <img id="currentPageImage" src="" alt="Page">
     <div class="click-zones">
-      <div id="leftZone"></div>
-      <div id="centerZone"></div>
       <div id="rightZone"></div>
+      <div id="centerZone"></div>
+      <div id="leftZone"></div>
     </div>
   </div>
   <div class="hint-overlay" id="hint">
@@ -231,16 +231,16 @@
       loadAllPages();
 
       document.getElementById('centerZone').addEventListener('click', toggleNav);
-      document.getElementById('leftZone').addEventListener('click', () => {
-        if (currentPage < pages.length - 1) {
-          currentPage++;
+      document.getElementById('rightZone').addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
           currentPageImage.src = pages[currentPage];
           updatePageCounter();
         }
       });
-      document.getElementById('rightZone').addEventListener('click', () => {
-        if (currentPage > 0) {
-          currentPage--;
+      document.getElementById('leftZone').addEventListener('click', () => {
+        if (currentPage < pages.length - 1) {
+          currentPage++;
           currentPageImage.src = pages[currentPage];
           updatePageCounter();
         }
