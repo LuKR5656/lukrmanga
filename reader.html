@@ -186,7 +186,7 @@
       const { mangaTitle, chap } = chapterData;
       const chapTitle = chap.title?.[lang] || chap.title?.fr || "Sans titre";
       titleEl.textContent = `${mangaTitle} — ${chapTitle}`;
-      const basePath = `assets/mangas/${chapterId.split('-')[0]}/chap${chap.number}/${lang}`;
+      const basePath = `pages/${chapterId.split('-')[0]}/chap${chap.number}/${lang}`;
       let pages = [];
       let currentPage = 0;
 
