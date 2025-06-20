@@ -1,88 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Lecture Manga (Vertical)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Reader Manga Universel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background: #111;
-      font-family: sans-serif;
       color: #fff;
-      height: 100%;
-      overflow-x: hidden;
-    }
-
-    #reader {
-      display: flex;
-      flex-direction: row; /* horizontal */
-      justify-content: flex-end; /* commencer à droite */
-      width: 100vw;
+      font-family: sans-serif;
       height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    #reader {
+      flex: 1;
+      display: flex;
+      overflow: auto;
+      scroll-behavior: smooth;
+      background: #111;
+    }
+    /* Modes de lecture */
+    #reader.horizontal {
+      flex-direction: row;
+      justify-content: flex-end; /* Commence à droite */
       overflow-x: scroll;
       overflow-y: hidden;
-      scroll-behavior: smooth;
       scroll-snap-type: x mandatory;
     }
-    
+    #reader.vertical {
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+    }
     .page {
       scroll-snap-align: start;
       flex-shrink: 0;
-      width: 98vw;
-      height: 98vh;
+      background: #222;
+      margin: 5px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    
+    /* Dimensions pages selon mode */
+    #reader.horizontal .page {
+      width: 98vw;
+      height: 98vh;
+    }
+    #reader.vertical .page {
+      width: 100%;
+      height: auto;
+      max-height: 95vh;
+    }
     .page img {
+      max-width: 100%;
       max-height: 100%;
-      max-width: auto;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
     }
 
-
+    /* Overlay info */
     #info-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
       color: #eee;
-      display: none;
-      z-index: 20;
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 20px;
       box-sizing: border-box;
+      z-index: 50;
+      pointer-events: none;
     }
-
     #info-overlay.visible {
-      display: flex;
+      pointer-events: auto;
     }
-
     #info-text {
       font-size: 18px;
       line-height: 1.6;
-      margin-top: auto;
     }
-
     #page-counter {
-      font-size: 16px;
-      color: #ccc;
       font-family: monospace;
       font-weight: bold;
       margin-top: 10px;
+      font-size: 16px;
+      color: #ccc;
     }
-
     #info-buttons {
       align-self: flex-end;
       display: flex;
       gap: 10px;
     }
-
     #info-buttons button {
       padding: 8px 15px;
       font-size: 16px;
@@ -91,32 +106,31 @@
       background: #fff;
       color: #000;
       cursor: pointer;
-      transition: all 0.2s ease;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      user-select: none;
     }
-
     #info-buttons button:hover {
       background: #ddd;
     }
   </style>
 </head>
 <body>
-  <div id="reader"></div>
+  <div id="reader" class="horizontal"></div>
 
-  <div id="info-overlay" role="dialog" aria-modal="true">
+  <div id="info-overlay" class="visible" role="dialog" aria-modal="true" aria-label="Informations de lecture">
     <div id="info-text">
-      <strong id="manga-title">Titre Manga</strong><br>
-      Auteur : <span id="manga-author">Inconnu</span><br>
-      Chapitre : <span id="chapter-title">Titre Chapitre</span>
+      <strong id="manga-title">Titre Manga</strong><br />
+      Auteur : <span id="manga-author">Inconnu</span><br />
+      Chapitre : <span id="chapter-title">Chapitre</span>
       <div id="page-counter">Page 0 / 0</div>
     </div>
     <div id="info-buttons">
-      <button id="btn-back-to-hub">↩️ Retour</button>
-      <button id="btn-toggle-mode">Mode</button>
+      <button id="btn-back-to-hub" title="Retour à la liste">↩️ Retour</button>
+      <button id="btn-toggle-mode" title="Changer le mode de lecture">Mode</button>
+      <button id="btn-toggle-overlay" title="Afficher/Masquer les informations">Info</button>
     </div>
   </div>
 
-  <script src="mangas-data.js"></script>
   <script>
     const reader = document.getElementById("reader");
     const overlay = document.getElementById("info-overlay");
@@ -125,100 +139,146 @@
     const chapterElem = document.getElementById("chapter-title");
     const pageCounter = document.getElementById("page-counter");
 
+    // Récupérer les paramètres URL
     const urlParams = new URLSearchParams(window.location.search);
-    const chapId = urlParams.get('chap');
-    const lang = urlParams.get('lang') || 'fr';
+    const mangaId = urlParams.get('manga') || 'defaultManga';       // ID manga dans l'URL
+    const chapId = urlParams.get('chap') || 'chapter01';            // ID chapitre dans l'URL
+    const lang = urlParams.get('lang') || 'fr';                     // langue dans l'URL
+    const modeDefault = urlParams.get('mode') || 'horizontal';      // mode lecture
 
-    const chapter = mangas.flatMap(m => m.chapters.map(c => ({...c, manga: m}))).find(c => c.id === chapId);
-    let overlayTimeout = null;
+    // Exemple statique, à remplacer par ta vraie data (tu peux charger un JSON externe)
+    const mangasData = {
+      "defaultManga": {
+        title: "Titre Exemple",
+        author: "Auteur Exemple"
+      },
+      // Tu peux ajouter ici d’autres mangas...
+    };
 
     let totalPages = 0;
+    let currentPage = 1;
+    let maxPages = 100;  // limite max de pages à tester
 
-    function showOverlayTemporarily() {
-      overlay.classList.add("visible");
-      if (overlayTimeout) clearTimeout(overlayTimeout);
-      overlayTimeout = setTimeout(() => {
-        overlay.classList.remove("visible");
-      }, 3000);
+    // Appliquer infos manga
+    if (mangasData[mangaId]) {
+      titleElem.textContent = mangasData[mangaId].title;
+      authorElem.textContent = mangasData[mangaId].author;
     }
 
-    if (chapter) {
-      const folder = chapter.pages?.[lang] || chapter.pages?.fr;
-      titleElem.textContent = chapter.manga?.title || "Titre inconnu";
-      authorElem.textContent = chapter.manga?.author || "Inconnu";
-      chapterElem.textContent = chapter.title?.[lang] || "Chapitre";
-      loadImages(folder);
-    }
+    chapterElem.textContent = chapId;
 
-    async function loadImages(folder) {
-      let i = 1;
-      while (true) {
+    // Mode initial
+    reader.className = modeDefault;
+
+    // Fonction pour vérifier si une image existe (retourne une Promise)
+    function imageExists(url) {
+      return new Promise((resolve) => {
         const img = new Image();
-        const fileName = `${folder}${i.toString().padStart(3, '0')}.png`;
-        img.src = fileName;
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
+    }
 
-        try {
-          await img.decode();
-          const div = document.createElement("div");
-          div.className = "page";
-          div.appendChild(img);
-          reader.appendChild(div);
-          i++;
-        } catch (e) {
-          break;
-        }
+    async function loadPages() {
+      reader.innerHTML = "";
+      totalPages = 0;
+
+      for(let i=1; i<=maxPages; i++) {
+        const pageNumStr = i.toString().padStart(3,'0');
+        // Construire le chemin dynamique
+        const imgPath = `/mangas/${mangaId}/${chapId}/${lang}/${pageNumStr}.png`;
+        const exists = await imageExists(imgPath);
+        if (!exists) break; // Arrêter si pas trouvé
+
+        const div = document.createElement('div');
+        div.className = 'page';
+        const img = document.createElement('img');
+        img.src = imgPath;
+        img.alt = `Page ${i}`;
+        div.appendChild(img);
+        reader.appendChild(div);
+
+        totalPages++;
       }
-       totalPages = reader.children.length;
+
+      updatePageCounter();
+      scrollToPage(1);
+    }
+
+    // Scroll au bon endroit (selon mode)
+    function scrollToPage(page) {
+      currentPage = page;
+      const pages = reader.children;
+      if (pages.length === 0) return;
+      if (page < 1) page = 1;
+      if (page > totalPages) page = totalPages;
+
+      const target = pages[page - 1];
+      if (!target) return;
+
+      if(reader.classList.contains('horizontal')) {
+        reader.scrollLeft = target.offsetLeft;
+      } else {
+        reader.scrollTop = target.offsetTop;
+      }
+
       updatePageCounter();
     }
-    
-      reader.scrollLeft = reader.scrollWidth;
-    }
 
-
+    // Mise à jour compteur
     function updatePageCounter() {
-      const visible = getCurrentVisiblePage();
-      if (pageCounter) {
-        pageCounter.textContent = `Page ${visible} / ${totalPages}`;
-      }
+      pageCounter.textContent = `Page ${currentPage} / ${totalPages}`;
     }
 
-    function getCurrentVisiblePage() {
+    // Détection page visible au scroll
+    function detectVisiblePage() {
       const pages = Array.from(reader.children);
-      const scrollY = window.scrollY + window.innerHeight / 2;
-      for (let i = 0; i < pages.length; i++) {
-        const rect = pages[i].getBoundingClientRect();
-        const top = rect.top + window.scrollY;
-        const bottom = top + rect.height;
-        if (scrollY >= top && scrollY <= bottom) {
-          return i + 1;
+      let visiblePage = 1;
+      if (reader.classList.contains('horizontal')) {
+        const scrollLeft = reader.scrollLeft;
+        for(let i=0; i<pages.length; i++) {
+          if(pages[i].offsetLeft <= scrollLeft + pages[i].offsetWidth / 2) {
+            visiblePage = i + 1;
+          }
+        }
+      } else {
+        const scrollTop = reader.scrollTop;
+        for(let i=0; i<pages.length; i++) {
+          if(pages[i].offsetTop <= scrollTop + pages[i].offsetHeight / 2) {
+            visiblePage = i + 1;
+          }
         }
       }
-      return 1;
+      currentPage = visiblePage;
+      updatePageCounter();
     }
 
-    document.addEventListener("scroll", updatePageCounter);
-
-    document.addEventListener("click", (e) => {
-      if (overlay.contains(e.target)) {
-        // clic sur l'overlay => toggle
-        overlay.classList.toggle("visible");
-      } else {
-        // clic hors overlay => toggle aussi
-        overlay.classList.toggle("visible");
-      }
+    reader.addEventListener('scroll', () => {
+      detectVisiblePage();
     });
 
-
-    document.getElementById("btn-back-to-hub").onclick = () => {
+    // Boutons
+    document.getElementById('btn-back-to-hub').onclick = () => {
       window.location.href = "manga-hub.html";
     };
-
-    document.getElementById("btn-toggle-mode").onclick = () => {
-      const current = window.location.href;
-      const newUrl = current.replace("reader-vertical.html", "reader-horizontal.html");
-      window.location.href = newUrl;
+    document.getElementById('btn-toggle-mode').onclick = () => {
+      if (reader.classList.contains('horizontal')) {
+        reader.classList.remove('horizontal');
+        reader.classList.add('vertical');
+      } else {
+        reader.classList.remove('vertical');
+        reader.classList.add('horizontal');
+      }
+      // Scroll à la page courante après changement mode
+      scrollToPage(currentPage);
     };
+    document.getElementById('btn-toggle-overlay').onclick = () => {
+      overlay.classList.toggle('visible');
+    };
+
+    // Charger au démarrage
+    loadPages();
   </script>
 </body>
 </html>
