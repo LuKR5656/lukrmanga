@@ -267,14 +267,14 @@
     // Zones de clic
     document.getElementById("left-zone").addEventListener("click", nextPage);
     document.getElementById("right-zone").addEventListener("click", prevPage);
-    document.getElementById("center-zone").addEventListener("click", showInfoOverlay);
-    });
-
-    // Fermer overlay si on clique hors des boutons
-    document.body.addEventListener("click", e => {
-      if (!e.target.closest("#info-overlay") && !e.target.closest("#center-zone")) {
+    document.getElementById("center-zone").addEventListener("click", () => {
+      const isVisible = infoOverlay.style.display === "flex";
+    
+      if (isVisible) {
         infoOverlay.style.display = "none";
         clearTimeout(overlayTimeout);
+      } else {
+        showInfoOverlay();
       }
     });
 
