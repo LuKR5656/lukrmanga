@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Lecteur Manga</title>
   <style>
     * { box-sizing: border-box; }
@@ -11,25 +11,22 @@
       color: #fff;
       font-family: sans-serif;
       overflow: hidden;
+      position: relative;
     }
 
-    .title {
-      display: none;
-    }
-
-    .image-container {
+    .vertical-container {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100vw;
+      overflow-y: auto;
       padding-bottom: 80px;
     }
 
-    .image-container img {
+    .vertical-container img {
       max-width: 100vw;
       height: auto;
       margin: 10px 0;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     .horizontal-container {
@@ -42,8 +39,8 @@
     }
 
     .horizontal-container img {
-      max-width: 100%;
       max-height: 90vh;
+      max-width: 100vw;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
@@ -51,27 +48,27 @@
     .click-zones {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 100%;
       height: 100%;
+      width: 100%;
       display: flex;
+      justify-content: space-between;
     }
 
     .click-zones div {
       flex: 1;
     }
 
-    .hint-zone {
+    .hint-overlay {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 999;
+      z-index: 1000;
       animation: blinkHint 1.2s infinite;
     }
 
-    .hint-zone img {
-      width: 150px;
+    .hint-overlay img {
+      width: 120px;
     }
 
     @keyframes blinkHint {
@@ -85,171 +82,169 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 998;
+      z-index: 999;
     }
 
     .nav-button {
-      margin: 10px;
       padding: 10px 20px;
-      font-size: 1em;
-      background: #333;
-      color: #fff;
+      margin: 10px;
+      font-size: 1.2em;
+      background: #444;
+      color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    .nav-button:hover {
-      background: #555;
-    }
-
     .page-counter, .chapter-title {
-      margin: 5px 0;
+      margin: 10px;
+      font-size: 1.1em;
     }
   </style>
 </head>
 <body>
-  <div class="image-container" id="pagesContainer"></div>
-
+  <div class="vertical-container" id="verticalContainer"></div>
   <div class="horizontal-container" id="horizontalContainer">
-    <img id="currentPageImage" src="" alt="Page" />
+    <img id="currentPageImage" src="" alt="Page">
     <div class="click-zones">
-      <div id="rightZone"></div>
-      <div id="centerZone"></div>
       <div id="leftZone"></div>
+      <div id="centerZone"></div>
+      <div id="rightZone"></div>
     </div>
   </div>
-
-  <div class="hint-zone" id="hintZone">
-    <img id="hintImage" src="" alt="Hint" />
+  <div class="hint-overlay" id="hint">
+    <img id="hintImage" src="" alt="Hint">
   </div>
-
   <div class="nav-overlay" id="navOverlay">
     <div class="chapter-title" id="chapterTitle"></div>
     <div class="page-counter" id="pageCounter"></div>
-    <button class="nav-button" id="backButton"></button>
-    <button class="nav-button" id="modeButton"></button>
+    <button class="nav-button" onclick="goBack()" id="backBtn">↩️Retour</button>
+    <button class="nav-button" onclick="switchMode()" id="modeBtn">📖Changer le mode de lecture📜</button>
   </div>
-
   <script src="mangas-data.js"></script>
   <script>
-    const lang = new URLSearchParams(location.search).get("lang") || "fr";
-    const chapterId = new URLSearchParams(location.search).get("chap");
-    let mode = new URLSearchParams(location.search).get("mode") || "vertical";
+    const getParam = key => new URLSearchParams(location.search).get(key);
+    const chapterId = getParam('chap');
+    const lang = getParam('lang') || 'fr';
+    let mode = getParam('mode') || 'vertical';
 
-    const texts = {
-      fr: { back: "Retour", switch: "Changer le mode", end: "Fin du chapitre." },
-      en: { back: "Back", switch: "Switch mode", end: "End of chapter." }
+    const verticalContainer = document.getElementById('verticalContainer');
+    const horizontalContainer = document.getElementById('horizontalContainer');
+    const currentPageImage = document.getElementById('currentPageImage');
+    const hint = document.getElementById('hint');
+    const hintImage = document.getElementById('hintImage');
+    const navOverlay = document.getElementById('navOverlay');
+    const chapterTitle = document.getElementById('chapterTitle');
+    const pageCounter = document.getElementById('pageCounter');
+
+    const langStrings = {
+      fr: { back: '↩️Retour', switch: '📖Changer le mode de lecture📜' },
+      en: { back: '↩️Back', switch: '📖Switch reading mode📜' }
     };
 
-    const backButton = document.getElementById("backButton");
-    const modeButton = document.getElementById("modeButton");
-    const pageCounter = document.getElementById("pageCounter");
-    const chapterTitle = document.getElementById("chapterTitle");
-    const navOverlay = document.getElementById("navOverlay");
-    const hintZone = document.getElementById("hintZone");
-    const hintImage = document.getElementById("hintImage");
+    document.getElementById('backBtn').textContent = langStrings[lang]?.back || '↩️Retour';
+    document.getElementById('modeBtn').textContent = langStrings[lang]?.switch || '📖Changer le mode de lecture📜';
 
-    hintImage.src = mode === "horizontal" ? "assets/hint-hor.png" : "assets/hint-ver.png";
-    setTimeout(() => hintZone.style.display = "none", 2500);
+    hintImage.src = `assets/hint-${mode === 'horizontal' ? 'horizontal' : 'vertical'}.png`;
+    setTimeout(() => hint.style.display = 'none', 2500);
 
-    backButton.textContent = texts[lang].back;
-    modeButton.textContent = texts[lang].switch;
+    let pages = [];
+    let currentPage = 0;
 
-    modeButton.onclick = () => {
-      const newMode = mode === "vertical" ? "horizontal" : "vertical";
-      const url = new URL(location.href);
-      url.searchParams.set("mode", newMode);
-      window.location.href = url.toString();
-    };
-
-    let pages = [], currentPage = 0;
-    const horizontalContainer = document.getElementById("horizontalContainer");
-    const currentPageImage = document.getElementById("currentPageImage");
-    const pagesContainer = document.getElementById("pagesContainer");
-
-    document.body.addEventListener("click", (e) => {
-      if (mode === "horizontal") return;
-      navOverlay.style.display = navOverlay.style.display === "flex" ? "none" : "flex";
-    });
-
-    document.getElementById("centerZone").addEventListener("click", () => {
-      navOverlay.style.display = navOverlay.style.display === "flex" ? "none" : "flex";
-    });
-
-    document.getElementById("leftZone").addEventListener("click", () => {
-      if (currentPage < pages.length - 1) {
-        currentPage++;
-        updateHorizontalView();
-      }
-    });
-
-    document.getElementById("rightZone").addEventListener("click", () => {
-      if (currentPage > 0) {
-        currentPage--;
-        updateHorizontalView();
-      }
-    });
-
-    function updateHorizontalView() {
-      currentPageImage.src = pages[currentPage];
-      pageCounter.textContent = `${currentPage + 1}/${pages.length}`;
-    }
-
-    backButton.onclick = () => {
+    const chapterData = (() => {
       for (const manga of mangas) {
         for (const chap of manga.chapters) {
-          if (chap.id === chapterId) {
-            window.location.href = `manga-hub.html#manga-${manga.id}`;
-            return;
-          }
+          if (chap.id === chapterId) return { manga, chap };
         }
       }
-      window.location.href = "manga-hub.html";
-    };
+      return null;
+    })();
 
-    for (const manga of mangas) {
-      for (const chap of manga.chapters) {
-        if (chap.id === chapterId) {
-          chapterTitle.textContent = `${manga.title} — ${chap.title[lang] || chap.title.fr}`;
-          const basePath = `pages/${manga.id}/chap${chap.number}/${lang}`;
-
-          function load(i = 1) {
-            const img = new Image();
-            const path = `${basePath}/page${i}.png`;
-            img.src = path;
-            img.onload = () => {
-              pages.push(path);
-              load(i + 1);
-            };
-            img.onerror = () => {
-              if (mode === "vertical") {
-                pages.forEach(src => {
-                  const im = document.createElement("img");
-                  im.src = src;
-                  pagesContainer.appendChild(im);
-                });
-                const end = document.createElement("p");
-                end.textContent = texts[lang].end;
-                end.style.margin = "40px";
-                end.style.fontSize = "1.5em";
-                pagesContainer.appendChild(end);
-              } else {
-                pagesContainer.style.display = "none";
-                horizontalContainer.style.display = "flex";
-                updateHorizontalView();
-              }
-            };
-          }
-
-          load();
-        }
+    function goBack() {
+      if (chapterData?.manga?.id) {
+        window.location.href = `manga-hub.html?manga=${chapterData.manga.id}`;
+      } else {
+        window.location.href = 'manga-hub.html';
       }
+    }
+
+    function switchMode() {
+      const url = new URL(location.href);
+      url.searchParams.set('mode', mode === 'vertical' ? 'horizontal' : 'vertical');
+      location.href = url.toString();
+    }
+
+    function toggleNav() {
+      navOverlay.style.display = navOverlay.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    if (chapterData) {
+      const { manga, chap } = chapterData;
+      const basePath = `pages/${manga.id}/chap${chap.number}/${lang}`;
+
+      const loadPage = (index, callback) => {
+        const img = new Image();
+        const path = `${basePath}/page${index}.png`;
+        img.src = path;
+        img.onload = () => callback(path, true);
+        img.onerror = () => callback(path, false);
+      };
+
+      const loadAllPages = (i = 1) => {
+        loadPage(i, (path, ok) => {
+          if (ok) {
+            pages.push(path);
+            loadAllPages(i + 1);
+          } else {
+            renderPages();
+          }
+        });
+      };
+
+      const renderPages = () => {
+        chapterTitle.textContent = `${manga.title} — ${chap.title?.[lang] || chap.title?.fr || ''}`;
+        if (mode === 'vertical') {
+          verticalContainer.style.display = 'flex';
+          horizontalContainer.style.display = 'none';
+          pages.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            verticalContainer.appendChild(img);
+          });
+        } else {
+          verticalContainer.style.display = 'none';
+          horizontalContainer.style.display = 'flex';
+          currentPageImage.src = pages[currentPage];
+          updatePageCounter();
+        }
+      };
+
+      function updatePageCounter() {
+        pageCounter.textContent = `${currentPage + 1} / ${pages.length}`;
+      }
+
+      loadAllPages();
+
+      document.getElementById('centerZone').addEventListener('click', toggleNav);
+      document.getElementById('leftZone').addEventListener('click', () => {
+        if (currentPage < pages.length - 1) {
+          currentPage++;
+          currentPageImage.src = pages[currentPage];
+          updatePageCounter();
+        }
+      });
+      document.getElementById('rightZone').addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          currentPageImage.src = pages[currentPage];
+          updatePageCounter();
+        }
+      });
     }
   </script>
 </body>
