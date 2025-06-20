@@ -108,7 +108,7 @@
   <div class="nav-overlay" id="navOverlay">
     <div class="chapter-title" id="chapterTitle"></div>
     <div class="page-counter" id="pageCounter"></div>
-    <button class="nav-button" onclick="goBack()" id="backBtn">Retour</button>
+    <button class="nav-button" onclick="goBack()" id="backBtn">↩️Retour</button>
     <button class="nav-button" onclick="switchMode()" id="modeBtn">Changer le mode</button>
   </div>
 
@@ -134,7 +134,7 @@
     document.getElementById('backBtn').textContent = langStrings[lang]?.back || 'Retour';
     document.getElementById('modeBtn').textContent = langStrings[lang]?.switch || 'Changer le mode';
 
-    hintImage.src = `assets/hint-horizontal.png`;
+    hintImage.src = `assets/hint-hor.png`;
     setTimeout(() => hint.style.display = 'none', 2500);
 
     let pages = [];
