@@ -47,8 +47,8 @@ const mangas = [
         },
         path: "reader-horizontal.html",
         pages: {
-          fr: "assets/mangas/eldorado/chap1/fr/",
-          en: "assets/mangas/eldorado/chap1/en/"
+          fr: "pages/el/chap1/fr/",
+          en: "pages/el/chap1/en/"
         }
       },
       {
@@ -60,8 +60,8 @@ const mangas = [
         },
         path: "reader-horizontal.html",
         pages: {
-          fr: "assets/mangas/eldorado/chap2/fr",
-          en: "assets/mangas/eldorado/chap2/en/"
+          fr: "pages/el/chap2/fr/",
+          en: "pages/el/chap2/en/"
         }
       }
     ],
