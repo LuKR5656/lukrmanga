@@ -180,6 +180,18 @@
     const chapterElem = document.getElementById("chapter-title");
     const pageCounter = document.getElementById('page-counter');
 
+    let overlayTimeout;
+
+    function showInfoOverlay() {
+      infoOverlay.style.display = "flex";
+    
+      if (overlayTimeout) clearTimeout(overlayTimeout);
+    
+      overlayTimeout = setTimeout(() => {
+        infoOverlay.style.display = "none";
+      }, 3000);
+    }
+
     let currentIndex = 0;
 
     if (chapter) {
@@ -260,9 +272,10 @@
     });
 
     // Fermer overlay si on clique hors des boutons
-    infoOverlay.addEventListener("click", e => {
-      if (!e.target.closest("#info-buttons")) {
+    document.body.addEventListener("click", e => {
+      if (!e.target.closest("#info-overlay") && !e.target.closest("#center-zone")) {
         infoOverlay.style.display = "none";
+        clearTimeout(overlayTimeout);
       }
     });
 
