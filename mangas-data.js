@@ -18,8 +18,8 @@ const mangas = [
         },
         path: "reader-horizontal.html",
         pages: {
-          fr: "pages/bp/fr/",
-          en: "pages/bp/en/"
+          fr: "pages/bp/chap1/fr/",
+          en: "pages/bp/chap1/en/"
         }
       }
     ],
@@ -42,12 +42,12 @@ const mangas = [
         id: "eldorado-1",
         number: 1,
         title: {
-          fr: "Départ",
-          en: "Departure"
+          fr: "Le Nouveau Monde",
+          en: "the New World"
         },
         path: "reader-horizontal.html",
         pages: {
-          fr: "assets/mangas/eldorado/chap1/",
+          fr: "assets/mangas/eldorado/chap1/fr/",
           en: "assets/mangas/eldorado/chap1/en/"
         }
       },
@@ -60,7 +60,7 @@ const mangas = [
         },
         path: "reader-horizontal.html",
         pages: {
-          fr: "assets/mangas/eldorado/chap2/",
+          fr: "assets/mangas/eldorado/chap2/fr",
           en: "assets/mangas/eldorado/chap2/en/"
         }
       }
