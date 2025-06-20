@@ -228,7 +228,7 @@
       }
     }
 
-    function nextPage() {
+    function prevnextPage() {
       if (currentIndex > 0) {
         currentIndex--;
         reader.scrollTo({ left: reader.children[currentIndex].offsetLeft, behavior: 'smooth' });
@@ -236,7 +236,7 @@
       }
     }
 
-    function prevPage() {
+    function nextPage() {
       if (currentIndex < reader.children.length - 1) {
         currentIndex++;
         reader.scrollTo({ left: reader.children[currentIndex].offsetLeft, behavior: 'smooth' });
