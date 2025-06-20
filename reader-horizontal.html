@@ -62,42 +62,54 @@
       background: #fff;
       transform: scale(1.05);
     }
-
+      
     #info-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      /* Dégradé transparent comme sur ton croquis */
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
+      /* On enlève le blur car ça rend la lecture moins claire */
+      /* backdrop-filter: blur(8px); */
       color: #eee;
       display: none;
       z-index: 20;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      justify-content: space-between; /* Espace entre contenu et boutons */
+      padding: 20px;
+      box-sizing: border-box;
     }
-
-    #info-text {
-      margin-bottom: 30px;
+    
+     #info-text {
       font-size: 18px;
       line-height: 1.6;
+      margin-top: auto; /* pousse vers le bas */
+    }
+    
+     #info-text > div {
+      margin-bottom: 10px;
     }
 
-    #page-counter {
-      margin-top: 15px;
+     #page-counter {
       font-size: 20px;
       color: #ccc;
       font-family: monospace;
       font-weight: bold;
+      margin-top: 20px;
     }
 
+     #info-buttons {
+      align-self: flex-end; /* boutons alignés en bas à droite */
+      display: flex;
+      gap: 10px;
+    }
+
+
     #info-buttons button {
-      margin: 10px;
-      padding: 10px 20px;
+      padding: 8px 15px;
       font-size: 16px;
       border-radius: 8px;
       border: none;
@@ -105,6 +117,7 @@
       color: #000;
       cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
 
     #info-buttons button:hover {
@@ -146,14 +159,14 @@
 
   <div id="info-overlay" role="dialog" aria-modal="true">
     <div id="info-text">
-      <div><strong id="manga-title">Titre Manga</strong></div>
-      <div>Auteur : <span id="manga-author">Inconnu</span></div>
-      <div>Chapitre : <span id="chapter-title">Titre Chapitre</span></div>
+      <strong id="manga-title">Titre Manga</strong><br>
+      Auteur : <span id="manga-author">Inconnu</span><br>
+      Chapitre : <span id="chapter-title">Titre Chapitre</span>
       <div id="page-counter">Page 1 / 1</div>
     </div>
     <div id="info-buttons">
-      <button id="btn-back-to-hub">↩️ Manga Hub</button>
-      <button id="btn-toggle-mode">📜 Changer mode</button>
+      <button id="btn-back-to-hub">↩️ Retour</button>
+      <button id="btn-toggle-mode">Mode</button>
     </div>
   </div>
 
