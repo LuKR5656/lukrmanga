@@ -13,7 +13,6 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      overflow-x: hidden;
     }
 
     .image-container {
@@ -25,17 +24,43 @@
     }
 
     .image-container img {
-      max-width: 100%;
+      max-width: 100vw;
       max-height: 95vh;
       height: auto;
       margin: 10px 0;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     .title {
       margin: 20px 0;
       font-size: 2em;
+      text-align: center;
+    }
+
+    .hint-zone {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      opacity: 0.9;
+      animation: blinkHint 1.2s infinite;
+    }
+
+    .hint-zone img {
+      width: 100px;
+      height: auto;
+    }
+
+    @keyframes blinkHint {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .hint-zone img {
+        width: 70px;
+      }
     }
 
     .nav-overlay {
@@ -43,63 +68,26 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 20px;
       z-index: 999;
     }
 
-    .nav-overlay.hidden {
-      display: none;
-    }
-
-    .nav-overlay button {
-      background: #333;
-      color: white;
-      border: none;
+    .nav-button {
       padding: 10px 15px;
-      border-radius: 6px;
+      background: #333;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1em;
       cursor: pointer;
-      width: 80%;
-      max-width: 300px;
     }
 
-    .nav-overlay button:hover {
+    .nav-button:hover {
       background: #555;
-    }
-
-    .nav-hint {
-      animation: blink 1.2s infinite;
-      height: 50px;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      .nav-hint {
-        height: 40px;
-      }
-    }
-
-    /* Overlay backdrop when menu is visible */
-    .backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 998;
-    }
-
-    .backdrop.hidden {
-      display: none;
     }
   </style>
 </head>
@@ -107,13 +95,16 @@
   <div class="title" id="chapterTitle">Chargement...</div>
   <div class="image-container" id="pagesContainer"></div>
 
-  <!-- Menu navigation -->
-  <div id="navOverlay" class="nav-overlay hidden">
-    <button onclick="switchMode()">Changer de mode</button>
-    <button onclick="goToSelection()">Retour aux chapitres</button>
-    <img id="hintImage" src="" alt="Hint" class="nav-hint" />
+  <!-- Hint -->
+  <div id="hintZone" class="hint-zone">
+    <img id="hintImage" src="" alt="Hint" />
   </div>
-  <div id="backdrop" class="backdrop hidden"></div>
+
+  <!-- Navigation overlay -->
+  <div class="nav-overlay">
+    <button class="nav-button" onclick="goBack()">Retour</button>
+    <button class="nav-button" onclick="switchMode()">Changer le mode</button>
+  </div>
 
   <script src="mangas-data.js"></script>
   <script>
@@ -124,20 +115,36 @@
 
     const chapterId = getParam("chap");
     const lang = getParam("lang") || "fr";
-    const mode = getParam("mode") || "vertical";
+    let mode = getParam("mode") || "vertical";
 
     const pagesContainer = document.getElementById("pagesContainer");
     const chapterTitle = document.getElementById("chapterTitle");
-    const navOverlay = document.getElementById("navOverlay");
-    const hintImage = document.getElementById("hintImage");
-    const backdrop = document.getElementById("backdrop");
 
-    // Sélection du hint selon le mode
+    const hintZone = document.getElementById("hintZone");
+    const hintImage = document.getElementById("hintImage");
+
     hintImage.src = mode === "horizontal"
       ? "assets/hint-horizontal.png"
       : "assets/hint-vertical.png";
     hintImage.alt = mode === "horizontal" ? "Hint horizontal" : "Hint vertical";
 
+    // Masquer le hint après 5 secondes
+    setTimeout(() => {
+      hintZone.style.display = "none";
+    }, 5000);
+
+    function goBack() {
+      window.location.href = "manga-hub.html";
+    }
+
+    function switchMode() {
+      const newMode = mode === "vertical" ? "horizontal" : "vertical";
+      const url = new URL(window.location.href);
+      url.searchParams.set("mode", newMode);
+      window.location.href = url.toString();
+    }
+
+    // Récupérer les données du chapitre
     const chapterData = (() => {
       for (const manga of mangas) {
         for (const chap of manga.chapters) {
@@ -153,54 +160,37 @@
       chapterTitle.textContent = "Chapitre introuvable.";
     } else {
       const { mangaTitle, chap } = chapterData;
-      chapterTitle.textContent = `${mangaTitle} — ${chap.title?.[lang] || chap.title?.fr || chap.title}`;
+      const chapTitle = chap.title?.[lang] || chap.title?.fr || "Sans titre";
+      chapterTitle.textContent = `${mangaTitle} — ${chapTitle}`;
 
-      const baseName = mangaTitle.replace(/\s+/g, '');
-      const basePath = `assets/mangas/${baseName}/chap${chap.number}`;
-      const langPath = lang === "fr" ? "" : `/${lang}`;
-      const fullPath = `${basePath}${langPath}`;
+      const basePath = `assets/mangas/${chapterId.split('-')[0]}/chap${chap.number}`;
+      const langPath = `${basePath}/${lang}`;
+      let pageNum = 1;
 
-      let index = 1;
-      let pageFound = false;
-
-      function tryLoadPage() {
+      const loadImage = () => {
+        const imagePath = `${langPath}/page${pageNum}.png`;
         const img = new Image();
-        const src = `${fullPath}/page${index}.png`;
-        img.src = src;
+        img.src = imagePath;
         img.onload = () => {
           pagesContainer.appendChild(img);
-          index++;
-          pageFound = true;
-          tryLoadPage();
+          pageNum++;
+          loadImage(); // Charger la suivante
         };
         img.onerror = () => {
-          if (!pageFound) {
-            const end = document.createElement("p");
-            end.textContent = "Fin du chapitre.";
-            end.style.margin = "20px";
-            end.style.opacity = "0.7";
-            pagesContainer.appendChild(end);
+          if (pageNum === 1) {
+            pagesContainer.innerHTML = "<p>Pas de pages disponibles.</p>";
+          } else {
+            const endMsg = document.createElement("p");
+            endMsg.textContent = "Fin du chapitre.";
+            endMsg.style.margin = "40px";
+            endMsg.style.fontSize = "1.5em";
+            pagesContainer.appendChild(endMsg);
           }
         };
-      }
+      };
 
-      tryLoadPage();
+      loadImage();
     }
-
-    function switchMode() {
-      const newMode = mode === "vertical" ? "horizontal" : "vertical";
-      const url = `reader.html?chap=${chapterId}&lang=${lang}&mode=${newMode}`;
-      window.location.href = url;
-    }
-
-    function goToSelection() {
-      window.location.href = "manga-hub.html";
-    }
-
-    document.body.addEventListener("click", () => {
-      navOverlay.classList.toggle("hidden");
-      backdrop.classList.toggle("hidden");
-    });
   </script>
 </body>
 </html>
