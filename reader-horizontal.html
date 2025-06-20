@@ -183,7 +183,7 @@
     const titleElem = document.getElementById("manga-title");
     const authorElem = document.getElementById("manga-author");
     const chapterElem = document.getElementById("chapter-title");
-    const pageCounter = document.getElementById("page-counter");
+    const pageCounter = document.getElementById('page-counter');
 
     let currentIndex = 0;
 
@@ -210,7 +210,9 @@
     function updatePageNumber() {
       const total = reader.children.length;
       const pageNum = currentIndex + 1;
-      pageCounter.textContent = `Page ${pageNum} / ${total}`;
+      if (pageCounter) {
+        pageCounter.textContent = `Page ${pageNum} / ${total}`;
+      }
     }
 
     function nextPage() {
