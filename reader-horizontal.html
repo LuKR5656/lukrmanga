@@ -106,20 +106,20 @@
     const urlParams = new URLSearchParams(window.location.search);
     const chapId = urlParams.get('chap');
     const lang = urlParams.get('lang') || 'fr';
-
+  
     const reader = document.getElementById('reader');
     const btnBack = document.getElementById('btn-back');
     const btnToggleMode = document.getElementById('btn-toggle-mode');
     const pageCounter = document.getElementById('page-counter');
-
+  
     let totalPages = 0;
-    let currentPage = 1;
+    let currentPage = 0;
     let verticalMode = false;
-
-    // Recherche du manga et chapitre dans mangas-data.js
+    let pages = [];
+  
     let manga = null;
     let chapter = null;
-
+  
     for (const m of mangas) {
       const c = m.chapters.find(ch => ch.id === chapId);
       if (c) {
@@ -128,102 +128,106 @@
         break;
       }
     }
-
+  
     if (!chapter) {
       reader.innerHTML = "<p style='color:red; text-align:center; padding:20px;'>Chapitre introuvable.</p>";
     } else {
       loadPages();
     }
-
+  
     async function loadPages() {
       const folder = chapter.pages[lang] || chapter.pages['fr'];
       let i = 1;
-
+  
       while (true) {
         const img = new Image();
-        // Construire le chemin complet de l'image (ex: pages/bp/chap1/fr/001.png)
         const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
         img.src = fileName;
-
+  
         try {
           await img.decode();
-
+  
           const pageDiv = document.createElement('div');
           pageDiv.className = 'page';
           pageDiv.appendChild(img);
           reader.appendChild(pageDiv);
-
+  
           i++;
         } catch (e) {
           break;
         }
       }
-      totalPages = reader.children.length;
+  
+      pages = Array.from(reader.children);
+      totalPages = pages.length;
+  
+      // Lecture horizontale : bloquer scroll et afficher la dernière page
+      if (!verticalMode) {
+        reader.style.overflow = 'hidden';
+        currentPage = totalPages - 1;
+        goToPage(currentPage);
+      }
+  
       updatePageCounter();
-
-      // Scroll initial à droite (début du manga en lecture horizontale droite->gauche)
-      reader.scrollLeft = reader.scrollWidth;
     }
-
+  
     function updatePageCounter() {
-      if (totalPages === 0) {
-        pageCounter.textContent = "Page 0 / 0";
-        return;
-      }
-
-      const pages = Array.from(reader.children);
-      let visibleIndex = 1;
-
-      if (verticalMode) {
-        const scrollPos = reader.scrollTop + window.innerHeight / 2;
-        for (let i = 0; i < pages.length; i++) {
-          const pageTop = pages[i].offsetTop;
-          const pageBottom = pageTop + pages[i].offsetHeight;
-          if (scrollPos >= pageTop && scrollPos <= pageBottom) {
-            visibleIndex = i + 1;
-            break;
-          }
-        }
-      } else {
-        const scrollPos = reader.scrollLeft + window.innerWidth / 2;
-        for (let i = 0; i < pages.length; i++) {
-          const pageLeft = pages[i].offsetLeft;
-          const pageRight = pageLeft + pages[i].offsetWidth;
-          if (scrollPos >= pageLeft && scrollPos <= pageRight) {
-            visibleIndex = i + 1;
-            break;
-          }
-        }
-      }
-
-      currentPage = visibleIndex;
-      pageCounter.textContent = `Page ${currentPage} / ${totalPages}`;
+      pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
     }
-
-    reader.addEventListener('scroll', updatePageCounter);
-
+  
+    function goToPage(index) {
+      index = Math.max(0, Math.min(index, totalPages - 1));
+      currentPage = index;
+  
+      const page = pages[currentPage];
+      if (page) {
+        page.scrollIntoView({ behavior: "smooth", inline: "center", block: "center" });
+      }
+  
+      updatePageCounter();
+    }
+  
+    // Changer de mode
     btnToggleMode.onclick = () => {
       verticalMode = !verticalMode;
+  
       if (verticalMode) {
         reader.classList.add('vertical');
+        reader.style.overflow = 'auto';
         btnToggleMode.textContent = "Mode lecture : Vertical";
         reader.scrollTop = 0;
       } else {
         reader.classList.remove('vertical');
+        reader.style.overflow = 'hidden';
         btnToggleMode.textContent = "Mode lecture : Horizontal";
-        reader.scrollLeft = reader.scrollWidth;
+        goToPage(currentPage);
       }
+  
       updatePageCounter();
     };
-
+  
+    // Retour
     btnBack.onclick = () => {
       if (manga) {
-        const url = `manga-hub.html?manga=${encodeURIComponent(manga.id)}`;
-        window.location.href = url;
+        window.location.href = `manga-hub.html?manga=${encodeURIComponent(manga.id)}`;
       } else {
         window.location.href = "manga-hub.html";
       }
     };
+  
+    // Clic gauche/droite (mode horizontal uniquement)
+    document.addEventListener("click", (e) => {
+      if (verticalMode) return;
+  
+      const clickX = e.clientX;
+      const screenWidth = window.innerWidth;
+  
+      if (clickX < screenWidth * 0.3) {
+        goToPage(currentPage + 1); // Aller à la page précédente (car lecture de droite à gauche)
+      } else if (clickX > screenWidth * 0.7) {
+        goToPage(currentPage - 1); // Aller à la page suivante
+      }
+    });
   </script>
 </body>
 </html>
