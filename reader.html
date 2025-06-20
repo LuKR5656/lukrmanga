@@ -21,7 +21,7 @@
       flex-direction: column;
       align-items: center;
       max-width: 100%;
-      margin-bottom: 50px;
+      margin-bottom: 100px;
     }
 
     .image-container img {
@@ -38,45 +38,68 @@
       font-size: 2em;
     }
 
-    .nav-menu {
+    .nav-overlay {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.9);
-      padding: 10px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 20px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      z-index: 1000;
+      gap: 10px;
+      z-index: 999;
     }
 
-    .nav-menu.hidden {
+    .nav-overlay.hidden {
       display: none;
     }
 
-    .nav-menu button {
+    .nav-overlay button {
       background: #333;
       color: white;
       border: none;
       padding: 10px 15px;
-      margin: 0 10px;
       border-radius: 6px;
       cursor: pointer;
+      width: 80%;
+      max-width: 300px;
     }
 
-    .nav-menu button:hover {
+    .nav-overlay button:hover {
       background: #555;
     }
 
-    .hint-img {
+    .nav-hint {
+      animation: blink 1.2s infinite;
       height: 50px;
     }
 
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
     @media (max-width: 600px) {
-      .hint-img {
+      .nav-hint {
         height: 40px;
       }
+    }
+
+    /* Overlay backdrop when menu is visible */
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 998;
+    }
+
+    .backdrop.hidden {
+      display: none;
     }
   </style>
 </head>
@@ -85,16 +108,12 @@
   <div class="image-container" id="pagesContainer"></div>
 
   <!-- Menu navigation -->
-  <div id="navMenu" class="nav-menu hidden">
+  <div id="navOverlay" class="nav-overlay hidden">
     <button onclick="switchMode()">Changer de mode</button>
     <button onclick="goToSelection()">Retour aux chapitres</button>
-    <img id="hintImageMenu" src="" alt="Hint" class="hint-img" />
+    <img id="hintImage" src="" alt="Hint" class="nav-hint" />
   </div>
-
-  <!-- Default hint (désactivé) -->
-  <div class="hint-zone" id="hintZone" style="display: none;">
-    <img id="hintImage" src="" alt="Hint" />
-  </div>
+  <div id="backdrop" class="backdrop hidden"></div>
 
   <script src="mangas-data.js"></script>
   <script>
@@ -109,16 +128,16 @@
 
     const pagesContainer = document.getElementById("pagesContainer");
     const chapterTitle = document.getElementById("chapterTitle");
+    const navOverlay = document.getElementById("navOverlay");
+    const hintImage = document.getElementById("hintImage");
+    const backdrop = document.getElementById("backdrop");
 
-    const navMenu = document.getElementById("navMenu");
-    const hintImageMenu = document.getElementById("hintImageMenu");
+    // Sélection du hint selon le mode
+    hintImage.src = mode === "horizontal"
+      ? "assets/hint-horizontal.png"
+      : "assets/hint-vertical.png";
+    hintImage.alt = mode === "horizontal" ? "Hint horizontal" : "Hint vertical";
 
-    // Remplit le hint
-    const hintPath = mode === "horizontal" ? "../assets/hint-horizontal.png" : "../assets/hint-vertical.png";
-    hintImageMenu.src = hintPath;
-    hintImageMenu.alt = mode === "horizontal" ? "Hint horizontal" : "Hint vertical";
-
-    // Trouve les données du chapitre
     const chapterData = (() => {
       for (const manga of mangas) {
         for (const chap of manga.chapters) {
@@ -134,28 +153,34 @@
       chapterTitle.textContent = "Chapitre introuvable.";
     } else {
       const { mangaTitle, chap } = chapterData;
-      chapterTitle.textContent = `${mangaTitle} — ${chap.title[lang] || chap.title.fr}`;
+      chapterTitle.textContent = `${mangaTitle} — ${chap.title?.[lang] || chap.title?.fr || chap.title}`;
 
-      const basePath = `assets/mangas/${mangaTitle.replace(/\s+/g, '')}/chap${chap.number}`;
-      const langSuffix = lang === "fr" ? "" : `/${lang}`;
-      const fullPath = `${basePath}${langSuffix}`;
+      const baseName = mangaTitle.replace(/\s+/g, '');
+      const basePath = `assets/mangas/${baseName}/chap${chap.number}`;
+      const langPath = lang === "fr" ? "" : `/${lang}`;
+      const fullPath = `${basePath}${langPath}`;
 
       let index = 1;
+      let pageFound = false;
 
       function tryLoadPage() {
         const img = new Image();
-        img.src = `${fullPath}/page${index}.jpg`;
+        const src = `${fullPath}/page${index}.jpg`;
+        img.src = src;
         img.onload = () => {
           pagesContainer.appendChild(img);
           index++;
+          pageFound = true;
           tryLoadPage();
         };
         img.onerror = () => {
-          const end = document.createElement("p");
-          end.textContent = "Fin du chapitre.";
-          end.style.margin = "20px";
-          end.style.opacity = "0.7";
-          pagesContainer.appendChild(end);
+          if (!pageFound) {
+            const end = document.createElement("p");
+            end.textContent = "Fin du chapitre.";
+            end.style.margin = "20px";
+            end.style.opacity = "0.7";
+            pagesContainer.appendChild(end);
+          }
         };
       }
 
@@ -169,12 +194,12 @@
     }
 
     function goToSelection() {
-      window.location.href = "index.html"; // ajuste selon ton projet
+      window.location.href = "manga-hub.html";
     }
 
-    // Toggle menu on body click
     document.body.addEventListener("click", () => {
-      navMenu.classList.toggle("hidden");
+      navOverlay.classList.toggle("hidden");
+      backdrop.classList.toggle("hidden");
     });
   </script>
 </body>
