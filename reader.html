@@ -10,9 +10,6 @@
       background: #111;
       color: #fff;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       overflow-x: hidden;
       position: relative;
     }
@@ -32,63 +29,7 @@
       margin: 10px 0;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
-    }
-
-    .title {
-      margin: 20px 0;
-      font-size: 2em;
-      text-align: center;
-    }
-
-    .hint-zone {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-      opacity: 0.9;
-      animation: blinkHint 1.2s infinite;
-    }
-
-    .hint-zone img {
-      width: 100px;
-      height: auto;
-    }
-
-    @keyframes blinkHint {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-
-    .nav-overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      padding: 15px;
-      display: none;
-      justify-content: center;
-      gap: 20px;
-      z-index: 2000;
-      transition: opacity 0.3s ease;
-    }
-
-    .nav-overlay.show {
-      display: flex;
-    }
-
-    .nav-button {
-      padding: 10px 15px;
-      background: #333;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      font-size: 1em;
       cursor: pointer;
-    }
-
-    .nav-button:hover {
-      background: #555;
     }
 
     .horizontal-container {
@@ -114,34 +55,78 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      z-index: 1000;
     }
 
     .click-zones div {
       flex: 1;
     }
 
-    .nav-backdrop {
+    .hint-zone {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      opacity: 0.9;
+      animation: blinkHint 1.2s infinite;
+    }
+
+    .hint-zone img {
+      width: 100px;
+      height: auto;
+    }
+
+    @keyframes blinkHint {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .menu-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1500;
+      background: rgba(0, 0, 0, 0.7);
       display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px;
+      z-index: 999;
     }
 
-    .nav-backdrop.show {
-      display: block;
+    .menu-overlay.show {
+      display: flex;
+    }
+
+    .nav-button {
+      padding: 10px 15px;
+      background: #333;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .nav-button:hover {
+      background: #555;
+    }
+
+    .menu-title {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .page-counter {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="title" id="chapterTitle">Chargement...</div>
-
   <div class="image-container" id="pagesContainer"></div>
-
   <div class="horizontal-container" id="horizontalContainer">
     <img id="currentPageImage" src="" alt="Page">
     <div class="click-zones">
@@ -155,11 +140,11 @@
     <img id="hintImage" src="" alt="Hint" />
   </div>
 
-  <div id="navBackdrop" class="nav-backdrop" onclick="toggleNav()"></div>
-
-  <div class="nav-overlay" id="navOverlay">
-    <button class="nav-button" onclick="goBack()">Retour</button>
-    <button class="nav-button" onclick="switchMode()">Changer le mode</button>
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-title" id="menuTitle"></div>
+    <div class="page-counter" id="pageCounter"></div>
+    <button class="nav-button" onclick="goBack()"></button>
+    <button class="nav-button" onclick="switchMode()"></button>
   </div>
 
   <script src="mangas-data.js"></script>
@@ -169,18 +154,27 @@
     const lang = getParam("lang") || "fr";
     let mode = getParam("mode") || "vertical";
 
-    const titleEl = document.getElementById("chapterTitle");
+    const i18n = {
+      fr: { back: "Retour", switch: "Changer le mode", end: "Fin du chapitre.", untitled: "Sans titre" },
+      en: { back: "Back", switch: "Switch mode", end: "End of chapter.", untitled: "Untitled" }
+    };
+
+    const texts = i18n[lang] || i18n.fr;
+
     const pagesContainer = document.getElementById("pagesContainer");
     const horizontalContainer = document.getElementById("horizontalContainer");
     const currentPageImage = document.getElementById("currentPageImage");
-    const navOverlay = document.getElementById("navOverlay");
-    const navBackdrop = document.getElementById("navBackdrop");
-
     const hintZone = document.getElementById("hintZone");
     const hintImage = document.getElementById("hintImage");
+    const menuOverlay = document.getElementById("menuOverlay");
+    const menuTitle = document.getElementById("menuTitle");
+    const pageCounter = document.getElementById("pageCounter");
+
+    document.querySelector(".nav-button:nth-of-type(1)").textContent = texts.back;
+    document.querySelector(".nav-button:nth-of-type(2)").textContent = texts.switch;
 
     hintImage.src = mode === "horizontal" ? "assets/hint-horizontal.png" : "assets/hint-vertical.png";
-    setTimeout(() => hintZone.style.display = "none", 5000);
+    setTimeout(() => hintZone.style.display = "none", 2500);
 
     function goBack() {
       window.location.href = "manga-hub.html";
@@ -193,15 +187,11 @@
       window.location.href = url.toString();
     }
 
-    function toggleNav() {
-      const isVisible = navOverlay.classList.contains("show");
-      if (isVisible) {
-        navOverlay.classList.remove("show");
-        navBackdrop.classList.remove("show");
-      } else {
-        navOverlay.classList.add("show");
-        navBackdrop.classList.add("show");
-      }
+    let hideMenuTimeout;
+    function toggleMenuOverlay() {
+      clearTimeout(hideMenuTimeout);
+      menuOverlay.classList.add("show");
+      hideMenuTimeout = setTimeout(() => menuOverlay.classList.remove("show"), 2500);
     }
 
     const chapterData = (() => {
@@ -214,11 +204,12 @@
     })();
 
     if (!chapterData) {
-      titleEl.textContent = "Chapitre introuvable.";
+      document.body.innerHTML = "<h2>Chapitre introuvable.</h2>";
     } else {
       const { mangaTitle, chap } = chapterData;
-      const chapTitle = chap.title?.[lang] || chap.title?.fr || "Sans titre";
-      titleEl.textContent = `${mangaTitle} — ${chapTitle}`;
+      const chapTitle = chap.title?.[lang] || chap.title?.fr || texts.untitled;
+      menuTitle.textContent = `${mangaTitle} — ${chapTitle}`;
+
       const basePath = `pages/${chapterId.split('-')[0]}/chap${chap.number}/${lang}`;
       let pages = [];
       let currentPage = 0;
@@ -231,6 +222,10 @@
         img.onerror = () => callback(path, false);
       };
 
+      const updatePageCounter = () => {
+        pageCounter.textContent = `${currentPage + 1} / ${pages.length}`;
+      };
+
       const loadAllPages = (i = 1) => {
         loadNextPage(i, (path, exists) => {
           if (exists) {
@@ -241,10 +236,11 @@
               pages.forEach(src => {
                 const img = document.createElement("img");
                 img.src = src;
+                img.addEventListener("click", toggleMenuOverlay);
                 pagesContainer.appendChild(img);
               });
               const endMsg = document.createElement("p");
-              endMsg.textContent = "Fin du chapitre.";
+              endMsg.textContent = texts.end;
               endMsg.style.margin = "40px";
               endMsg.style.fontSize = "1.5em";
               pagesContainer.appendChild(endMsg);
@@ -253,6 +249,7 @@
               horizontalContainer.style.display = "flex";
               if (pages.length > 0) {
                 currentPageImage.src = pages[0];
+                updatePageCounter();
               } else {
                 currentPageImage.alt = "Aucune page trouvée";
               }
@@ -263,11 +260,11 @@
 
       loadAllPages();
 
-      // Navigation par clics en mode horizontal
       document.getElementById("leftZone").addEventListener("click", () => {
         if (currentPage > 0) {
           currentPage--;
           currentPageImage.src = pages[currentPage];
+          updatePageCounter();
         }
       });
 
@@ -275,10 +272,11 @@
         if (currentPage < pages.length - 1) {
           currentPage++;
           currentPageImage.src = pages[currentPage];
+          updatePageCounter();
         }
       });
 
-      document.getElementById("centerZone").addEventListener("click", toggleNav);
+      document.getElementById("centerZone").addEventListener("click", toggleMenuOverlay);
     }
   </script>
 </body>
