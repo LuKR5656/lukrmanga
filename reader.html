@@ -123,8 +123,8 @@
   <div class="nav-overlay" id="navOverlay">
     <div class="chapter-title" id="chapterTitle"></div>
     <div class="page-counter" id="pageCounter"></div>
-    <button class="nav-button" onclick="goBack()" id="backBtn">↩️Retour</button>
-    <button class="nav-button" onclick="switchMode()" id="modeBtn">📖Changer le mode de lecture📜</button>
+    <button class="nav-button" onclick="goBack()" id="backBtn">Retour</button>
+    <button class="nav-button" onclick="switchMode()" id="modeBtn">Changer le mode</button>
   </div>
   <script src="mangas-data.js"></script>
   <script>
@@ -143,12 +143,12 @@
     const pageCounter = document.getElementById('pageCounter');
 
     const langStrings = {
-      fr: { back: '↩️Retour', switch: '📖Changer le mode de lecture📜' },
-      en: { back: '↩️Back', switch: '📖Switch reading mode📜' }
+      fr: { back: 'Retour', switch: 'Changer le mode' },
+      en: { back: 'Back', switch: 'Switch mode' }
     };
 
-    document.getElementById('backBtn').textContent = langStrings[lang]?.back || '↩️Retour';
-    document.getElementById('modeBtn').textContent = langStrings[lang]?.switch || '📖Changer le mode de lecture📜';
+    document.getElementById('backBtn').textContent = langStrings[lang]?.back || 'Retour';
+    document.getElementById('modeBtn').textContent = langStrings[lang]?.switch || 'Changer le mode';
 
     hintImage.src = `assets/hint-${mode === 'horizontal' ? 'horizontal' : 'vertical'}.png`;
     setTimeout(() => hint.style.display = 'none', 2500);
