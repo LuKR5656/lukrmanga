@@ -17,18 +17,31 @@
 
     #reader {
       display: flex;
-      flex-direction: column;
+      flex-direction: row; /* horizontal */
+      justify-content: flex-end; /* commencer à droite */
+      width: 100vw;
+      height: 100vh;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+    }
+    
+    .page {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      width: 98vw;
+      height: 98vh;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      width: 100%;
+    }
+    
+    .page img {
+      max-height: 100%;
+      max-width: auto;
     }
 
-    .page img {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      object-fit: contain;
-      display: block;
-    }
 
     #info-overlay {
       position: fixed;
@@ -155,9 +168,13 @@
           break;
         }
       }
-      totalPages = reader.children.length;
+       totalPages = reader.children.length;
       updatePageCounter();
     }
+    
+      reader.scrollLeft = reader.scrollWidth;
+    }
+
 
     function updatePageCounter() {
       const visible = getCurrentVisiblePage();
@@ -183,16 +200,15 @@
     document.addEventListener("scroll", updatePageCounter);
 
     document.addEventListener("click", (e) => {
-      const isOverlayClick = overlay.contains(e.target);
-      if (!isOverlayClick) {
-        const isVisible = overlay.classList.contains("visible");
-        if (isVisible) {
-          overlay.classList.remove("visible");
-        } else {
-          showOverlayTemporarily();
-        }
+      if (overlay.contains(e.target)) {
+        // clic sur l'overlay => toggle
+        overlay.classList.toggle("visible");
+      } else {
+        // clic hors overlay => toggle aussi
+        overlay.classList.toggle("visible");
       }
     });
+
 
     document.getElementById("btn-back-to-hub").onclick = () => {
       window.location.href = "manga-hub.html";
