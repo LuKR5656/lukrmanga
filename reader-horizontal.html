@@ -261,7 +261,7 @@
 
     // Fermer overlay si on clique hors des boutons
     infoOverlay.addEventListener("click", e => {
-      if (!e.target.closest("button")) {
+      if (!e.target.closest("button") && !e.target.closest("#info-buttons")) {
         infoOverlay.style.display = "none";
       }
     });
