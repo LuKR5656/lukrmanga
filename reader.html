@@ -13,6 +13,7 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      overflow-x: hidden;
     }
 
     .image-container {
@@ -25,10 +26,11 @@
 
     .image-container img {
       max-width: 100%;
+      max-height: 95vh;
       height: auto;
       margin: 10px 0;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
 
     .title {
@@ -36,22 +38,44 @@
       font-size: 2em;
     }
 
-    .hint-zone {
+    .nav-menu {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 999;
-      opacity: 0.7;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
     }
 
-    .hint-zone img {
-      width: 100px;
-      height: auto;
+    .nav-menu.hidden {
+      display: none;
+    }
+
+    .nav-menu button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 0 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .nav-menu button:hover {
+      background: #555;
+    }
+
+    .hint-img {
+      height: 50px;
     }
 
     @media (max-width: 600px) {
-      .hint-zone img {
-        width: 70px;
+      .hint-img {
+        height: 40px;
       }
     }
   </style>
@@ -60,9 +84,16 @@
   <div class="title" id="chapterTitle">Chargement...</div>
   <div class="image-container" id="pagesContainer"></div>
 
-  <!-- Hint display area -->
-  <div class="hint-zone" id="hintZone">
-    <img id="hintImage" src="" alt="Hint">
+  <!-- Menu navigation -->
+  <div id="navMenu" class="nav-menu hidden">
+    <button onclick="switchMode()">Changer de mode</button>
+    <button onclick="goToSelection()">Retour aux chapitres</button>
+    <img id="hintImageMenu" src="" alt="Hint" class="hint-img" />
+  </div>
+
+  <!-- Default hint (désactivé) -->
+  <div class="hint-zone" id="hintZone" style="display: none;">
+    <img id="hintImage" src="" alt="Hint" />
   </div>
 
   <script src="mangas-data.js"></script>
@@ -78,16 +109,16 @@
 
     const pagesContainer = document.getElementById("pagesContainer");
     const chapterTitle = document.getElementById("chapterTitle");
-    const hintImage = document.getElementById("hintImage");
 
-    if (mode === "horizontal") {
-      hintImage.src = "../assets/hint-horizontal.png";
-      hintImage.alt = "Hint horizontal";
-    } else {
-      hintImage.src = "../assets/hint-vertical.png";
-      hintImage.alt = "Hint vertical";
-    }
+    const navMenu = document.getElementById("navMenu");
+    const hintImageMenu = document.getElementById("hintImageMenu");
 
+    // Remplit le hint
+    const hintPath = mode === "horizontal" ? "../assets/hint-horizontal.png" : "../assets/hint-vertical.png";
+    hintImageMenu.src = hintPath;
+    hintImageMenu.alt = mode === "horizontal" ? "Hint horizontal" : "Hint vertical";
+
+    // Trouve les données du chapitre
     const chapterData = (() => {
       for (const manga of mangas) {
         for (const chap of manga.chapters) {
@@ -99,47 +130,52 @@
       return null;
     })();
 
-    async function loadPages(basePath, container) {
-      let index = 1;
-      let found = true;
-
-      while (found) {
-        const img = document.createElement("img");
-        const fileName = `page${index}.png`;
-        img.src = `${basePath}${fileName}`;
-        img.alt = `Page ${index}`;
-
-        found = await new Promise(resolve => {
-          img.onload = () => {
-            container.appendChild(img);
-            resolve(true);
-          };
-          img.onerror = () => resolve(false);
-        });
-
-        index++;
-      }
-
-      const endMessage = document.createElement("p");
-      endMessage.textContent = "Fin du chapitre.";
-      endMessage.style.marginTop = "30px";
-      container.appendChild(endMessage);
-    }
-
     if (!chapterData) {
       chapterTitle.textContent = "Chapitre introuvable.";
     } else {
       const { mangaTitle, chap } = chapterData;
-      const chapterName = chap.title?.[lang] || chap.title;
-      chapterTitle.textContent = `${mangaTitle} — ${chapterName}`;
+      chapterTitle.textContent = `${mangaTitle} — ${chap.title[lang] || chap.title.fr}`;
 
-      const basePath = chap.pages?.[lang];
-      if (!basePath) {
-        pagesContainer.innerHTML = "<p>Pas de pages pour cette langue.</p>";
-      } else {
-        loadPages(basePath, pagesContainer);
+      const basePath = `assets/mangas/${mangaTitle.replace(/\s+/g, '')}/chap${chap.number}`;
+      const langSuffix = lang === "fr" ? "" : `/${lang}`;
+      const fullPath = `${basePath}${langSuffix}`;
+
+      let index = 1;
+
+      function tryLoadPage() {
+        const img = new Image();
+        img.src = `${fullPath}/page${index}.jpg`;
+        img.onload = () => {
+          pagesContainer.appendChild(img);
+          index++;
+          tryLoadPage();
+        };
+        img.onerror = () => {
+          const end = document.createElement("p");
+          end.textContent = "Fin du chapitre.";
+          end.style.margin = "20px";
+          end.style.opacity = "0.7";
+          pagesContainer.appendChild(end);
+        };
       }
+
+      tryLoadPage();
     }
+
+    function switchMode() {
+      const newMode = mode === "vertical" ? "horizontal" : "vertical";
+      const url = `reader.html?chap=${chapterId}&lang=${lang}&mode=${newMode}`;
+      window.location.href = url;
+    }
+
+    function goToSelection() {
+      window.location.href = "index.html"; // ajuste selon ton projet
+    }
+
+    // Toggle menu on body click
+    document.body.addEventListener("click", () => {
+      navMenu.classList.toggle("hidden");
+    });
   </script>
 </body>
 </html>
