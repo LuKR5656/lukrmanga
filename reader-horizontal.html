@@ -235,10 +235,10 @@
     });
 
     // Zones de clic
-    document.getElementById("left-zone").addEventListener("click", nextPage);
-    document.getElementById("right-zone").addEventListener("click", prevPage);
+    document.getElementById("left-zone").addEventListener("click", prevPage);
+    document.getElementById("right-zone").addEventListener("click", nextPage);
     document.getElementById("center-zone").addEventListener("click", () => {
-      infoOverlay.style.display = "flex";
+  infoOverlay.style.display = "flex";
     });
 
     // Fermer overlay si on clique hors des boutons
