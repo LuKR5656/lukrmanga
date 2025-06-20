@@ -42,7 +42,7 @@
       max-height: 95vh;
       max-width: 95vw;
       object-fit: contain;
-      pointer-events: none; /* clic passe à #reader */
+      pointer-events: none;
       user-select: none;
       -webkit-user-drag: none;
       box-shadow: 0 0 20px #0009;
@@ -50,7 +50,6 @@
       background: #222;
     }
 
-    /* Barre d'info (footer) */
     #info-overlay {
       position: fixed;
       bottom: 0;
@@ -107,7 +106,6 @@
       color: #111;
     }
 
-    /* Numéro de page */
     #page-number {
       position: fixed;
       bottom: 60px;
@@ -123,14 +121,11 @@
       font-family: monospace;
       letter-spacing: 0.1em;
     }
-
   </style>
 </head>
 <body>
   <div id="reader"></div>
-
   <div id="page-number">Page 1 / 1</div>
-
   <div id="info-overlay" role="dialog" aria-modal="true" aria-label="Informations du chapitre">
     <div id="info-text">
       <div><strong id="manga-title">Titre Manga</strong></div>
@@ -149,7 +144,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const chapId = urlParams.get('chap');
       let lang = urlParams.get('lang') || 'fr';
-      let readingMode = urlParams.get('mode') || 'horizontal'; // peut être 'horizontal' ou 'vertical'
+      let readingMode = urlParams.get('mode') || 'horizontal';
 
       const chapter = mangas.flatMap(m => m.chapters.map(c => ({...c, manga: m}))).find(c => c.id === chapId);
 
@@ -171,12 +166,10 @@
       mangaAuthorEl.textContent = chapter.manga.author || "Inconnu";
       chapterTitleEl.textContent = chapter.title?.[lang] || "Chapitre";
 
-      // Fonction pour charger dynamiquement les images tant qu'elles existent
       async function loadImages(folder, extension = 'png') {
         let index = 1;
         while (true) {
           let filename = `${folder}${index.toString().padStart(3, '0')}.${extension}`;
-          // Vérifier si l'image existe par préchargement
           try {
             await new Promise((resolve, reject) => {
               const img = new Image();
@@ -184,7 +177,6 @@
               img.onerror = () => reject(false);
               img.src = filename;
             });
-            // Si chargée, créer la page
             const pageDiv = document.createElement('div');
             pageDiv.className = 'page';
             const imgEl = document.createElement('img');
@@ -193,27 +185,23 @@
             reader.appendChild(pageDiv);
             index++;
           } catch {
-            break; // Fin du chargement
+            break;
           }
         }
       }
 
-      // Initialisation du lecteur
       async function initReader() {
         const folder = chapter.pages?.[lang] || chapter.pages?.fr || '';
         await loadImages(folder);
-
         if (reader.children.length === 0) {
           reader.textContent = "Aucune page disponible.";
           return;
         }
-
         currentIndex = 0;
         scrollToPage(currentIndex);
         updatePageNumber();
       }
 
-      // Scroll vers une page (index)
       function scrollToPage(idx) {
         if (idx < 0) idx = 0;
         if (idx >= reader.children.length) idx = reader.children.length - 1;
@@ -224,89 +212,72 @@
         reader.scrollTo({left: offsetLeft, behavior: 'smooth'});
       }
 
-      // Mise à jour du numéro de page (affiché en lecture droite→gauche)
       function updatePageNumber() {
         const total = reader.children.length;
-        const pageNum = total - currentIndex;
+        const pageNum = currentIndex + 1; // ✅ correction ici
         pageNumber.textContent = `Page ${pageNum} / ${total}`;
       }
 
-      // Navigation pages
-      function nextPage() { // page suivante → index -1 (car flex-row-reverse)
+      function nextPage() {
         if (currentIndex < reader.children.length - 1) {
           scrollToPage(currentIndex + 1);
           updatePageNumber();
         }
       }
 
-      function prevPage() { // page précédente → index +1
+      function prevPage() {
         if (currentIndex > 0) {
           scrollToPage(currentIndex - 1);
           updatePageNumber();
         }
       }
 
-      // Gestion des clics pour navigation et overlay
       reader.addEventListener('click', (e) => {
-        if (infoOverlay.style.display === 'flex') return; // ignore clics sous overlay
-
+        if (infoOverlay.style.display === 'flex') return;
         const w = window.innerWidth;
         const x = e.clientX;
-
-        if (x < w/3) {
-          // Tiers gauche → page suivante
+        if (x < w / 3) {
           nextPage();
-        } else if (x > 2*w/3) {
-          // Tiers droit → page précédente
+        } else if (x > 2 * w / 3) {
           prevPage();
         } else {
-          // Tiers central → toggle overlay
           showOverlay();
         }
       });
 
-      // Variable currentIndex
       let currentIndex = 0;
 
-      // Scroll manuel via clavier (optionnel)
       window.addEventListener('keydown', (e) => {
         if (infoOverlay.style.display === 'flex') return;
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
         else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
       });
 
-      // Affiche la barre d'info overlay
       function showOverlay() {
         infoOverlay.style.display = 'flex';
       }
 
-      // Cache la barre d'info overlay
       function hideOverlay() {
         infoOverlay.style.display = 'none';
       }
 
-      // Fermer overlay en cliquant hors boutons
       infoOverlay.addEventListener('click', (e) => {
-        if (e.target.tagName.toLowerCase() === 'button') return; // pas fermer si bouton
+        if (e.target.tagName.toLowerCase() === 'button') return;
         hideOverlay();
       });
 
-      // Bouton retour au hub
       btnBackToHub.addEventListener('click', () => {
         window.location.href = `manga-hub.html?manga=${chapter.manga.id}`;
       });
 
-      // Bouton changement mode de lecture (juste reload avec paramètre)
       btnToggleMode.addEventListener('click', () => {
         let newMode = readingMode === 'horizontal' ? 'vertical' : 'horizontal';
-        // Reload en conservant les paramètres + mode
         const baseUrl = window.location.pathname;
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('mode', newMode);
         window.location.href = `${baseUrl}?${searchParams.toString()}`;
       });
 
-      // Initialisation
       initReader();
     })();
   </script>
