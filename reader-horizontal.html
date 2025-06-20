@@ -190,14 +190,7 @@
       authorElem.textContent = chapter.manga?.author || "Inconnu";
       chapterElem.textContent = chapter.title?.[lang] || "Chapitre";
 
-      loadImages(folder); 
-        const div = document.createElement("div");
-        div.className = "page";
-        const img = document.createElement("img");
-        img.src = `${folder}${i.toString().padStart(3, '0')}.png`;
-        div.appendChild(img);
-        reader.appendChild(div);
-      }
+      loadImages(folder);
 
       updatePageNumber();
     }
