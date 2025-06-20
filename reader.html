@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Lecteur Manga</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       background: #111;
@@ -12,6 +13,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-x: hidden;
       position: relative;
     }
 
@@ -20,7 +22,7 @@
       flex-direction: column;
       align-items: center;
       max-width: 100%;
-      margin-bottom: 100px;
+      margin-bottom: 120px;
     }
 
     .image-container img {
@@ -57,12 +59,6 @@
       50% { opacity: 1; }
     }
 
-    @media (max-width: 600px) {
-      .hint-zone img {
-        width: 70px;
-      }
-    }
-
     .nav-overlay {
       position: fixed;
       bottom: 0;
@@ -70,7 +66,7 @@
       width: 100%;
       background: rgba(0, 0, 0, 0.7);
       padding: 15px;
-      display: flex;
+      display: none;
       justify-content: center;
       gap: 20px;
       z-index: 999;
@@ -89,49 +85,76 @@
     .nav-button:hover {
       background: #555;
     }
+
+    .horizontal-container {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+
+    .horizontal-container img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    .click-zones {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .click-zones div {
+      flex: 1;
+    }
   </style>
 </head>
 <body>
   <div class="title" id="chapterTitle">Chargement...</div>
   <div class="image-container" id="pagesContainer"></div>
+  <div class="horizontal-container" id="horizontalContainer">
+    <img id="currentPageImage" src="" alt="Page">
+    <div class="click-zones">
+      <div id="leftZone"></div>
+      <div id="centerZone"></div>
+      <div id="rightZone"></div>
+    </div>
+  </div>
 
-  <!-- Hint -->
   <div id="hintZone" class="hint-zone">
     <img id="hintImage" src="" alt="Hint" />
   </div>
 
-  <!-- Navigation overlay -->
-  <div class="nav-overlay">
+  <div class="nav-overlay" id="navOverlay">
     <button class="nav-button" onclick="goBack()">Retour</button>
     <button class="nav-button" onclick="switchMode()">Changer le mode</button>
   </div>
 
   <script src="mangas-data.js"></script>
   <script>
-    function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
-    }
-
+    const getParam = name => new URLSearchParams(location.search).get(name);
     const chapterId = getParam("chap");
     const lang = getParam("lang") || "fr";
     let mode = getParam("mode") || "vertical";
 
+    const titleEl = document.getElementById("chapterTitle");
     const pagesContainer = document.getElementById("pagesContainer");
-    const chapterTitle = document.getElementById("chapterTitle");
+    const horizontalContainer = document.getElementById("horizontalContainer");
+    const currentPageImage = document.getElementById("currentPageImage");
+    const navOverlay = document.getElementById("navOverlay");
 
     const hintZone = document.getElementById("hintZone");
     const hintImage = document.getElementById("hintImage");
 
-    hintImage.src = mode === "horizontal"
-      ? "assets/hint-horizontal.png"
-      : "assets/hint-vertical.png";
-    hintImage.alt = mode === "horizontal" ? "Hint horizontal" : "Hint vertical";
-
-    // Masquer le hint après 5 secondes
-    setTimeout(() => {
-      hintZone.style.display = "none";
-    }, 5000);
+    hintImage.src = mode === "horizontal" ? "assets/hint-horizontal.png" : "assets/hint-vertical.png";
+    setTimeout(() => hintZone.style.display = "none", 5000);
 
     function goBack() {
       window.location.href = "manga-hub.html";
@@ -139,57 +162,90 @@
 
     function switchMode() {
       const newMode = mode === "vertical" ? "horizontal" : "vertical";
-      const url = new URL(window.location.href);
+      const url = new URL(location.href);
       url.searchParams.set("mode", newMode);
       window.location.href = url.toString();
     }
 
-    // Récupérer les données du chapitre
+    function toggleNav() {
+      navOverlay.style.display = navOverlay.style.display === "flex" ? "none" : "flex";
+    }
+
     const chapterData = (() => {
       for (const manga of mangas) {
         for (const chap of manga.chapters) {
-          if (chap.id === chapterId) {
-            return { mangaTitle: manga.title, chap };
-          }
+          if (chap.id === chapterId) return { mangaTitle: manga.title, chap };
         }
       }
       return null;
     })();
 
     if (!chapterData) {
-      chapterTitle.textContent = "Chapitre introuvable.";
+      titleEl.textContent = "Chapitre introuvable.";
     } else {
       const { mangaTitle, chap } = chapterData;
       const chapTitle = chap.title?.[lang] || chap.title?.fr || "Sans titre";
-      chapterTitle.textContent = `${mangaTitle} — ${chapTitle}`;
+      titleEl.textContent = `${mangaTitle} — ${chapTitle}`;
+      const basePath = `assets/mangas/${chapterId.split('-')[0]}/chap${chap.number}/${lang}`;
+      let pages = [];
+      let currentPage = 0;
 
-      const basePath = `assets/mangas/${chapterId.split('-')[0]}/chap${chap.number}`;
-      const langPath = `${basePath}/${lang}`;
-      let pageNum = 1;
-
-      const loadImage = () => {
-        const imagePath = `${langPath}/page${pageNum}.png`;
+      const loadNextPage = (num, callback) => {
         const img = new Image();
-        img.src = imagePath;
-        img.onload = () => {
-          pagesContainer.appendChild(img);
-          pageNum++;
-          loadImage(); // Charger la suivante
-        };
-        img.onerror = () => {
-          if (pageNum === 1) {
-            pagesContainer.innerHTML = "<p>Pas de pages disponibles.</p>";
-          } else {
-            const endMsg = document.createElement("p");
-            endMsg.textContent = "Fin du chapitre.";
-            endMsg.style.margin = "40px";
-            endMsg.style.fontSize = "1.5em";
-            pagesContainer.appendChild(endMsg);
-          }
-        };
+        const path = `${basePath}/page${num}.png`;
+        img.src = path;
+        img.onload = () => callback(path, true);
+        img.onerror = () => callback(path, false);
       };
 
-      loadImage();
+      const loadAllPages = (i = 1) => {
+        loadNextPage(i, (path, exists) => {
+          if (exists) {
+            pages.push(path);
+            loadAllPages(i + 1);
+          } else {
+            if (mode === "vertical") {
+              pages.forEach(src => {
+                const img = document.createElement("img");
+                img.src = src;
+                pagesContainer.appendChild(img);
+              });
+              const endMsg = document.createElement("p");
+              endMsg.textContent = "Fin du chapitre.";
+              endMsg.style.margin = "40px";
+              endMsg.style.fontSize = "1.5em";
+              pagesContainer.appendChild(endMsg);
+            } else {
+              pagesContainer.style.display = "none";
+              horizontalContainer.style.display = "flex";
+              if (pages.length > 0) {
+                currentPageImage.src = pages[0];
+              } else {
+                currentPageImage.alt = "Aucune page trouvée";
+              }
+            }
+          }
+        });
+      };
+
+      loadAllPages();
+
+      // Click zones for horizontal mode
+      document.getElementById("leftZone").addEventListener("click", () => {
+        if (currentPage > 0) {
+          currentPage--;
+          currentPageImage.src = pages[currentPage];
+        }
+      });
+
+      document.getElementById("rightZone").addEventListener("click", () => {
+        if (currentPage < pages.length - 1) {
+          currentPage++;
+          currentPageImage.src = pages[currentPage];
+        }
+      });
+
+      document.getElementById("centerZone").addEventListener("click", toggleNav);
     }
   </script>
 </body>
