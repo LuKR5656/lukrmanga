@@ -190,7 +190,7 @@
       authorElem.textContent = chapter.manga?.author || "Inconnu";
       chapterElem.textContent = chapter.title?.[lang] || "Chapitre";
 
-      for (let i = 1; i <= imageCount; i++) {
+      loadImages(folder); {
         const div = document.createElement("div");
         div.className = "page";
         const img = document.createElement("img");
@@ -201,6 +201,31 @@
 
       updatePageNumber();
     }
+    
+    async function loadImages(folder) {
+      let i = 1;
+      while (true) {
+        const img = new Image();
+        const fileName = `${folder}${i.toString().padStart(3, '0')}.png`;
+        img.src = fileName;
+    
+        try {
+          await img.decode(); // attend que l'image soit bien chargée
+    
+          const div = document.createElement("div");
+          div.className = "page";
+          div.appendChild(img);
+          reader.appendChild(div);
+    
+          i++;
+        } catch (e) {
+          break; // image introuvable => on arrête
+        }
+      }
+    
+      updatePageNumber();
+    }
+
 
     function updatePageNumber() {
       const total = reader.children.length;
