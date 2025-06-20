@@ -76,13 +76,16 @@
       color: #eee;
       display: none;
       z-index: 20;
-      display: flex;
       flex-direction: column;
       justify-content: space-between; /* Espace entre contenu et boutons */
       padding: 20px;
       box-sizing: border-box;
     }
-    
+
+    #info-overlay.visible {
+      display: flex;
+    }
+        
      #info-text {
       font-size: 18px;
       line-height: 1.6;
@@ -183,12 +186,12 @@
     let overlayTimeout;
 
     function showInfoOverlay() {
-      infoOverlay.style.display = "flex";
+       infoOverlay.classList.add("visible");
     
       if (overlayTimeout) clearTimeout(overlayTimeout);
     
       overlayTimeout = setTimeout(() => {
-        infoOverlay.style.display = "none";
+        infoOverlay.classList.remove("visible");
       }, 3000);
     }
 
@@ -268,7 +271,7 @@
     document.getElementById("left-zone").addEventListener("click", nextPage);
     document.getElementById("right-zone").addEventListener("click", prevPage);
     document.getElementById("center-zone").addEventListener("click", () => {
-      const isVisible = infoOverlay.style.display === "flex";
+      const isVisible = infoOverlay.classList.contains("visible");
     
       if (isVisible) {
         infoOverlay.style.display = "none";
