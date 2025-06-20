@@ -2,6 +2,7 @@ const mangas = [
   {
     id: "bp",
     title: "Boiling Point",
+    author: "LuK R.",
     tag: "Oneshot",
     resume: {
       fr: "Une baston dans un colisée.",
@@ -15,7 +16,7 @@ const mangas = [
           fr: "BoilingPoint Oneshot",
           en: "BoilingPoint Oneshot"
         },
-        path: "reader.html",
+        path: "reader-horizontal.html",
         pages: {
           fr: "pages/bp/fr/",
           en: "pages/bp/en/"
@@ -30,6 +31,7 @@ const mangas = [
   {
     id: "eldorado",
     title: "Eldorado",
+    author: "LuK R.",
     tag: "Serie",
     resume: {
       fr: "Une aventure vers une île légendaire pleine de mystères.",
@@ -43,7 +45,7 @@ const mangas = [
           fr: "Départ",
           en: "Departure"
         },
-        path: "reader.html",
+        path: "reader-horizontal.html",
         pages: {
           fr: "assets/mangas/eldorado/chap1/",
           en: "assets/mangas/eldorado/chap1/en/"
@@ -56,7 +58,7 @@ const mangas = [
           fr: "L’île",
           en: "The Island"
         },
-        path: "reader.html",
+        path: "reader-horizontal.html",
         pages: {
           fr: "assets/mangas/eldorado/chap2/",
           en: "assets/mangas/eldorado/chap2/en/"
