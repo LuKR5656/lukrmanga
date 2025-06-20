@@ -2,6 +2,7 @@ const mangas = [
   {
     id: "bp",
     title: "Boiling Point",
+    author: "LuK R.",
     tag: "Oneshot",
     resume: {
       fr: "Une baston dans un colisée.",
@@ -30,6 +31,7 @@ const mangas = [
   {
     id: "eldorado",
     title: "Eldorado",
+    author: "LuK R.",
     tag: "Serie",
     resume: {
       fr: "Une aventure vers une île légendaire pleine de mystères.",
