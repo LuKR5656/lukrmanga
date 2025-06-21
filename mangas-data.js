@@ -7,6 +7,7 @@ const mangas = [
       {
         id: "bp-1",
         number: 1,
+        numPages: 9,   
         pages: {
           fr: "/page/bp/chap1/fr/",
           en: "/page/bp/chap1/en/"
@@ -21,6 +22,7 @@ const mangas = [
       {
         id: "el-1",
         number: 1,
+        numPages: 11,
         pages: {
           fr: "/page/el/chap1/fr/",
           en: "/page/el/chap1/en/"
@@ -53,6 +55,7 @@ const mangas = [
       {
         id: "id_unique_chapitre",        // exemple : "bp-1"
         number: 1,                       // numéro du chapitre
+        numPages: 1,                     // nombre de pages
         pages: {
           fr: "/page/serie/chap1/fr/",   // lien vers la version FR
           en: "/page/serie/chap1/en/"    // lien vers la version EN
