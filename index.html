@@ -263,7 +263,7 @@
         .forEach(manga => {
           oneshotList.innerHTML += `
             <li class="manga-card">
-              <img src="${manga.cover || 'assets/covers/default.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              <img src="${manga.cover || 'assets/covers/${manga.id}-cover.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
@@ -274,7 +274,7 @@
         .forEach(manga => {
           seriesList.innerHTML += `
             <li class="manga-card">
-              <img src="${manga.cover || 'assets/covers/default.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              <img src="${manga.cover || 'assets/covers/${manga.id}-cover.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
