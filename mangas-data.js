@@ -44,7 +44,7 @@ const mangas = [
 
 
 
-
+/*
 //const mangas = [
   // Série existante ou nouvel ajout :
   {
