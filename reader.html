@@ -14,7 +14,6 @@
       height: 100%;
       overflow: hidden;
     }
-
     #reader {
       display: flex;
       flex-direction: row;
@@ -25,7 +24,6 @@
       overflow: hidden;
       position: relative;
     }
-
     .page {
       display: none;
       width: 100%;
@@ -33,7 +31,6 @@
       justify-content: center;
       align-items: center;
     }
-
     .page img {
       max-height: 100%;
       max-width: 100%;
@@ -41,7 +38,6 @@
       user-select: none;
       pointer-events: none;
     }
-
     #reader.vertical {
       flex-direction: column;
       overflow-y: auto;
@@ -49,7 +45,6 @@
       scroll-snap-type: y mandatory;
       justify-content: flex-start;
     }
-
     #reader.vertical .page {
       display: flex;
       width: auto;
@@ -59,7 +54,6 @@
       margin: 1vh auto;
       scroll-snap-align: center;
     }
-
     #controls {
       position: fixed;
       top: 10px;
@@ -69,7 +63,6 @@
       flex-direction: column;
       gap: 10px;
     }
-
     #controls button {
       background: #222;
       border: none;
@@ -81,7 +74,6 @@
       box-shadow: 0 0 8px #0008;
       user-select: none;
     }
-
     #page-counter {
       position: fixed;
       bottom: 10px;
@@ -95,7 +87,6 @@
       user-select: none;
       z-index: 1000;
     }
-
     #hint-container {
       position: fixed;
       top: 50%;
@@ -105,26 +96,21 @@
       display: none;
       animation: fadeOut 3s forwards;
     }
-    
     #hint-image {
       max-width: 65vw;
       max-height: 65vh;
     }
-    
-    /* Animation de disparition */
     @keyframes fadeOut {
       0% { opacity: 1; }
       80% { opacity: 1; }
       100% { opacity: 0; display: none; }
     }
-    
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.6; }
     }
-    
     .blinking {
-      animation: blink 0.5s step-start infinite;
+      animation: blink 1s step-start infinite;
     }
   </style>
 </head>
@@ -181,74 +167,78 @@
       btnToggleMode.textContent = 'Mode lecture : Horizontal';
     }
 
-    // Charger les pages
     if (!chapter) {
       reader.innerHTML = "<p style='color:red; text-align:center; padding:20px;'>Chapitre introuvable.</p>";
     } else {
       loadPages().then(() => {
-        showHint('hor'); // ou 'ver' si verticalMode = true par défaut
+        showHint('hor');
       });
     }
 
     async function loadPages() {
       const folder = chapter.pages[lang] || chapter.pages['fr'];
       let i = 1;
-    
+      let loadedPages = [];
+
       while (true) {
         const img = new Image();
         const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
         img.src = fileName;
-    
+
         try {
           await img.decode();
-    
+
           const pageDiv = document.createElement('div');
           pageDiv.className = 'page';
           pageDiv.appendChild(img);
-          reader.appendChild(pageDiv);
-          pages.push(pageDiv);
-    
+
+          loadedPages.push(pageDiv);
           i++;
         } catch (e) {
           break;
         }
       }
-    
-      totalPages = pages.length;
-    
+
+      totalPages = loadedPages.length;
+
+      // Inverser l'ordre dans le DOM pour lecture droite à gauche
+      loadedPages.reverse().forEach(pageDiv => {
+        reader.appendChild(pageDiv);
+        pages.push(pageDiv);
+      });
+
       if (verticalMode) {
         pages.forEach(p => p.style.display = 'flex');
       } else {
         pages.forEach(p => p.style.display = 'none');
-        if (pages[totalPages - 1]) pages[totalPages - 1].style.display = 'flex';
+        if (pages[0]) pages[0].style.display = 'flex'; // Affiche la dernière page (première dans l'ordre inversé)
         reader.scrollTop = 0;
       }
-    
-      currentPage = totalPages - 1; // <-- Commencer à la dernière page
+
+      currentPage = 0; // Commence à la dernière page (première visible)
       updatePageCounter();
     }
-    
+
     function updatePageCounter() {
-      pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
+      // Affiche la page actuelle en mode manga (lecture droite à gauche)
+      // page affichée = totalPages - currentPage (car on a inversé l'ordre)
+      pageCounter.textContent = `Page ${totalPages - currentPage} / ${totalPages}`;
     }
 
     function showHint(mode) {
       const hintContainer = document.getElementById('hint-container');
       const hintImage = document.getElementById('hint-image');
-    
+
       hintImage.src = `assets/hint-${mode}.png`;
       hintContainer.style.display = 'block';
-    
-      // Redémarrer animation fadeOut
+
       hintContainer.style.animation = 'none';
       void hintContainer.offsetWidth;
       hintContainer.style.animation = 'fadeOut 3s forwards';
-    
-      // Ajouter classe blinking pour l'effet clignotant
+
       hintImage.classList.add('blinking');
-    
       setTimeout(() => {
-         hintImage.classList.remove('blinking');
+        hintImage.classList.remove('blinking');
       }, 2500);
     }
 
@@ -300,9 +290,9 @@
       const screenWidth = window.innerWidth;
 
       if (clickX < screenWidth * 0.5) {
-        goToPage(currentPage - 1); // clic à gauche = page suivante (index - 1)
+        goToPage(currentPage + 1); // clic à gauche = page suivante (index +1)
       } else {
-        goToPage(currentPage + 1); // clic à droite = page précédente (index + 1)
+        goToPage(currentPage - 1); // clic à droite = page précédente (index -1)
       }
     });
   </script>
