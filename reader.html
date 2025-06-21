@@ -227,6 +227,10 @@
       currentPage = 0;
       updatePageCounter();
     }
+    
+    function updatePageCounter() {
+      pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
+    }
 
 
     function showHint(mode) {
@@ -298,9 +302,9 @@
       const screenWidth = window.innerWidth;
 
       if (clickX < screenWidth * 0.35) {
-        goToPage(currentPage + 1); // aller à la page précédente (style manga)
+        goToPage(currentPage - 1); // aller à la page précédente (style manga)
       } else if (clickX > screenWidth * 0.45) {
-        goToPage(currentPage - 1); // aller à la page suivante
+        goToPage(currentPage + 1); // aller à la page suivante
       }
     });
   </script>
