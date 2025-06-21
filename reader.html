@@ -1,300 +1,108 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Lecteur Manga</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Manga Reader</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       background: #111;
-      color: #fff;
+      color: white;
       font-family: sans-serif;
-      height: 100%;
-      overflow: hidden;
-    }
-    #reader {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-    .page {
-      display: none;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-    }
-    .page img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-      user-select: none;
-      pointer-events: none;
-    }
-    #reader.vertical {
-      flex-direction: column;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scroll-snap-type: y mandatory;
-      justify-content: flex-start;
-    }
-    #reader.vertical .page {
-      display: flex;
-      width: auto;
-      height: auto;
-      max-width: 98vw;
-      max-height: 98vh;
-      margin: 1vh auto;
-      scroll-snap-align: center;
     }
     #controls {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1000;
+      top: 0;
+      width: 100%;
+      background: #222;
+      padding: 10px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #reader {
+      margin-top: 60px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: center;
     }
-    #controls button {
-      background: #222;
-      border: none;
-      color: #eee;
-      padding: 8px 15px;
-      font-size: 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 0 8px #0008;
-      user-select: none;
+    .horizontal #reader {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      align-items: flex-start;
     }
-    #page-counter {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background: #222a;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-family: monospace;
-      font-weight: bold;
-      font-size: 18px;
-      user-select: none;
-      z-index: 1000;
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
     }
-    #hint-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2000;
-      display: none;
-      animation: fadeOut 3s forwards;
-    }
-    #hint-image {
-      max-width: 65vw;
-      max-height: 65vh;
-    }
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { opacity: 0; display: none; }
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .blinking {
-      animation: blink 2s ease-in-out infinite;
+    .horizontal img {
+      height: 100vh;
+      width: auto;
+      margin: 0 10px;
     }
   </style>
 </head>
 <body>
-
   <div id="controls">
-    <button id="btn-back">← Retour</button>
-    <button id="btn-toggle-mode">Mode lecture : Horizontal</button>
-  </div>
-
-  <div id="hint-container">
-    <img id="hint-image" src="" alt="Hint lecture" />
+    <div>
+      Série: <span id="serieName"></span> |
+      Chapitre: <span id="chapterNum"></span> |
+      Langue: <span id="language"></span>
+    </div>
+    <button onclick="toggleMode()">Basculer Lecture</button>
   </div>
 
   <div id="reader"></div>
 
-  <div id="page-counter">Page 0 / 0</div>
-
-  <script src="mangas-data.js"></script>
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const chapId = urlParams.get('chap');
-    const lang = urlParams.get('lang') || 'fr';
+    // 🔧 Lecture des paramètres d'URL ou localStorage
+    const params = new URLSearchParams(window.location.search);
+    const serie = params.get('serie') || localStorage.getItem('serie') || 'MyManga';
+    const chapter = params.get('chapter') || localStorage.getItem('chapter') || '1';
+    const lang = params.get('lang') || localStorage.getItem('lang') || 'en';
+
+    document.getElementById('serieName').textContent = serie;
+    document.getElementById('chapterNum').textContent = chapter;
+    document.getElementById('language').textContent = lang;
 
     const reader = document.getElementById('reader');
-    const btnBack = document.getElementById('btn-back');
-    const btnToggleMode = document.getElementById('btn-toggle-mode');
-    const pageCounter = document.getElementById('page-counter');
+    let verticalMode = true;
 
-    let totalPages = 0;
-    let currentPage = 0;
-    let verticalMode = false;
-    let pages = [];
-
-    let manga = null;
-    let chapter = null;
-
-    // Trouver le chapitre correspondant
-    for (const m of mangas) {
-      const c = m.chapters.find(ch => ch.id === chapId);
-      if (c) {
-        manga = m;
-        chapter = c;
-        break;
-      }
-    }
-
-    // Adapter les boutons à la langue
-    if (lang === 'en') {
-      btnBack.textContent = '← Back';
-      btnToggleMode.textContent = 'Reading mode: Horizontal';
-    } else {
-      btnBack.textContent = '← Retour';
-      btnToggleMode.textContent = 'Mode lecture : Horizontal';
-    }
-
-    if (!chapter) {
-      reader.innerHTML = "<p style='color:red; text-align:center; padding:20px;'>Chapitre introuvable.</p>";
-    } else {
-      loadPages().then(() => {
-        showHint('hor');
-      });
-    }
-
-    async function loadPages() {
-      const folder = chapter.pages[lang] || chapter.pages['fr'];
-      let i = 1;
-      let loadedPages = [];
-
-      while (true) {
-        const img = new Image();
-        const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
-        img.src = fileName;
-
-        try {
-          await img.decode();
-
-          const pageDiv = document.createElement('div');
-          pageDiv.className = 'page';
-          pageDiv.appendChild(img);
-
-          loadedPages.push(pageDiv);
-          i++;
-        } catch (e) {
-          break;
-        }
-      }
-
-      totalPages = loadedPages.length;
-
-      // Inverser l'ordre dans le DOM pour lecture droite à gauche
-      loadedPages.reverse().forEach(pageDiv => {
-        reader.appendChild(pageDiv);
-        pages.push(pageDiv);
-      });
-
-      if (verticalMode) {
-        pages.forEach(p => p.style.display = 'flex');
-      } else {
-        pages.forEach(p => p.style.display = 'none');
-        if (pages[0]) pages[0].style.display = 'flex'; // Affiche la dernière page (première dans l'ordre inversé)
-        reader.scrollTop = 0;
-      }
-
-      currentPage = 0; // Commence à la dernière page (première visible)
-      updatePageCounter();
-    }
-
-    function updatePageCounter() {
-      // Affiche la page actuelle en mode manga (lecture droite à gauche)
-      // page affichée = totalPages - currentPage (car on a inversé l'ordre)
-      pageCounter.textContent = `Page ${totalPages - currentPage} / ${totalPages}`;
-    }
-
-    function showHint(mode) {
-      const hintContainer = document.getElementById('hint-container');
-      const hintImage = document.getElementById('hint-image');
-
-      hintImage.src = `assets/hint-${mode}.png`;
-      hintContainer.style.display = 'block';
-
-      hintContainer.style.animation = 'none';
-      void hintContainer.offsetWidth;
-      hintContainer.style.animation = 'fadeOut 3s forwards';
-
-      hintImage.classList.add('blinking');
-      setTimeout(() => {
-        hintImage.classList.remove('blinking');
-      }, 2500);
-    }
-
-    function goToPage(index) {
-      index = Math.max(0, Math.min(index, totalPages - 1));
-      if (index === currentPage) return;
-
-      pages[currentPage].style.display = 'none';
-      currentPage = index;
-      pages[currentPage].style.display = 'flex';
-      updatePageCounter();
-    }
-
-    btnToggleMode.onclick = () => {
+    function toggleMode() {
       verticalMode = !verticalMode;
+      document.body.classList.toggle('horizontal', !verticalMode);
+    }
 
-      if (verticalMode) {
-        reader.classList.add('vertical');
-        reader.style.overflow = 'auto';
-        pages.forEach(p => p.style.display = 'flex');
-        reader.scrollTop = 0;
-        btnToggleMode.textContent = lang === 'en' ? 'Reading mode: Vertical' : 'Mode lecture : Vertical';
-      } else {
-        reader.classList.remove('vertical');
-        reader.style.overflow = 'hidden';
-        pages.forEach(p => p.style.display = 'none');
-        pages[currentPage].style.display = 'flex';
-        btnToggleMode.textContent = lang === 'en' ? 'Reading mode: Horizontal' : 'Mode lecture : Horizontal';
+    // 🔄 Chargement dynamique des images
+    const maxPages = 200; // sécurité pour éviter des boucles infinies
+    let page = 1;
+    const basePath = `pages/${serie}/chapitre${chapter}/${lang}/`;
+
+    async function loadImages() {
+      for (let i = 1; i <= maxPages; i++) {
+        const img = new Image();
+        img.src = `${basePath}${i}.jpg`;
+        img.loading = "lazy";
+        img.onerror = () => {
+          // Arrêter à la première erreur (image manquante)
+          if (i === 1) {
+            reader.innerHTML = "<p style='color: red;'>Aucune page trouvée.</p>";
+          }
+        };
+        img.onload = () => reader.appendChild(img);
+        // On attend que l'image se charge ou échoue
+        await new Promise(resolve => {
+          img.onload = img.onerror = resolve;
+        });
+        if (img.naturalWidth === 0) break; // Fin si image invalide
       }
+    }
 
-      updatePageCounter();
-      showHint(verticalMode ? 'ver' : 'hor');
-    };
-
-    btnBack.onclick = () => {
-      if (manga) {
-        window.location.href = `manga-hub.html?manga=${encodeURIComponent(manga.id)}&lang=${lang}`;
-      } else {
-        window.location.href = `manga-hub.html?lang=${lang}`;
-      }
-    };
-
-    // Navigation clic gauche/droite pour lecture droite à gauche
-    document.addEventListener("click", (e) => {
-      if (verticalMode) return;
-      if (e.target.closest('#controls')) return;
-
-      const clickX = e.clientX;
-      const screenWidth = window.innerWidth;
-
-      if (clickX < screenWidth * 0.5) {
-        goToPage(currentPage - 1); // clic à gauche = page suivante (index -1 car ordre inversé)
-      } else {
-        goToPage(currentPage + 1); // clic à droite = page précédente (index +1)
-      }
-    });
+    loadImages();
   </script>
 </body>
 </html>
