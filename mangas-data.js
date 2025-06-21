@@ -16,7 +16,7 @@ const mangas = [
           fr: "BoilingPoint Oneshot",
           en: "BoilingPoint Oneshot"
         },
-        path: "reader-horizontal.html",
+        path: "reader.html",
         pages: {
           fr: "pages/bp/chap1/fr/",
           en: "pages/bp/chap1/en/"
@@ -45,7 +45,7 @@ const mangas = [
           fr: "Le Nouveau Monde",
           en: "the New World"
         },
-        path: "reader-horizontal.html",
+        path: "reader",
         pages: {
           fr: "pages/el/chap1/fr/",
           en: "pages/el/chap1/en/"
@@ -58,7 +58,7 @@ const mangas = [
           fr: "L’île",
           en: "The Island"
         },
-        path: "reader-horizontal.html",
+        path: "reader",
         pages: {
           fr: "pages/el/chap2/fr/",
           en: "pages/el/chap2/en/"
