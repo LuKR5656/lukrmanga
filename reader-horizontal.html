@@ -135,38 +135,40 @@
     async function loadPages() {
       const folder = chapter.pages[lang] || chapter.pages['fr'];
       let i = 1;
-
+    
       while (true) {
         const img = new Image();
         const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
         img.src = fileName;
-
-        try {
-          await img.decode();
-
-          const pageDiv = document.createElement('div');
-          pageDiv.className = 'page';
-          pageDiv.appendChild(img);
-          reader.appendChild(pageDiv);
-
-          i++;
-        } catch (e) {
-          break;
-        }
+    
+        const loaded = await new Promise(resolve => {
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+        });
+    
+        if (!loaded) break;
+    
+        const pageDiv = document.createElement('div');
+        pageDiv.className = 'page';
+        pageDiv.appendChild(img);
+        reader.appendChild(pageDiv);
+    
+        i++;
       }
-
+    
       pages = Array.from(reader.children);
       totalPages = pages.length;
-
+    
       if (!verticalMode) {
         reader.style.overflow = 'hidden';
         currentPage = totalPages - 1;
         updatePageVisibility();
         goToPage(currentPage);
       }
-
+    
       updatePageCounter();
     }
+
 
     function updatePageCounter() {
       pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
