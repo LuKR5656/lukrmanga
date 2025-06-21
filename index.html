@@ -200,9 +200,9 @@
 <body>
   <div class="header">
     <div class="carousel" id="carousel">
-      <img src="images/carousel1.jpg" class="active" alt="slide 1">
-      <img src="images/carousel2.jpg" alt="slide 2">
-      <img src="images/carousel3.jpg" alt="slide 3">
+      <img src="assets/carousel/car1.png" class="active" alt="slide 1">
+      <img src="assets/carousel/car1.png" alt="slide 2">
+      <img src="assets/carousel/car1.png" alt="slide 3">
       <!-- Ajoute/enlève des images ici selon ton dossier images/ -->
     </div>
   </div>
@@ -212,7 +212,7 @@
       <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
       <h3>Mes réseaux</h3>
       <ul>
-        <li><a href="https://twitter.com/votre_twitter" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
+        <li><a href="https://x.com/LuKRvl" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
         <li><a href="https://instagram.com/votre_instagram" target="_blank" rel="noopener" style="color:#ffd700;">Instagram</a></li>
         <li><a href="https://tiktok.com/@votre_tiktok" target="_blank" rel="noopener" style="color:#ffd700;">TikTok</a></li>
         <!-- Ajoute d'autres liens si besoin -->
@@ -263,7 +263,7 @@
         .forEach(manga => {
           oneshotList.innerHTML += `
             <li class="manga-card">
-              <img src="${manga.cover || 'covers/default.jpg'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              <img src="${manga.cover || 'assets/covers/default.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
@@ -274,7 +274,7 @@
         .forEach(manga => {
           seriesList.innerHTML += `
             <li class="manga-card">
-              <img src="${manga.cover || 'covers/default.jpg'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              <img src="${manga.cover || 'assets/covers/default.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
