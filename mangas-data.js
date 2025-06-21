@@ -9,8 +9,8 @@ const mangas = [
         number: 1,
         numPages: 9,   
         pages: {
-          fr: "/page/bp/chap1/fr/",
-          en: "/page/bp/chap1/en/"
+          fr: "/pages/bp/chap1/fr/",
+          en: "/pages/bp/chap1/en/"
         }
       }
     ]
@@ -24,16 +24,16 @@ const mangas = [
         number: 1,
         numPages: 11,
         pages: {
-          fr: "/page/el/chap1/fr/",
-          en: "/page/el/chap1/en/"
+          fr: "/pages/el/chap1/fr/",
+          en: "/pages/el/chap1/en/"
         }
       },
       {
         id: "el-2",
         number: 2,
         pages: {
-          fr: "/page/el/chap2/fr/",
-          en: "/page/el/chap2/en/"
+          fr: "/pages/el/chap2/fr/",
+          en: "/pages/el/chap2/en/"
         }
       }
     ]
@@ -45,7 +45,7 @@ const mangas = [
 
 
 
-const mangas = [
+//const mangas = [
   // Série existante ou nouvel ajout :
   {
     id: "id_unique_de_la_serie",         // exemple : "bp", "el"
@@ -57,8 +57,8 @@ const mangas = [
         number: 1,                       // numéro du chapitre
         numPages: 1,                     // nombre de pages
         pages: {
-          fr: "/page/serie/chap1/fr/",   // lien vers la version FR
-          en: "/page/serie/chap1/en/"    // lien vers la version EN
+          fr: "/pages/serie/chap1/fr/",   // lien vers la version FR
+          en: "/pages/serie/chap1/en/"    // lien vers la version EN
           // ajoute d'autres langues si besoin
         }
       },
