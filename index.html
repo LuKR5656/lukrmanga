@@ -1,177 +1,137 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>LuKR Manga</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7285761108794227"
-    crossorigin="anonymous"></script>
-  <meta name="google-site-verification" content="hXcv-MAKgxsY5IuBFWkHVUBL7OW8N6uC2shHS5oObXo" />
-  <meta name="google-adsense-account" content="ca-pub-7285761108794227" />
-
+  <meta charset="UTF-8">
+  <title>LuK R. Manga Hub</title>
   <style>
-    /* Style : identique à ta version d’origine */
-    html, body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      background: #222;
-      color: #f0f0f0;
-      font-family: sans-serif;
-    }
     body {
-      flex: 1;
-      padding: 30px 15px 80px;
-      opacity: 0;
-      animation: fadeInBody 1s ease-in-out forwards;
-      position: relative;
-    }
-    @keyframes fadeInBody {
-      to { opacity: 1; }
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #eee;
+      margin: 0;
+      padding: 0;
     }
     h1 {
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 30px;
+      margin-top: 1em;
+      color: #ffd700;
     }
     .columns {
       display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 30px;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 2em;
     }
     .column {
-      flex: 1;
-      min-width: 250px;
-      max-width: 300px;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #ccc;
-      border-bottom: 1px solid #444;
-      padding-bottom: 5px;
-    }
-    .chapter-link {
-      display: block;
-      background: #f0f0f0;
-      color: #222;
-      padding: 15px 20px;
-      margin: 10px auto;
+      background: #2d2d2d;
       border-radius: 10px;
-      text-decoration: none;
-      max-width: 100%;
-      box-shadow: 0 0 10px #000;
-      font-size: 18px;
-      transition: transform 0.2s ease, background 0.3s ease;
+      box-shadow: 0 2px 12px #000a;
+      padding: 2em 1.5em 1em 1.5em;
+      min-width: 250px;
+      max-width: 330px;
     }
-    .chapter-link:hover {
-      background: #555;
-      transform: translateY(-4px);
+    .column h2 {
+      border-bottom: 1px solid #ffd700;
+      padding-bottom: 0.5em;
+      color: #ffd700;
     }
-    .special-box {
-      background: #f0f0f0;
-      color: #222;
-      padding: 12px 18px;
-      margin: 12px auto;
-      font-size: 16px;
+    .manga-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .manga-card {
+      margin: 1em 0;
+      padding: 1em;
+      background: #393939;
       border-radius: 8px;
-      box-shadow: 1px 1px 5px #000;
+      box-shadow: 0 1px 4px #0005;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2em;
+      transition: box-shadow 0.2s;
     }
-    #logoTopRight {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 50px;
-      opacity: 0.85;
-      cursor: pointer;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      z-index: 1000;
+    .manga-card:hover {
+      box-shadow: 0 4px 12px #ffd70055;
+      background: #444;
     }
-    #logoTopRight:hover {
-      transform: scale(1.1);
-      opacity: 1;
+    .manga-title {
+      font-size: 1.2em;
+      color: #ffd700;
+      text-decoration: none;
+      font-weight: bold;
     }
-    footer {
-      margin-top: auto;
-      text-align: right;
-      padding: 10px 20px;
-      font-size: 0.7em;
-      color: #aaa;
+    .manga-author {
+      font-size: 0.95em;
+      color: #eee;
     }
-    @media (max-width: 900px) {
+    .manga-link {
+      color: #ffd700;
+      text-decoration: underline;
+      font-size: 0.95em;
+      margin-top: 0.4em;
+    }
+    @media (max-width: 800px) {
       .columns {
         flex-direction: column;
         align-items: center;
       }
-    }
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 24px;
-      }
-      .chapter-link {
-        font-size: 16px;
-        padding: 12px;
-      }
-      #logoTopRight {
-        width: 40px;
-        top: 10px;
-        right: 10px;
+      .column {
+        width: 90vw;
+        max-width: none;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Logo -->
-  <img src="assets/favicon.png" alt="Logo du site" id="logoTopRight" />
-
-  <h1>Bienvenue sur mon site de lecture de Manga</h1>
-
+  <h1>LuK R. Manga Hub</h1>
   <div class="columns">
-    <!-- Oneshots -->
     <div class="column">
-      <h2>📕 Mes One-shots</h2>
-      <div id="oneshotsList"></div>
+      <h2>Mes Oneshots</h2>
+      <ul id="oneshot-list" class="manga-list"></ul>
     </div>
-
-    <!-- Séries -->
     <div class="column">
-      <h2>📚 Mes Séries</h2>
-      <div id="seriesList"></div>
-    </div>
-
-    <!-- Divers -->
-    <div class="column">
-      <h2>✨ Divers</h2>
-      <a class="chapter-link" href="BP-hub/BP-hub.html">📌Dernière Sortie</a>
-      <a class="chapter-link" href="https://x.com/LuKRvl" target="_blank">🐦 Suis-moi sur X</a>
+      <h2>Mes Séries</h2>
+      <ul id="series-list" class="manga-list"></ul>
     </div>
   </div>
 
-  <footer>
-    © 2025 LuKR. All rights reserved.
-  </footer>
-
-  <script src="mangas-data.js?v=3"></script>
+  <script src="mangas-data.js"></script>
   <script>
-    const oneshots = mangas.filter(m => m.isOneshot);
-    const seriesLongues = mangas.filter(m => !m.isOneshot);
-
-    mangas.forEach(manga => {
-      const link = document.createElement("a");
-      link.className = "chapter-link";
-      link.href = `manga-hub.html?manga=${manga.id}`;
-      link.textContent = manga.title;
-
-      if (manga.tag === "Oneshot") {
-        oneshotsList.appendChild(link);
-      } else {
-        seriesList.appendChild(link);
+    // Attendre que le fichier mangas-data.js soit bien chargé
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof mangas === "undefined") {
+        document.getElementById('oneshot-list').innerHTML = "<li>Erreur : mangas non chargé.</li>";
+        document.getElementById('series-list').innerHTML = "<li>Erreur : mangas non chargé.</li>";
+        return;
       }
+
+      const oneshotList = document.getElementById("oneshot-list");
+      const seriesList = document.getElementById("series-list");
+
+      // Oneshots
+      mangas.filter(m => m.isOneshot)
+        .forEach(manga => {
+          oneshotList.innerHTML += `
+            <li class="manga-card">
+              <span class="manga-title">${manga.title}</span>
+              <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
+              <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
+            </li>
+          `;
+        });
+
+      // Séries longues
+      mangas.filter(m => !m.isOneshot)
+        .forEach(manga => {
+          seriesList.innerHTML += `
+            <li class="manga-card">
+              <span class="manga-title">${manga.title}</span>
+              <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
+              <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
+            </li>
+          `;
+        });
     });
   </script>
 </body>
