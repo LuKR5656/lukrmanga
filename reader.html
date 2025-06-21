@@ -93,6 +93,30 @@
       user-select: none;
       z-index: 1000;
     }
+
+    #hint-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      display: none;
+      animation: fadeOut 3s forwards;
+    }
+    
+    #hint-image {
+      max-width: 80vw;
+      max-height: 80vh;
+      box-shadow: 0 0 12px #000a;
+      border-radius: 12px;
+    }
+    
+    /* Animation de disparition */
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; display: none; }
+    }
   </style>
 </head>
 <body>
@@ -100,6 +124,10 @@
   <div id="controls">
     <button id="btn-back">← Retour</button>
     <button id="btn-toggle-mode">Mode lecture : Horizontal</button>
+  </div>
+
+  <div id="hint-container">
+    <img id="hint-image" src="" alt="Hint lecture" />
   </div>
 
   <div id="reader"></div>
@@ -148,7 +176,9 @@
     if (!chapter) {
       reader.innerHTML = "<p style='color:red; text-align:center; padding:20px;'>Chapitre introuvable.</p>";
     } else {
-      loadPages();
+      loadPages().then(() => {
+        showHint('hor'); // ou 'ver' si verticalMode = true par défaut
+      });
     }
 
     async function loadPages() {
@@ -192,6 +222,19 @@
     function updatePageCounter() {
       pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
     }
+    
+    function showHint(mode) {
+      const hintContainer = document.getElementById('hint-container');
+      const hintImage = document.getElementById('hint-image');
+    
+      hintImage.src = `assets/hint-${mode}.png`;
+      hintContainer.style.display = 'block';
+    
+      // Redémarrer animation
+      hintContainer.style.animation = 'none';
+      void hintContainer.offsetWidth; // force reflow
+      hintContainer.style.animation = 'fadeOut 3s forwards';
+    }
 
     function goToPage(index) {
       index = Math.max(0, Math.min(index, totalPages - 1));
@@ -221,8 +264,8 @@
       }
 
       updatePageCounter();
+      showHint(verticalMode ? 'ver' : 'hor');
     };
-
     btnBack.onclick = () => {
       if (manga) {
         window.location.href = `manga-hub.html?manga=${encodeURIComponent(manga.id)}&lang=${lang}`;
