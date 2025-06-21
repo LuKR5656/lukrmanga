@@ -158,8 +158,8 @@
 
   <script src="mangas-data.js?v=2"></script>
   <script>
-    const oneshotsList = document.getElementById("oneshotsList");
-    const seriesList = document.getElementById("seriesList");
+    const oneshots = mangas.filter(m => m.isOneshot);
+    const seriesLongues = mangas.filter(m => !m.isOneshot);
 
     mangas.forEach(manga => {
       const link = document.createElement("a");
