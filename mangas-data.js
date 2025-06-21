@@ -4,6 +4,7 @@ const mangas = [
     title: "BoilingPoint",
     author: "LuK R.",
     isOneshot: true,
+    cover: "assets/covers/bp-cover.png",
     chapters: [
       {
         id: "bp-1",
@@ -21,6 +22,7 @@ const mangas = [
     title: "Eldorado",
     author: "LuK R.",
     isOneshot: false,
+    cover: "assets/covers/el-cover.png",
     chapters: [
       {
         id: "el-1",
@@ -41,6 +43,7 @@ EXEMPLE POUR AJOUTER UNE SÉRIE :
   id: "nouvelle_serie",
   title: "TitreNouvelleSerie",
   author: "Auteur...",
+  cover: "assets/covers/bp-cover.png",
   chapters: [
     {
       id: "nouvelle_serie-1",
