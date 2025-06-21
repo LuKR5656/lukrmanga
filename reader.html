@@ -105,10 +105,8 @@
     }
     
     #hint-image {
-      max-width: 80vw;
-      max-height: 80vh;
-      box-shadow: 0 0 12px #000a;
-      border-radius: 12px;
+      max-width: 65vw;
+      max-height: 65vh;
     }
     
     /* Animation de disparition */
@@ -116,6 +114,15 @@
       0% { opacity: 1; }
       80% { opacity: 1; }
       100% { opacity: 0; display: none; }
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .blinking {
+      animation: blink 0.8s ease-in-out 3; /* 3 fois */
     }
   </style>
 </head>
@@ -219,10 +226,6 @@
       updatePageCounter();
     }
 
-    function updatePageCounter() {
-      pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
-    }
-    
     function showHint(mode) {
       const hintContainer = document.getElementById('hint-container');
       const hintImage = document.getElementById('hint-image');
@@ -230,10 +233,18 @@
       hintImage.src = `assets/hint-${mode}.png`;
       hintContainer.style.display = 'block';
     
-      // Redémarrer animation
+      // Redémarrer animation fadeOut
       hintContainer.style.animation = 'none';
       void hintContainer.offsetWidth; // force reflow
       hintContainer.style.animation = 'fadeOut 3s forwards';
+    
+      // Ajouter classe blinking pour l'effet clignotant
+      hintImage.classList.add('blinking');
+    
+      // Retirer la classe blinking après 2.5 secondes
+      setTimeout(() => {
+         hintImage.classList.remove('blinking');
+      }, 2500);
     }
 
     function goToPage(index) {
