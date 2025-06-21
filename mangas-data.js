@@ -2,6 +2,7 @@ const mangas = [
   {
     id: "bp",
     title: "BoilingPoint",
+    author: "LuK R.",
     chapters: [
       {
         id: "bp-1",
@@ -47,6 +48,7 @@ const mangas = [
   {
     id: "id_unique_de_la_serie",         // exemple : "bp", "el"
     title: "TitreDeLaSerie",             // exemple : "BoilingPoint"
+        author: "LuK R.",                // exemple : "LuK R."
     chapters: [
       {
         id: "id_unique_chapitre",        // exemple : "bp-1"
