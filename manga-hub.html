@@ -291,7 +291,7 @@
       manga.chapters.forEach(chap => {
         const link = document.createElement("a");
         link.className = "chapter-link";
-        link.href = `reader.html?chap=${chap.id}&lang=${lang}&mode=horizontal`;
+        link.href = `reader.html?chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
         link.textContent = chap.title?.[lang] || `Chapitre ${chap.number}`;
         chapterList.appendChild(link);
       });
