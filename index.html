@@ -126,9 +126,10 @@
       transition: box-shadow 0.2s, background 0.2s;
       min-height: 180px;
     }
-    .manga-card:hover {
-      box-shadow: 0 4px 12px #ffd70055;
-      background: #444;
+    .manga-card a:hover .manga-cover {
+      box-shadow: 0 0 10px #ffd700, 0 2px 8px #0007;
+      transform: scale(1.05);
+      transition: box-shadow 0.2s, transform 0.2s;
     }
     .manga-cover {
       width: 90px;
@@ -263,10 +264,11 @@
         .forEach(manga => {
           oneshotList.innerHTML += `
             <li class="manga-card">
-              <img src="${manga.cover || 'assets/cover/${manga.id}-cover.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              <a href="${manga.id}-hub.html">
+                <img src="${manga.cover || 'assets/covers/default.png'}" alt="Couverture de ${manga.title}" class="manga-cover">
+              </a>
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
-              <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
             </li>
           `;
         });
