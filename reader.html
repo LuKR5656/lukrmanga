@@ -194,11 +194,11 @@
       const folder = chapter.pages[lang] || chapter.pages['fr'];
       let i = 1;
 
-      while (true) {
-        const img = new Image();
-        const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
-        img.src = fileName;
-
+     while (true) {
+       const img = new Image();
+       const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
+       img.src = fileName;
+     }
         try {
           await img.decode();
 
