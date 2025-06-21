@@ -130,7 +130,7 @@
           <p><b>Chapitre ${chapter.number}${chapter.title ? ": " + chapter.title : ""}</b></p>
           <p><b>Auteur:</b> ${manga.author || '???'}</p>
           <p><b>Langue:</b> ${lang.toUpperCase()}</p>
-          <button onclick="window.location.href='index.html'">Retour au hub</button>
+          <button onclick="window.location.href='${manga.id}-hub.html'">Retour au hub</button>
           <button onclick="changeMode()">Mode ${mode === 'horizontal' ? 'vertical' : 'horizontal'}</button>
           <button onclick="hideOverlay()">Fermer</button>
         </div>
