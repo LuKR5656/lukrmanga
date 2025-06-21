@@ -238,9 +238,9 @@
       const clickX = e.clientX;
       const screenWidth = window.innerWidth;
 
-      if (clickX < screenWidth * 0.3) {
+      if (clickX < screenWidth * 0.35) {
         goToPage(currentPage + 1); // aller à la page précédente (style manga)
-      } else if (clickX > screenWidth * 0.7) {
+      } else if (clickX > screenWidth * 0.45) {
         goToPage(currentPage - 1); // aller à la page suivante
       }
     });
