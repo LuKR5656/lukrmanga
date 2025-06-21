@@ -29,7 +29,7 @@ const mangas = [
     }
   },
   {
-    id: "eldorado",
+    id: "el",
     title: "Eldorado",
     author: "LuK R.",
     tag: "Serie",
@@ -39,7 +39,7 @@ const mangas = [
     },
     chapters: [
       {
-        id: "eldorado-1",
+        id: "el-1",
         number: 1,
         title: {
           fr: "Le Nouveau Monde",
@@ -52,7 +52,7 @@ const mangas = [
         }
       },
       {
-        id: "eldorado-2",
+        id: "el-2",
         number: 2,
         title: {
           fr: "L’île",
