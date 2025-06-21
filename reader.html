@@ -290,9 +290,9 @@
       const screenWidth = window.innerWidth;
 
       if (clickX < screenWidth * 0.5) {
-        goToPage(currentPage + 1); // clic à gauche = page suivante (index +1)
+        goToPage(currentPage - 1); // clic à gauche = page suivante (index +1)
       } else {
-        goToPage(currentPage - 1); // clic à droite = page précédente (index -1)
+        goToPage(currentPage + 1); // clic à droite = page précédente (index -1)
       }
     });
   </script>
