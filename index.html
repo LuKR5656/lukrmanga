@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>LuK R. Manga Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       margin: 0;
@@ -114,28 +115,42 @@
       box-shadow: 0 1px 4px #0005;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 0.3em;
       transition: box-shadow 0.2s, background 0.2s;
+      min-height: 180px;
     }
     .manga-card:hover {
       box-shadow: 0 4px 12px #ffd70055;
       background: #444;
+    }
+    .manga-cover {
+      width: 90px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 7px;
+      box-shadow: 0 2px 8px #0007;
+      margin-bottom: 0.6em;
+      background: #222;
     }
     .manga-title {
       font-size: 1.1em;
       color: #ffd700;
       text-decoration: none;
       font-weight: bold;
+      text-align: center;
     }
     .manga-author {
       font-size: 0.95em;
       color: #eee;
+      text-align: center;
     }
     .manga-link {
       color: #ffd700;
       text-decoration: underline;
       font-size: 0.95em;
       margin-top: 0.3em;
+      text-align: center;
     }
     @media (max-width: 1100px) {
       .main-content {
@@ -169,6 +184,10 @@
       .sidebar {
         padding: 1em 0.3em 0.7em 0.6em;
       }
+      .manga-cover {
+        width: 60px;
+        height: 90px;
+      }
     }
   </style>
 </head>
@@ -178,13 +197,13 @@
       <img src="images/carousel1.jpg" class="active" alt="slide 1">
       <img src="images/carousel2.jpg" alt="slide 2">
       <img src="images/carousel3.jpg" alt="slide 3">
-      <!-- Ajoute ou enlève des images ici -->
+      <!-- Ajoute/enlève des images ici selon ton dossier images/ -->
     </div>
   </div>
   <div class="main-content">
     <div class="sidebar">
       <h3>À propos</h3>
-      <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
+      <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
       <h3>Mes réseaux</h3>
       <ul>
         <li><a href="https://twitter.com/votre_twitter" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
@@ -193,8 +212,8 @@
         <!-- Ajoute d'autres liens si besoin -->
       </ul>
       <div class="pub">
-        <span>🚀 Espace Pub !<br>
-        Contacte-moi pour collaborer !</span>
+        🚀 Espace Pub !<br>
+        Contacte-moi pour collaborer !
       </div>
       <!-- Ajoute ici d'autres encarts à l'avenir -->
     </div>
@@ -212,7 +231,7 @@
 
   <script src="mangas-data.js"></script>
   <script>
-    // CAROUSEL D'IMAGES
+    // Carousel d'images
     document.addEventListener("DOMContentLoaded", function() {
       const carousel = document.getElementById("carousel");
       const images = carousel.querySelectorAll("img");
@@ -224,7 +243,7 @@
       }, 3200);
     });
 
-    // AFFICHAGE ONESHOTS / SERIES
+    // Affichage Oneshots / Séries avec couverture
     window.addEventListener("DOMContentLoaded", function () {
       if (typeof mangas === "undefined") {
         document.getElementById('oneshot-list').innerHTML = "<li>Erreur : mangas non chargé.</li>";
@@ -238,6 +257,7 @@
         .forEach(manga => {
           oneshotList.innerHTML += `
             <li class="manga-card">
+              <img src="${manga.cover || 'covers/default.jpg'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
@@ -248,6 +268,7 @@
         .forEach(manga => {
           seriesList.innerHTML += `
             <li class="manga-card">
+              <img src="${manga.cover || 'covers/default.jpg'}" alt="Couverture de ${manga.title}" class="manga-cover">
               <span class="manga-title">${manga.title}</span>
               <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
               <a class="manga-link" href="${manga.id}-hub.html">Voir le hub</a>
