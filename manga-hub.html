@@ -257,24 +257,24 @@
       location.reload();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+   window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('manga');
       const lang = localStorage.getItem('lang') || 'fr';
-
+    
       const manga = mangas.find(m => m.id === mangaId);
-
+    
       const titleEl = document.getElementById("manga-title");
       const resumeEl = document.getElementById("manga-resume");
       const chapterList = document.getElementById("chapter-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
-
+    
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
         return;
       }
-
+    
       const bgStyle = document.createElement("style");
       bgStyle.innerHTML = `
         header::before {
@@ -282,20 +282,23 @@
         }
       `;
       document.head.appendChild(bgStyle);
-
+    
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
-
+    
       chapterList.innerHTML = '';
-
+    
       manga.chapters.forEach(chap => {
         const link = document.createElement("a");
         link.className = "chapter-link";
-        link.href = `reader.html?chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
+    
+        // Construction dynamique du lien avec chap.path et params chap.id + lang
+        link.href = `${chap.path}?chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
+    
         link.textContent = chap.title?.[lang] || `Chapitre ${chap.number}`;
         chapterList.appendChild(link);
       });
-
+    
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
     });
