@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <title>Manga Reader</title>
@@ -72,8 +72,8 @@
   <script src="mangas-data.js"></script>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const chapId = urlParams.get("chap");
-    const lang = urlParams.get("lang") || localStorage.getItem("lang") || "fr";
+    const chapId = urlParams.get("chap") || "el-1"; // 👈 valeur par défaut
+    const lang = urlParams.get("lang") || "fr";     // 👈 valeur par défaut
 
     const reader = document.getElementById("reader");
     let verticalMode = true;
@@ -89,6 +89,7 @@
       const percent = (scrollTop / scrollHeight) * 100;
       document.getElementById("progress-bar").style.width = `${percent}%`;
     }
+
     window.addEventListener("scroll", updateProgress);
 
     const manga = mangas.find(m => m.chapters.some(c => c.id === chapId));
@@ -100,12 +101,16 @@
     const chapter = manga.chapters.find(c => c.id === chapId);
     const basePath = chapter.pages[lang];
 
+    if (!basePath) {
+      reader.innerHTML = "<p style='color:red;'>Langue non disponible.</p>";
+      throw new Error("Langue introuvable.");
+    }
+
     document.getElementById("serieName").textContent = manga.title;
     document.getElementById("chapterNum").textContent = chapter.number;
     document.getElementById("language").textContent = lang;
 
     const maxPages = 200;
-    let page = 1;
 
     async function loadImages() {
       for (let i = 1; i <= maxPages; i++) {
