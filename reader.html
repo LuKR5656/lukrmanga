@@ -210,7 +210,7 @@
     
           i++;
         } catch (e) {
-          break; // ✅ maintenant dans la boucle, donc légal
+          break;
         }
       }
     
@@ -220,18 +220,17 @@
         pages.forEach(p => p.style.display = 'flex');
       } else {
         pages.forEach(p => p.style.display = 'none');
-        if (pages[0]) pages[0].style.display = 'flex';
+        if (pages[totalPages - 1]) pages[totalPages - 1].style.display = 'flex';
         reader.scrollTop = 0;
       }
     
-      currentPage = 0;
+      currentPage = totalPages - 1; // <-- Commencer à la dernière page
       updatePageCounter();
     }
     
     function updatePageCounter() {
       pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
     }
-
 
     function showHint(mode) {
       const hintContainer = document.getElementById('hint-container');
@@ -242,13 +241,12 @@
     
       // Redémarrer animation fadeOut
       hintContainer.style.animation = 'none';
-      void hintContainer.offsetWidth; // force reflow
+      void hintContainer.offsetWidth;
       hintContainer.style.animation = 'fadeOut 3s forwards';
     
       // Ajouter classe blinking pour l'effet clignotant
       hintImage.classList.add('blinking');
     
-      // Retirer la classe blinking après 2.5 secondes
       setTimeout(() => {
          hintImage.classList.remove('blinking');
       }, 2500);
@@ -284,6 +282,7 @@
       updatePageCounter();
       showHint(verticalMode ? 'ver' : 'hor');
     };
+
     btnBack.onclick = () => {
       if (manga) {
         window.location.href = `manga-hub.html?manga=${encodeURIComponent(manga.id)}&lang=${lang}`;
@@ -292,19 +291,18 @@
       }
     };
 
-    // Navigation clic gauche/droite
+    // Navigation clic gauche/droite pour lecture droite à gauche
     document.addEventListener("click", (e) => {
       if (verticalMode) return;
-
-       if (e.target.closest('#controls')) return;
+      if (e.target.closest('#controls')) return;
 
       const clickX = e.clientX;
       const screenWidth = window.innerWidth;
 
-      if (clickX < screenWidth * 0.35) {
-        goToPage(currentPage + 1); // aller à la page précédente (style manga)
-      } else if (clickX > screenWidth * 0.45) {
-        goToPage(currentPage - 1); // aller à la page suivante
+      if (clickX < screenWidth * 0.5) {
+        goToPage(currentPage - 1); // clic à gauche = page suivante (index - 1)
+      } else {
+        goToPage(currentPage + 1); // clic à droite = page précédente (index + 1)
       }
     });
   </script>
