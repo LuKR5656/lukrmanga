@@ -5,35 +5,101 @@
   <title>LuK R. Manga Hub</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: #eee;
       margin: 0;
-      padding: 0;
+      background: #20232A;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
     }
-    h1 {
-      text-align: center;
-      margin-top: 1em;
+    .header {
+      width: 100vw;
+      background: #181a1f;
+      overflow: hidden;
+      position: relative;
+    }
+    .carousel {
+      width: 100vw;
+      height: 220px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100vw;
+      height: 220px;
+      object-fit: cover;
+      object-position: center;
+      transform: translate(-50%,-50%);
+      opacity: 0;
+      transition: opacity 0.7s;
+      z-index: 1;
+    }
+    .carousel img.active {
+      opacity: 1;
+      z-index: 2;
+    }
+    .main-content {
+      display: flex;
+      gap: 30px;
+      margin: 30px 5vw 0 5vw;
+      align-items: flex-start;
+    }
+    .sidebar {
+      width: 260px;
+      min-width: 180px;
+      background: #292d37;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #0007;
+      padding: 1.7em 1em 1em 1em;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+    .sidebar h3 {
+      margin-top: 0;
       color: #ffd700;
+    }
+    .sidebar ul {
+      padding-left: 1em;
+      margin-top: 0.2em;
+    }
+    .sidebar .pub {
+      background: #f9e79f;
+      color: #222;
+      text-align: center;
+      border-radius: 7px;
+      padding: 0.8em;
+      font-weight: bold;
+      font-size: 1.1em;
     }
     .columns {
       display: flex;
+      flex: 1;
+      gap: 36px;
       justify-content: center;
-      gap: 40px;
-      margin-top: 2em;
     }
     .column {
-      background: #2d2d2d;
+      background: #242830;
       border-radius: 10px;
-      box-shadow: 0 2px 12px #000a;
+      box-shadow: 0 2px 12px #0009;
       padding: 2em 1.5em 1em 1.5em;
       min-width: 250px;
-      max-width: 330px;
+      max-width: 340px;
+      flex: 1;
     }
     .column h2 {
-      border-bottom: 1px solid #ffd700;
+      border-bottom: 1.5px solid #ffd700;
       padding-bottom: 0.5em;
       color: #ffd700;
+      margin-top: 0;
     }
     .manga-list {
       margin: 0;
@@ -42,21 +108,21 @@
     }
     .manga-card {
       margin: 1em 0;
-      padding: 1em;
+      padding: 1em 1em 0.8em 1em;
       background: #393939;
       border-radius: 8px;
       box-shadow: 0 1px 4px #0005;
       display: flex;
       flex-direction: column;
-      gap: 0.2em;
-      transition: box-shadow 0.2s;
+      gap: 0.3em;
+      transition: box-shadow 0.2s, background 0.2s;
     }
     .manga-card:hover {
       box-shadow: 0 4px 12px #ffd70055;
       background: #444;
     }
     .manga-title {
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: #ffd700;
       text-decoration: none;
       font-weight: bold;
@@ -69,47 +135,105 @@
       color: #ffd700;
       text-decoration: underline;
       font-size: 0.95em;
-      margin-top: 0.4em;
+      margin-top: 0.3em;
     }
-    @media (max-width: 800px) {
+    @media (max-width: 1100px) {
+      .main-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sidebar {
+        width: 100%;
+        margin-bottom: 25px;
+        position: static;
+      }
       .columns {
         flex-direction: column;
-        align-items: center;
+        gap: 18px;
       }
       .column {
-        width: 90vw;
+        width: 100%;
         max-width: none;
+      }
+    }
+    @media (max-width: 700px) {
+      .carousel, .carousel img {
+        height: 110px;
+      }
+      .main-content {
+        margin: 15px 1vw 0 1vw;
+      }
+      .column {
+        padding: 1.2em 0.7em 0.6em 0.7em;
+      }
+      .sidebar {
+        padding: 1em 0.3em 0.7em 0.6em;
       }
     }
   </style>
 </head>
 <body>
-  <h1>LuK R. Manga Hub</h1>
-  <div class="columns">
-    <div class="column">
-      <h2>Mes Oneshots</h2>
-      <ul id="oneshot-list" class="manga-list"></ul>
+  <div class="header">
+    <div class="carousel" id="carousel">
+      <img src="images/carousel1.jpg" class="active" alt="slide 1">
+      <img src="images/carousel2.jpg" alt="slide 2">
+      <img src="images/carousel3.jpg" alt="slide 3">
+      <!-- Ajoute ou enlève des images ici -->
     </div>
-    <div class="column">
-      <h2>Mes Séries</h2>
-      <ul id="series-list" class="manga-list"></ul>
+  </div>
+  <div class="main-content">
+    <div class="sidebar">
+      <h3>À propos</h3>
+      <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
+      <h3>Mes réseaux</h3>
+      <ul>
+        <li><a href="https://twitter.com/votre_twitter" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
+        <li><a href="https://instagram.com/votre_instagram" target="_blank" rel="noopener" style="color:#ffd700;">Instagram</a></li>
+        <li><a href="https://tiktok.com/@votre_tiktok" target="_blank" rel="noopener" style="color:#ffd700;">TikTok</a></li>
+        <!-- Ajoute d'autres liens si besoin -->
+      </ul>
+      <div class="pub">
+        <span>🚀 Espace Pub !<br>
+        Contacte-moi pour collaborer !</span>
+      </div>
+      <!-- Ajoute ici d'autres encarts à l'avenir -->
+    </div>
+    <div class="columns">
+      <div class="column">
+        <h2>Mes Oneshots</h2>
+        <ul id="oneshot-list" class="manga-list"></ul>
+      </div>
+      <div class="column">
+        <h2>Mes Séries</h2>
+        <ul id="series-list" class="manga-list"></ul>
+      </div>
     </div>
   </div>
 
   <script src="mangas-data.js"></script>
   <script>
-    // Attendre que le fichier mangas-data.js soit bien chargé
+    // CAROUSEL D'IMAGES
+    document.addEventListener("DOMContentLoaded", function() {
+      const carousel = document.getElementById("carousel");
+      const images = carousel.querySelectorAll("img");
+      let idx = 0;
+      setInterval(() => {
+        images[idx].classList.remove("active");
+        idx = (idx + 1) % images.length;
+        images[idx].classList.add("active");
+      }, 3200);
+    });
+
+    // AFFICHAGE ONESHOTS / SERIES
     window.addEventListener("DOMContentLoaded", function () {
       if (typeof mangas === "undefined") {
         document.getElementById('oneshot-list').innerHTML = "<li>Erreur : mangas non chargé.</li>";
         document.getElementById('series-list').innerHTML = "<li>Erreur : mangas non chargé.</li>";
         return;
       }
-
       const oneshotList = document.getElementById("oneshot-list");
       const seriesList = document.getElementById("series-list");
 
-      // Oneshots
       mangas.filter(m => m.isOneshot)
         .forEach(manga => {
           oneshotList.innerHTML += `
@@ -120,8 +244,6 @@
             </li>
           `;
         });
-
-      // Séries longues
       mangas.filter(m => !m.isOneshot)
         .forEach(manga => {
           seriesList.innerHTML += `
