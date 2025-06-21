@@ -3,6 +3,7 @@ const mangas = [
     id: "bp",
     title: "BoilingPoint",
     author: "LuK R.",
+    isOneshot: true,
     chapters: [
       {
         id: "bp-1",
@@ -19,6 +20,7 @@ const mangas = [
     id: "el",
     title: "Eldorado",
     author: "LuK R.",
+    isOneshot: false,
     chapters: [
       {
         id: "el-1",
