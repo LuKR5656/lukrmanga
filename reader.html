@@ -193,40 +193,41 @@
     async function loadPages() {
       const folder = chapter.pages[lang] || chapter.pages['fr'];
       let i = 1;
-
-     while (true) {
-       const img = new Image();
-       const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
-       img.src = fileName;
-     }
+    
+      while (true) {
+        const img = new Image();
+        const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
+        img.src = fileName;
+    
         try {
           await img.decode();
-
+    
           const pageDiv = document.createElement('div');
           pageDiv.className = 'page';
           pageDiv.appendChild(img);
           reader.appendChild(pageDiv);
           pages.push(pageDiv);
-
+    
           i++;
         } catch (e) {
-          break;
+          break; // ✅ maintenant dans la boucle, donc légal
         }
       }
-
+    
       totalPages = pages.length;
-
+    
       if (verticalMode) {
         pages.forEach(p => p.style.display = 'flex');
       } else {
         pages.forEach(p => p.style.display = 'none');
-        pages[0].style.display = 'flex';
+        if (pages[0]) pages[0].style.display = 'flex';
         reader.scrollTop = 0;
       }
-
+    
       currentPage = 0;
       updatePageCounter();
     }
+
 
     function showHint(mode) {
       const hintContainer = document.getElementById('hint-container');
