@@ -2,134 +2,161 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Manga Reader</title>
+  <title>Manga Reader Universel</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    body {
-      margin: 0;
-      background: #111;
-      color: white;
-      font-family: sans-serif;
+    body { margin: 0; background: #181818; color: #fff; font-family: sans-serif; }
+    #reader { display: flex; width: 100vw; height: 100vh; overflow-x: auto; overflow-y: hidden; }
+    #reader.horizontal { flex-direction: row-reverse; }
+    #reader.vertical { flex-direction: column; overflow-y: auto; overflow-x: hidden; }
+    .manga-page { max-height: 100vh; max-width: 100vw; object-fit: contain; margin: auto; cursor: pointer; }
+    #info-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85); color: #fff; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
     }
-    #controls {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: #222;
-      padding: 10px;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #progress {
-      width: 100%;
-      height: 5px;
-      background: #444;
-      position: fixed;
-      top: 50px;
-      z-index: 15;
-    }
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #0f0;
-    }
-    #reader {
-      margin-top: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .horizontal #reader {
-      flex-direction: row;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      align-items: flex-start;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      margin: 10px 0;
-    }
-    .horizontal img {
-      height: 100vh;
-      width: auto;
-      margin: 0 10px;
-    }
+    #info-overlay.hidden { display: none; }
+    #info-overlay .overlay-content { background: #222; padding: 2em; border-radius: 1em; text-align:center;}
+    #info-overlay button { margin: 0.5em; padding: 0.7em 1.2em; border:none; border-radius: 0.5em; background: #00c3ff; color:#fff; cursor: pointer; font-size:1em;}
   </style>
 </head>
 <body>
-  <div id="controls">
-    <div>
-      <span id="serieName"></span> - Chapitre <span id="chapterNum"></span> (<span id="language"></span>)
-    </div>
-    <button onclick="toggleMode()">Basculer Lecture</button>
-  </div>
-  <div id="progress"><div id="progress-bar"></div></div>
-  <div id="reader"></div>
-
-  <script src="mangas-data.js"></script>
+  <div id="reader" class="horizontal"></div>
+  <div id="info-overlay" class="hidden"></div>
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const chapId = urlParams.get("chap") || "el-1"; // 👈 valeur par défaut
-    const lang = urlParams.get("lang") || "fr";     // 👈 valeur par défaut
-
-    const reader = document.getElementById("reader");
-    let verticalMode = true;
-
-    function toggleMode() {
-      verticalMode = !verticalMode;
-      document.body.classList.toggle('horizontal', !verticalMode);
-    }
-
-    function updateProgress() {
-      const scrollTop = window.scrollY;
-      const scrollHeight = document.body.scrollHeight - window.innerHeight;
-      const percent = (scrollTop / scrollHeight) * 100;
-      document.getElementById("progress-bar").style.width = `${percent}%`;
-    }
-
-    window.addEventListener("scroll", updateProgress);
-
-    const manga = mangas.find(m => m.chapters.some(c => c.id === chapId));
-    if (!manga) {
-      reader.innerHTML = "<p style='color:red;'>Chapitre non trouvé.</p>";
-      throw new Error("Chapitre introuvable.");
-    }
-
-    const chapter = manga.chapters.find(c => c.id === chapId);
-    const basePath = chapter.pages[lang];
-
-    if (!basePath) {
-      reader.innerHTML = "<p style='color:red;'>Langue non disponible.</p>";
-      throw new Error("Langue introuvable.");
-    }
-
-    document.getElementById("serieName").textContent = manga.title;
-    document.getElementById("chapterNum").textContent = chapter.number;
-    document.getElementById("language").textContent = lang;
-
-    const maxPages = 200;
-
-    async function loadImages() {
-      for (let i = 1; i <= maxPages; i++) {
-        const img = new Image();
-        img.src = `${basePath}${i}.png`;
-        img.loading = "lazy";
-
-        const result = await new Promise(resolve => {
-          img.onload = () => resolve(true);
-          img.onerror = () => resolve(false);
-        });
-
-        if (!result) break;
-        reader.appendChild(img);
+    // EXEMPLE DE BASE DE DONNÉES (à adapter selon ta structure réelle)
+    const mangas = [
+      {
+        id: "bp",
+        title: "BoilingPoint",
+        author: "Auteur inconnu",
+        chapters: [
+          {
+            id: "bp-1",
+            number: 1,
+            title: "Premier Chapitre",
+            numPages: 10,
+            pages: {
+              fr: "/page/bp/chap1/fr/",
+              en: "/page/bp/chap1/en/"
+            }
+          }
+        ]
+      },
+      {
+        id: "el",
+        title: "Eldorado",
+        author: "Auteur inconnu",
+        chapters: [
+          {
+            id: "el-1",
+            number: 1,
+            title: "Commencement",
+            numPages: 14,
+            pages: {
+              fr: "/page/el/chap1/fr/",
+              en: "/page/el/chap1/en/"
+            }
+          },
+          {
+            id: "el-2",
+            number: 2,
+            title: "La suite",
+            numPages: 12,
+            pages: {
+              fr: "/page/el/chap2/fr/",
+              en: "/page/el/chap2/en/"
+            }
+          }
+        ]
       }
+    ];
+
+    // --- UTILITAIRES ---
+    function getParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        manga: params.get('manga') || mangas[0].id,
+        chapter: params.get('chapter') || mangas[0].chapters[0].id,
+        lang: params.get('lang') || 'fr'
+      };
     }
 
-    loadImages();
-    console.log("Tentative de chargement de :", window.location.origin + '/' + basePath + i + '.png');
+    function getChapterData(mangas, mangaId, chapterId) {
+      const manga = mangas.find(m => m.id === mangaId);
+      if (!manga) return null;
+      const chapter = manga.chapters.find(c => c.id === chapterId);
+      return { manga, chapter };
+    }
+
+    // ICI on suppose que les images sont nommées 1.png, 2.png... dans le dossier indiqué.
+    function getPages(chapter, lang) {
+      const base = chapter.pages[lang];
+      const numPages = chapter.numPages || 0;
+      return Array.from({length: numPages}, (_,i) => `${base}${i+1}.png`);
+    }
+
+    // --- READER ---
+    let mode = localStorage.getItem('reader-mode') || 'horizontal';
+
+    function renderReader(pages) {
+      const reader = document.getElementById('reader');
+      reader.className = mode;
+      reader.innerHTML = '';
+      pages.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'manga-page';
+        img.onclick = (e) => { if (e.target === img) showOverlay(); };
+        reader.appendChild(img);
+      });
+    }
+
+    function showOverlay() {
+      const overlay = document.getElementById('info-overlay');
+      overlay.classList.remove('hidden');
+    }
+    function hideOverlay() {
+      const overlay = document.getElementById('info-overlay');
+      overlay.classList.add('hidden');
+    }
+
+    function renderOverlay(manga, chapter, lang) {
+      const overlay = document.getElementById('info-overlay');
+      overlay.innerHTML = `
+        <div class="overlay-content">
+          <h2>${manga.title}</h2>
+          <p><b>Chapitre ${chapter.number}${chapter.title ? ": " + chapter.title : ""}</b></p>
+          <p><b>Auteur:</b> ${manga.author || '???'}</p>
+          <p><b>Langue:</b> ${lang.toUpperCase()}</p>
+          <button onclick="window.location.href='index.html'">Retour au hub</button>
+          <button onclick="changeMode()">Mode ${mode === 'horizontal' ? 'vertical' : 'horizontal'}</button>
+          <button onclick="hideOverlay()">Fermer</button>
+        </div>
+      `;
+    }
+
+    function changeMode() {
+      mode = mode === 'horizontal' ? 'vertical' : 'horizontal';
+      localStorage.setItem('reader-mode', mode);
+      window.location.reload();
+    }
+
+    // --- INITIALISATION ---
+    window.onload = () => {
+      const params = getParams();
+      const found = getChapterData(mangas, params.manga, params.chapter);
+      if (!found) {
+        document.getElementById('reader').innerHTML = '<p>Manga ou chapitre introuvable.</p>';
+        return;
+      }
+      const { manga, chapter } = found;
+      const pages = getPages(chapter, params.lang);
+      renderReader(pages);
+      renderOverlay(manga, chapter, params.lang);
+      document.getElementById('info-overlay').onclick = (e) => { if (e.target.id === 'info-overlay') hideOverlay(); };
+    };
   </script>
 </body>
 </html>
