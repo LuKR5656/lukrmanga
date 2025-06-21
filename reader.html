@@ -196,7 +196,7 @@
 
       while (true) {
         const img = new Image();
-        const fileName = ${folder}${String(i).padStart(3, '0')}.png;
+        const fileName = `${folder}${String(i).padStart(3, '0')}.png`;
         img.src = fileName;
 
         try {
@@ -232,7 +232,7 @@
       const hintContainer = document.getElementById('hint-container');
       const hintImage = document.getElementById('hint-image');
     
-      hintImage.src = assets/hint-${mode}.png;
+      hintImage.src = `assets/hint-${mode}.png`;
       hintContainer.style.display = 'block';
     
       // Redémarrer animation fadeOut
@@ -281,9 +281,9 @@
     };
     btnBack.onclick = () => {
       if (manga) {
-        window.location.href = manga-hub.html?manga=${encodeURIComponent(manga.id)}&lang=${lang};
+        window.location.href = `manga-hub.html?manga=${encodeURIComponent(manga.id)}&lang=${lang}`;
       } else {
-        window.location.href = manga-hub.html?lang=${lang};
+        window.location.href = `manga-hub.html?lang=${lang}`;
       }
     };
 
