@@ -264,13 +264,11 @@
 
       if (verticalMode) {
         reader.classList.add('vertical');
-        reader.style.overflow = 'auto';
         pages.forEach(p => p.style.display = 'flex');
         reader.scrollTop = 0;
         btnToggleMode.textContent = lang === 'en' ? 'Reading mode: Vertical' : 'Mode lecture : Vertical';
       } else {
         reader.classList.remove('vertical');
-        reader.style.overflow = 'hidden';
         pages.forEach(p => p.style.display = 'none');
         pages[currentPage].style.display = 'flex';
         btnToggleMode.textContent = lang === 'en' ? 'Reading mode: Horizontal' : 'Mode lecture : Horizontal';
