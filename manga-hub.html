@@ -17,18 +17,20 @@
       flex-direction: column;
       height: 100vh;
     }
+
+    /* HEADER AVEC BACKGROUND MANGA DYNAMIQUE */
     header {
       background: #232323;
-      padding: 22px 30px;
+      padding: 22px 30px 26px 30px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 2px 18px #000a;
       position: relative;
-      position: relative;
       overflow: hidden;
-      overflow: hidden;
+      min-height: 33vh;
+      border-radius: 0 0 20px 20px;
     }
-     header::before {
+    header::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -36,15 +38,21 @@
       background-size: 150% 150%;
       background-position: 0 center;
       animation: scrollImages 75s linear infinite;
-      filter: blur(6px);
+      filter: blur(10px) brightness(0.7) grayscale(0.15);
       z-index: 0;
-      /* background-image sera injecté dynamiquement via JS */
+      transition: background-image .2s;
+    }
+    @keyframes scrollImages {
+      0% { background-position-x: 0%; }
+      100% { background-position-x: -100%; }
     }
     .header-top {
       display: flex;
       align-items: center;
       gap: 30px;
       margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
     }
     .home-btn {
       background: #ffd700;
@@ -71,16 +79,23 @@
       font-weight: bold;
       color: #ffd700;
       letter-spacing: 1px;
+      background: rgba(0,0,0,0.55);
+      padding: 6px 18px 8px 18px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px #000a;
     }
     .resume {
       font-size: 1.13em;
-      color: #ccc;
-      background: rgba(0,0,0,0.26);
-      padding: 8px 15px;
+      color: #eee;
+      background: rgba(20,20,20,0.62);
+      padding: 10px 17px;
       border-radius: 13px;
       margin-bottom: 0;
       margin-top: 7px;
       max-width: 650px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 4px 16px #0002;
     }
     main {
       flex: 1;
@@ -171,7 +186,7 @@
       <button class="lang-btn" id="btn-en" onclick="changeLang('en')">English</button>
     </aside>
   </main>
-  <footer>
+  <footer style="text-align:right; padding: 10px; font-size: 0.7em; color: #aaa;">
     © 2025 LuKR. All rights reserved.
   </footer>
   <script src="manga-data.js"></script>
@@ -197,6 +212,16 @@
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
         return;
+      }
+      // Ajoute dynamiquement le background du header
+      if (manga.assets?.background) {
+        const bgStyle = document.createElement("style");
+        bgStyle.innerHTML = `
+          header::before {
+            background-image: url('${manga.assets.background}');
+          }
+        `;
+        document.head.appendChild(bgStyle);
       }
       titleEl.textContent = manga.title;
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
