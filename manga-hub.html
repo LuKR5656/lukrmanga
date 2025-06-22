@@ -24,7 +24,21 @@
       flex-direction: column;
       box-shadow: 0 2px 18px #000a;
       position: relative;
+      position: relative;
       overflow: hidden;
+      overflow: hidden;
+    }
+     header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-repeat: repeat-x;
+      background-size: 150% 150%;
+      background-position: 0 center;
+      animation: scrollImages 75s linear infinite;
+      filter: blur(6px);
+      z-index: 0;
+      /* background-image sera injecté dynamiquement via JS */
     }
     .header-top {
       display: flex;
