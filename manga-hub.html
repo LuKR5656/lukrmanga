@@ -293,7 +293,7 @@
         link.className = "chapter-link";
     
         // Construction dynamique du lien avec chap.path et params chap.id + lang
-        link.href = `${chap.path}?chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
+        link.href = `reader.html?manga=${encodeURIComponent(manga.id)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
     
         link.textContent = chap.title?.[lang] || `Chapitre ${chap.number}`;
         chapterList.appendChild(link);
