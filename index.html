@@ -12,44 +12,6 @@
       font-family: Arial, sans-serif;
       min-height: 100vh;
     }
-    .header {
-      width: 100vw;
-      background: #181a1f;
-      overflow: hidden;
-      position: relative;
-    }
-    .carousel {
-      width: 100vw;
-      height: 320px;
-      position: relative;
-      overflow: hidden;
-      background: #222;
-    }
-    .carousel img {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 100vw;
-      height: 320px;
-      object-fit: cover;        
-      object-position: center 60%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.7s;
-      z-index: 1;
-      background: #222;
-    }
-    .carousel img.active {
-      opacity: 1;
-      z-index: 2;
-    }
-    @media (max-width: 700px) {
-      .carousel,
-      .carousel img {
-        height: 110px;
-      }
-    }
-
     .main-content {
       display: flex;
       flex-direction: row;
@@ -63,41 +25,20 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 26px;
     }
-    .sidebar {
-      flex: 1 1 220px;
-      min-width: 180px;
-      background: #292d37;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px #0007;
-      padding: 1.7em 1em 1em 1em;
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5em;
-      height: fit-content;
-      position: sticky;
-      top: 20px;
-      max-width: 280px;
-    }
-    .sidebar h3 {
-      margin-top: 0;
-      color: #ffd700;
-    }
-    .sidebar ul {
-      padding-left: 1em;
-      margin-top: 0.2em;
-    }
-    .sidebar .pub {
-      background: #f9e79f;
-      color: #222;
-      text-align: center;
-      border-radius: 7px;
-      padding: 0.8em;
+    .column-label {
+      grid-column: 1 / -1;
+      font-size: 1.22em;
       font-weight: bold;
-      font-size: 1.1em;
+      margin: 0 0 12px 0;
+      color: #ffd700;
+      text-align: left;
+      letter-spacing: 1px;
+      background: none;
+      padding: 3px 0 7px 0;
+      border-bottom: 2px solid #ffd70044;
+      margin-bottom: 12px;
+      margin-top: 0;
     }
-
-    /* Carte style Manga+ */
     .manga-card {
       position: relative;
       height: 210px;
@@ -132,10 +73,10 @@
       left: 0; bottom: 0;
       width: 100%;
       height: 70%;
-      background: linear-gradient(to top, rgba(17,17,17,0.7) 35%, rgba(17,17,17,0.01) 100%);
+      background: linear-gradient(to top, rgba(17,17,17,0.5) 25%, rgba(17,17,17,0.01) 100%);
       z-index: 2;
       pointer-events: none;
-       border-radius: 11px;
+      border-radius: 11px;
     }
     .manga-infos {
       position: absolute;
@@ -178,22 +119,6 @@
       color: inherit;
       cursor: pointer;
     }
-
-    .column-label {
-      grid-column: 1 / -1;
-      font-size: 1.22em;
-      font-weight: bold;
-      margin: 0 0 12px 0;
-      color: #ffd700;
-      text-align: left;
-      letter-spacing: 1px;
-      background: none;
-      padding: 3px 0 7px 0;
-      border-bottom: 2px solid #ffd70044;
-      margin-bottom: 12px;
-      margin-top: 0;
-    }
-
     @media (max-width: 1200px) {
       .main-content {
         flex-direction: column;
@@ -201,11 +126,6 @@
       .manga-column {
         grid-template-columns: repeat(2, 1fr);
         margin-bottom: 28px;
-      }
-      .sidebar {
-        max-width: 100%;
-        margin-top: 10px;
-        position: static;
       }
     }
     @media (max-width: 800px) {
@@ -221,116 +141,54 @@
       .manga-card {
         height: 155px;
       }
-      .sidebar {
-        padding: 1em 0.3em 0.7em 0.6em;
-      }
-      .column-label {
-        font-size: 1.05em;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="carousel" id="carousel">
-      <img src="assets/carousel/car1.png" class="active" alt="slide 1">
-      <img src="assets/carousel/car2.png" alt="slide 2">
-      <img src="assets/carousel/car3.png" alt="slide 3">
-      <!-- Ajoute/enlève des images ici selon ton dossier images/ -->
-    </div>
-  </div>
   <div class="main-content">
     <div style="display:flex; flex-direction:column; flex:2 1 0; gap:36px;">
       <div class="manga-column" id="series-column">
         <span class="column-label">Mes Séries</span>
-        <!-- Les cartes séries seront ici -->
       </div>
       <div class="manga-column" id="oneshot-column">
         <span class="column-label">Mes Oneshots</span>
-        <!-- Les cartes oneshot seront ici -->
       </div>
     </div>
-    <aside class="sidebar">
-      <h3>À propos</h3>
-      <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
-      <h3>Mes réseaux</h3>
-      <ul>
-        <li><a href="https://x.com/LuKRvl" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
-        <li><a href="https://instagram.com/votre_instagram" target="_blank" rel="noopener" style="color:#ffd700;">Instagram</a></li>
-        <li><a href="https://tiktok.com/@votre_tiktok" target="_blank" rel="noopener" style="color:#ffd700;">TikTok</a></li>
-        <!-- Ajoute d'autres liens si besoin -->
-      </ul>
-      <div class="pub">
-        🚀 Espace Pub !<br>
-        Contacte-moi pour collaborer !
-      </div>
-      <!-- Ajoute ici d'autres encarts à l'avenir -->
-    </aside>
   </div>
-
   <script src="mangas-data.js"></script>
   <script>
-    // Carousel d'images
-    document.addEventListener("DOMContentLoaded", function() {
-      const carousel = document.getElementById("carousel");
-      const images = carousel.querySelectorAll("img");
-      let idx = 0;
-      setInterval(() => {
-        images[idx].classList.remove("active");
-        idx = (idx + 1) % images.length;
-        images[idx].classList.add("active");
-      }, 5000);
-    });
-
-    // Affichage Oneshots / Séries façon Manga+
     window.addEventListener("DOMContentLoaded", function () {
-      if (typeof mangas === "undefined") {
-        document.getElementById('oneshot-column').innerHTML += "<li>Erreur : mangas non chargé.</li>";
-        document.getElementById('series-column').innerHTML += "<li>Erreur : mangas non chargé.</li>";
-        return;
-      }
+      if (typeof mangas === "undefined") return;
       const oneshotColumn = document.getElementById("oneshot-column");
       const seriesColumn = document.getElementById("series-column");
-
-      // Efface tout sauf le titre de colonne
-      oneshotColumn.innerHTML = '<span class="column-label">Mes Oneshots</span>';
-      seriesColumn.innerHTML = '<span class="column-label">Mes Séries</span>';
 
       function getCoverUrl(manga) {
         return manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`;
       }
-
-      mangas.filter(m => m.isOneshot)
+      function makeMangaCard(manga) {
+        return `
+          <div class="manga-card">
+            <a href="manga-hub.html?id=${manga.id}">
+              <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
+                onerror="this.onerror=null;this.src='assets/cover/default.png';">
+              <div class="manga-gradient"></div>
+              <div class="manga-infos">
+                <span class="manga-title">${manga.title}</span>
+                <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
+              </div>
+            </a>
+          </div>
+        `;
+      }
+      // Oneshots
+      mangas.filter(m => Array.isArray(m.tags) && m.tags.includes("#Oneshot"))
         .forEach(manga => {
-          oneshotColumn.innerHTML += `
-            <div class="manga-card">
-              <a href="manga-hub.html?id=${manga.id}">
-                <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
-                  onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
-                <div class="manga-gradient"></div>
-                <div class="manga-infos">
-                  <span class="manga-title">${manga.title}</span>
-                  <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
-                </div>
-              </a>
-            </div>
-          `;
+          oneshotColumn.innerHTML += makeMangaCard(manga);
         });
-      mangas.filter(m => !m.isOneshot)
+      // Séries
+      mangas.filter(m => Array.isArray(m.tags) && m.tags.includes("#Serie"))
         .forEach(manga => {
-          seriesColumn.innerHTML += `
-            <div class="manga-card">
-              <a href="manga-hub.html?id=${manga.id}">
-                <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
-                  onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
-                <div class="manga-gradient"></div>
-                <div class="manga-infos">
-                  <span class="manga-title">${manga.title}</span>
-                  <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
-                </div>
-              </a>
-            </div>
-          `;
+          seriesColumn.innerHTML += makeMangaCard(manga);
         });
     });
   </script>
