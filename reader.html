@@ -2,262 +2,283 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Lecteur Manga</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LuK R. Manga Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    html,body {margin:0;padding:0; height:100%; background:#181818;}
-    body {width:100vw;height:100vh;overflow:hidden;}
-    #reader {
-      position:fixed; top:0; left:0; width:100vw; height:100vh;
-      background:#181818; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    body {
+      margin: 0;
+      background: #181818;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
     }
-    #main-image, .page-img {
-      max-width:100vw; max-height:100vh; display:block; margin:auto;
-      background:#222; border-radius:8px; box-shadow:0 4px 28px #000a;
-      cursor:pointer;
-      transition: box-shadow .2s;
-      user-select: none;
-      -webkit-user-select: none;
+    .main-header {
+      background: #232323;
+      color: #ffd700;
+      box-shadow: 0 2px 18px #000a;
+      padding: 22px 28px;
+      display: flex; align-items: center; gap: 16px;
     }
-    #main-image:active, .page-img:active {box-shadow:0 0 32px #ffd700;}
-    #overlay {
-      position:fixed; top:0; left:0; width:100vw; height:100vh;
-      pointer-events:none;
-      z-index:10;
+    .site-title {
+      font-size: 2.2em;
+      font-weight: bold;
+      margin: 0;
+      letter-spacing: 1px;
     }
-    #overlay-gradient {
-      position:absolute; top:0; right:0; width:100vw; height:100vh;
-      background: linear-gradient(to left, rgba(32,32,32,0.80) 32vw, rgba(32,32,32,0.0) 0%);
-      pointer-events: all;
-      transition: background 0.2s;
-      display:none;
-      z-index:11;
+    .carousel {
+      width: 100vw;
+      height: 320px;
+      position: relative;
+      overflow: hidden;
+      background: #222;
     }
-    #sidebar {
-      position: fixed;
-      top: 0; right: 0;
-      width: 32vw;
-      max-width: 400px;
-      height: 100vh;
-      background: rgba(32,32,32,0.98);
-      box-shadow: -12px 0 32px #000b;
-      border-radius: 18px 0 0 18px;
-      transform: translateX(100%);
-      transition: transform 0.33s cubic-bezier(.59,.04,.17,1.61);
-      z-index:12;
-      display:flex; flex-direction:column; justify-content:center; align-items:center;
-      gap: 23px;
-      padding:46px 7vw 36px 2vw;
+    .carousel img {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 100vw; height: 320px;
+      object-fit: cover;
+      object-position: center 60%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.7s;
+      z-index: 1;
+      background: #222;
     }
-    #sidebar.open { transform: translateX(0); }
-    #overlay-gradient.open { display:block; }
-    #toggle-sidebar-btn {
-      position:fixed;top:20px;right:20px;z-index:15;background:rgba(24,24,24,0.76);border:none;border-radius:50%;width:56px;height:56px;
-      color:#ffd700;font-size:2.1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 12px #0007;display:flex;align-items:center;justify-content:center;
-      transition:background 0.2s;
+    .carousel img.active {
+      opacity: 1;
+      z-index: 2;
     }
-    #toggle-sidebar-btn:hover {background:rgba(32,32,32,0.95);}
-    #sidebar h2 {margin:0;font-size:1.2em;}
-    #sidebar h3 {margin:0;color:#ffd700;font-size:1em;}
-    #sidebar .author {margin:0 0 10px 0; color:#aaa;font-size:.95em;}
-    #sidebar .page-indicator {margin:15px 0 0 0; color:#ffd700;}
-    #sidebar .actions {margin-top:18px;display:flex;gap:16px;}
-    #sidebar button {
-      background:#ffd700; border:none; border-radius:7px; padding:11px 22px; font-size:1em; cursor:pointer; font-weight:bold;
-      box-shadow:0 2px 8px #0005;
-      color:#222;
-      transition:background .2s;
+    @media (max-width: 700px) {
+      .carousel,
+      .carousel img { height: 110px; }
     }
-    #sidebar button:hover {background:#fff333;}
-    #mode-btn {
-      background: #333; color:#ffd700; border:2px solid #ffd700; font-size:1.1em; box-shadow:none;
-      padding:10px 24px;
+    .main-content {
+      display: flex;
+      flex-direction: row;
+      gap: 36px;
+      margin: 30px 3vw 0 3vw;
+      align-items: flex-start;
     }
-    #mode-btn:hover {
-      background:#ffd700; color:#222;
+    .manga-column {
+      flex: 2 1 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 26px;
     }
-    #sidebar .resume {
-      color:#ccc; font-size:.95em; margin-top:8px; text-align:justify;
-      max-width:290px;
+    .sidebar {
+      flex: 1 1 220px;
+      min-width: 180px;
+      background: #232323;
+      border-radius: 13px;
+      box-shadow: 0 2px 10px #0007;
+      padding: 1.7em 1em 1em 1em;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+      max-width: 280px;
     }
-    @media (max-width:900px) {
-      #sidebar {width:96vw;max-width:99vw; padding:32px 15vw 24px 4vw;}
-      #overlay-gradient {width:100vw;}
+    .sidebar h3 {
+      margin-top: 0;
+      color: #ffd700;
+      font-size: 1.1em;
     }
-    @media (max-width:700px) {
-      #main-image {max-width:98vw; max-height:65vh;}
-      .page-img{max-width:98vw;}
-      #sidebar{width:99vw;max-width:99vw; border-radius:0;}
-      #overlay-gradient {width:100vw;}
+    .sidebar ul {
+      padding-left: 1em;
+      margin-top: 0.2em;
     }
-    #pages.vertical {
-      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      width: 100vw; height: 100vh; overflow-y: auto; gap: 18px;
-      padding: 3vh 0 0 0;
+    .sidebar .pub {
+      background: #ffd70044;
+      color: #222;
+      text-align: center;
+      border-radius: 7px;
+      padding: 0.8em;
+      font-weight: bold;
+      font-size: 1.1em;
     }
-    #pages.horizontal {display:none;}
-    #pages.vertical .page-img {margin-bottom:8px;}
+    .manga-card {
+      position: relative;
+      height: 210px;
+      cursor: pointer;
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 0 3px 15px #0007;
+      transition: transform 0.18s, box-shadow 0.18s;
+      display: flex;
+      align-items: flex-end;
+      background: #232323;
+    }
+    .manga-card:hover {
+      transform: scale(1.035);
+      box-shadow: 0 6px 30px #ffd70044, 0 3px 20px #000a;
+    }
+    .manga-cover-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      top: 0; left: 0;
+      z-index: 1;
+      filter: brightness(0.82);
+      transition: filter 0.18s;
+    }
+    .manga-card:hover .manga-cover-bg { filter: brightness(1); }
+    .manga-gradient {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%; height: 70%;
+      background: linear-gradient(to top, rgba(17,17,17,0.7) 35%, rgba(17,17,17,0.01) 100%);
+      z-index: 2; pointer-events: none;
+      border-radius: 13px;
+    }
+    .manga-infos {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%; z-index: 3;
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding: 16px 15px 12px 15px;
+      color: #fff;
+    }
+    .manga-title {
+      font-size: 1.05em;
+      font-weight: bold;
+      color: #ffd700;
+      line-height: 1.2;
+      text-shadow: 0 2px 10px #000c;
+      margin-bottom: 2px;
+      max-width: 90%;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .manga-author {
+      font-size: 0.96em;
+      color: #eee;
+      text-shadow: 0 2px 5px #000b;
+      opacity: 0.84;
+      max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .manga-card a { display: block; width: 100%; height: 100%; text-decoration: none; color: inherit; cursor: pointer; }
+    .column-label {
+      grid-column: 1 / -1;
+      font-size: 1.22em;
+      font-weight: bold;
+      color: #ffd700;
+      text-align: left;
+      letter-spacing: 1px;
+      background: none;
+      padding: 3px 0 7px 0;
+      border-bottom: 2px solid #ffd70044;
+      margin-bottom: 12px;
+      margin-top: 0;
+    }
+    @media (max-width: 1200px) {
+      .main-content { flex-direction: column; }
+      .manga-column { grid-template-columns: repeat(2, 1fr); margin-bottom: 28px; }
+      .sidebar { max-width: 100%; margin-top: 10px; position: static; }
+    }
+    @media (max-width: 800px) { .manga-column { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) {
+      .main-content { margin: 13px 1vw 0 1vw; gap: 12px; }
+      .manga-card { height: 155px; }
+      .sidebar { padding: 1em 0.3em 0.7em 0.6em; }
+      .column-label { font-size: 1.05em; }
+    }
   </style>
 </head>
 <body>
-  <div id="reader">
-    <img id="main-image" src="" alt="Page Manga">
-    <div id="pages" class="vertical" style="display:none;"></div>
-    <button id="toggle-sidebar-btn" title="Menu/Infos">&#9776;</button>
+  <header class="main-header">
+    <span class="site-title">LuK R. Manga Hub</span>
+  </header>
+  <div class="carousel" id="carousel">
+    <img src="assets/carousel/car1.png" class="active" alt="slide 1">
+    <img src="assets/carousel/car2.png" alt="slide 2">
+    <img src="assets/carousel/car3.png" alt="slide 3">
   </div>
-  <div id="overlay">
-    <div id="overlay-gradient"></div>
-    <aside id="sidebar">
-      <h2 id="mangatitle"></h2>
-      <div class="author" id="author"></div>
-      <h3 id="chaptitle"></h3>
-      <div class="page-indicator" id="page-indicator"></div>
-      <button id="mode-btn">Lire en vertical</button>
-      <div class="actions">
-        <button id="back-btn">Retour</button>
+  <div class="main-content">
+    <div style="display:flex; flex-direction:column; flex:2 1 0; gap:36px;">
+      <div class="manga-column" id="series-column">
+        <span class="column-label">Mes Séries</span>
       </div>
-      <div class="resume" id="resume"></div>
+      <div class="manga-column" id="oneshot-column">
+        <span class="column-label">Mes Oneshots</span>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <h3>À propos</h3>
+      <p>Bienvenue sur le hub officiel de LuK R. !<br>Découvre mes mangas et lectures originales.</p>
+      <h3>Mes réseaux</h3>
+      <ul>
+        <li><a href="https://x.com/LuKRvl" target="_blank" rel="noopener" style="color:#ffd700;">Twitter</a></li>
+        <li><a href="https://instagram.com/votre_instagram" target="_blank" rel="noopener" style="color:#ffd700;">Instagram</a></li>
+        <li><a href="https://tiktok.com/@votre_tiktok" target="_blank" rel="noopener" style="color:#ffd700;">TikTok</a></li>
+      </ul>
+      <div class="pub">
+        🚀 Espace Pub !<br>Contacte-moi pour collaborer !
+      </div>
     </aside>
   </div>
   <script src="manga-data.js"></script>
   <script>
-    function getParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
-    }
-    // Récupération des infos
-    const mangaId = getParam('manga');
-    const chapId = getParam('chap');
-    const lang = getParam('lang') || 'fr';
-    const manga = mangas.find(m => m.id === mangaId);
-    const chapter = manga && manga.chapters.find(c => c.id === chapId);
-
-    if (!manga || !chapter) {
-      document.body.innerHTML = "<h2 style='color:red;text-align:center;margin-top:30vh;'>Erreur : chapitre/manga introuvable !</h2>";
-      throw new Error("Manga/chapter not found");
-    }
-    // Génère la liste des pages
-    const numPages = chapter.numPages || 1;
-    const pageFolder = chapter.pages[lang];
-    const folder = pageFolder.endsWith('/') ? pageFolder : pageFolder + '/';
-    const pages = Array.from({length: numPages}, (_,i)=>`${folder}${i+1}.png`);
-
-    // Elements
-    let mode = "horizontal"; // ou "vertical"
-    let curPage = 0;
-    const mainImage = document.getElementById('main-image');
-    const overlay = document.getElementById('overlay');
-    const overlayGradient = document.getElementById('overlay-gradient');
-    const sidebar = document.getElementById('sidebar');
-    const mangatitle = document.getElementById('mangatitle');
-    const chaptitle = document.getElementById('chaptitle');
-    const author = document.getElementById('author');
-    const pageindicator = document.getElementById('page-indicator');
-    const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
-    const backBtn = document.getElementById('back-btn');
-    const modeBtn = document.getElementById('mode-btn');
-    const resume = document.getElementById('resume');
-    const pagesDiv = document.getElementById('pages');
-
-    // Init
-    function showPage(idx) {
-      curPage = idx;
-      mainImage.src = pages[idx];
-      pageindicator.textContent = `Page ${idx+1} / ${pages.length}`;
-    }
-    function showSidebar() {
-      overlay.style.pointerEvents = "all";
-      overlayGradient.classList.add("open");
-      sidebar.classList.add("open");
-      document.body.style.overflow = "hidden";
-    }
-    function hideSidebar() {
-      overlay.style.pointerEvents = "none";
-      overlayGradient.classList.remove("open");
-      sidebar.classList.remove("open");
-      document.body.style.overflow = "";
-    }
-    function toggleMode() {
-      if (mode === "horizontal") {
-        mode = "vertical";
-        mainImage.style.display = "none";
-        pagesDiv.style.display = "flex";
-        pagesDiv.className = "vertical";
-        pagesDiv.innerHTML = "";
-        pages.forEach(src => {
-          const img = document.createElement('img');
-          img.src = src;
-          img.className = "page-img";
-          img.onclick = () => { showSidebar(); };
-          pagesDiv.appendChild(img);
-        });
-        modeBtn.textContent = "Lire en horizontal";
-        pageindicator.textContent = `${pages.length} pages`;
-      } else {
-        mode = "horizontal";
-        mainImage.style.display = "";
-        pagesDiv.style.display = "none";
-        modeBtn.textContent = "Lire en vertical";
-        showPage(curPage);
-      }
-    }
-
-    // Infos dynamiques
-    mangatitle.textContent = manga.title;
-    chaptitle.textContent = chapter.title?.[lang] || '';
-    author.textContent = (manga.author || chapter.author || "Auteur inconnu");
-    resume.textContent = chapter.resume?.[lang] || manga.resume?.[lang] || "";
-
-    // Sidebar toggles
-    toggleSidebarBtn.onclick = showSidebar;
-    overlayGradient.onclick = hideSidebar;
-    backBtn.onclick = () => window.location.href = `manga-hub.html?id=${encodeURIComponent(manga.id)}`;
-    modeBtn.onclick = () => { toggleMode(); hideSidebar(); }
-
-    // Navigation horizontale style Manga Plus
-    mainImage.onclick = function(e) {
-      const rect = mainImage.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      if (x < 0.5) { // Clic à gauche → page suivante (lecture japonaise D→G)
-        if (curPage < pages.length-1) showPage(curPage+1);
-      } else { // Clic à droite → page précédente
-        if (curPage > 0) showPage(curPage-1);
-      }
-    };
-    // Tap mobile
-    mainImage.addEventListener('touchend', function(e) {
-      if (!e.changedTouches[0]) return;
-      const rect = mainImage.getBoundingClientRect();
-      const x = (e.changedTouches[0].clientX - rect.left) / rect.width;
-      if (x < 0.5) {
-        if (curPage < pages.length-1) showPage(curPage+1);
-      } else {
-        if (curPage > 0) showPage(curPage-1);
-      }
+    document.addEventListener("DOMContentLoaded", function() {
+      const carousel = document.getElementById("carousel");
+      const images = carousel.querySelectorAll("img");
+      let idx = 0;
+      setInterval(() => {
+        images[idx].classList.remove("active");
+        idx = (idx + 1) % images.length;
+        images[idx].classList.add("active");
+      }, 5000);
     });
 
-    // Touche clavier
-    window.addEventListener('keydown', function(e) {
-      if (sidebar.classList.contains('open')) {
-        if(e.key === 'Escape') hideSidebar();
+    window.addEventListener("DOMContentLoaded", function () {
+      if (typeof mangas === "undefined") {
+        document.getElementById('oneshot-column').innerHTML += "<li>Erreur : mangas non chargé.</li>";
+        document.getElementById('series-column').innerHTML += "<li>Erreur : mangas non chargé.</li>";
         return;
       }
-      if (e.key === ' ' || e.key === 'Enter') showSidebar();
-      else if (e.key === 'ArrowLeft' && curPage < pages.length-1 && mode==="horizontal") showPage(curPage+1); // Droite→gauche
-      else if (e.key === 'ArrowRight' && curPage > 0 && mode==="horizontal") showPage(curPage-1);
+      const oneshotColumn = document.getElementById("oneshot-column");
+      const seriesColumn = document.getElementById("series-column");
+
+      oneshotColumn.innerHTML = '<span class="column-label">Mes Oneshots</span>';
+      seriesColumn.innerHTML = '<span class="column-label">Mes Séries</span>';
+
+      function getCoverUrl(manga) { return manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`; }
+
+      mangas.filter(m => m.isOneshot)
+        .forEach(manga => {
+          oneshotColumn.innerHTML += `
+            <div class="manga-card">
+              <a href="manga-hub.html?id=${manga.id}">
+                <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
+                  onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
+                <div class="manga-gradient"></div>
+                <div class="manga-infos">
+                  <span class="manga-title">${manga.title}</span>
+                  <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
+                </div>
+              </a>
+            </div>
+          `;
+        });
+      mangas.filter(m => !m.isOneshot)
+        .forEach(manga => {
+          seriesColumn.innerHTML += `
+            <div class="manga-card">
+              <a href="manga-hub.html?id=${manga.id}">
+                <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
+                  onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
+                <div class="manga-gradient"></div>
+                <div class="manga-infos">
+                  <span class="manga-title">${manga.title}</span>
+                  <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
+                </div>
+              </a>
+            </div>
+          `;
+        });
     });
-
-    // Préchargement images suivantes
-    function preloadNext() {
-      for(let i=curPage+1; i<Math.min(curPage+4,pages.length); ++i) {
-        const img = new Image();
-        img.src = pages[i];
-      }
-    }
-    mainImage.onload = preloadNext;
-
-    // Initialisation
-    showPage(0);
   </script>
 </body>
 </html>
