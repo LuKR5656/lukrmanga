@@ -131,8 +131,8 @@
       position: absolute;
       left: 0; bottom: 0;
       width: 100%;
-      height: 60%;
-      background: linear-gradient(to top, #111 85%, rgba(17,17,17,0.01) 100%);
+      height: 30%;
+      background: linear-gradient(to top, #111 85%, rgba(17,17,17,0.25) 100%);
       z-index: 2;
       pointer-events: none;
     }
@@ -303,7 +303,7 @@
         .forEach(manga => {
           oneshotColumn.innerHTML += `
             <div class="manga-card">
-              <a href="${manga.id}-hub.html">
+              <a href="manga-hub.html?id=${manga.id}">
                 <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
                   onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
                 <div class="manga-gradient"></div>
@@ -319,7 +319,7 @@
         .forEach(manga => {
           seriesColumn.innerHTML += `
             <div class="manga-card">
-              <a href="${manga.id}-hub.html">
+              <a href="manga-hub.html?id=${manga.id}">
                 <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
                   onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
                 <div class="manga-gradient"></div>
