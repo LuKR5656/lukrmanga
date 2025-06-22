@@ -9,214 +9,290 @@
       margin: 0; padding: 0; height: 100%;
       background: #181818;
       color: #fff;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
     }
     body {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
+      min-height: 100vh;
     }
-
-    /* HEADER AVEC BACKGROUND MANGA DYNAMIQUE */
     header {
       background: #232323;
-      padding: 22px 30px 26px 30px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 2px 18px #000a;
       position: relative;
       overflow: hidden;
-      min-height: 33vh;
+      box-shadow: 0 2px 18px #000a;
+      padding: 0;
+      border-radius: 0 0 28px 28px;
+      min-height: 35vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
     header::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-repeat: repeat-x;
-      background-size: 150% 150%;
-      background-position: 0 center;
-      animation: scrollImages 75s linear infinite;
-      filter: blur(10px) brightness(0.7) grayscale(0.15);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center 40%;
       z-index: 0;
-      transition: background-image .2s;
+      filter: blur(14px) brightness(0.65) grayscale(0.15);
+      transition: background-image 0.25s;
+      animation: bgScroll 60s linear infinite;
     }
-    @keyframes scrollImages {
+    @keyframes bgScroll {
       0% { background-position-x: 0%; }
-      100% { background-position-x: -100%; }
+      100% { background-position-x: 100%; }
     }
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      margin-bottom: 10px;
+    .header-content {
       position: relative;
       z-index: 1;
-    }
-    .home-btn {
-      background: #ffd700;
-      color: #181818;
-      border: none;
-      border-radius: 13px;
-      width: 70px;
-      height: 70px;
-      font-size: 44px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px #000;
-      transition: background 0.3s, transform 0.2s;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
+      gap: 32px;
+      padding: 32px 5vw 24px 5vw;
+    }
+    .cover-container {
+      flex: 0 0 212px;
+      width: 212px;
+      height: 308px;
+      box-shadow: 0 6px 32px #000c, 0 0 0 4px #ffd70044;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #232323;
+      display: flex;
+      align-items: flex-end;
       justify-content: center;
-      user-select: none;
-      padding-bottom: 7px;
-    }
-    .home-btn:hover { background: #fff333; transform: scale(1.08);}
-    header h1 {
-      header h1 {
-      margin: 0;
-      font-size: 2.3em;
-      font-weight: bold;
-      color: #ffd700;
-      letter-spacing: 1px;
-      background: rgba(0,0,0,0.55);
-      padding: 6px 18px 8px 18px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px #000a;
-      text-shadow: 0 4px 18px #000b, 0 1px 0 #fff6;
-      word-break: break-word;
-      max-width: 96vw;
-    }
-    .resume {
-      font-size: 1.13em;
-      color: #eee;
-      background: rgba(20,20,20,0.62);
-      padding: 10px 17px;
-      border-radius: 13px;
       margin-bottom: 0;
-      margin-top: 7px;
-      max-width: 650px;
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 4px 16px #0002;
+      margin-right: 12px;
     }
-    main {
-      flex: 1;
-      display: flex;
-      background: #181818;
-    }
-    .chapters-list {
-      flex: 2;
-      background: #232323;
-      padding: 15px 22px;
-      overflow-y: auto;
-      box-sizing: border-box;
-      border-right: 2px solid #ffd70044;
-      min-width: 230px;
-    }
-    .chapter-link {
+    .cover-container img {
+      width: 100%; height: 100%;
+      object-fit: cover;
       display: block;
-      background: #ffd700;
-      color: #181818;
-      padding: 12px 16px;
-      margin: 10px 0;
-      border-radius: 8px;
-      text-decoration: none;
-      box-shadow: 0 0 8px #000;
-      font-weight: bold;
-      font-size: 1.1em;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      user-select: none;
-    }
-    .chapter-link:hover {
-      background: #fff333;
-      color: #181818;
-      transform: translateY(-3px) scale(1.03);
-    }
-    .right-panel {
-      flex: 1;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px #0007;
       background: #232323;
-      padding: 30px 20px;
+    }
+    .infos-container {
+      flex: 1 1 0px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      border-left: 2px solid #ffd70044;
+      justify-content: flex-end;
+      gap: 10px;
+      min-width: 0;
+    }
+    .manga-title {
+      font-size: 2.2em;
+      font-weight: 900;
+      color: #ffd700;
+      letter-spacing: 1px;
+      text-shadow: 0 4px 22px #000c, 0 1px 0 #fff6;
+      margin: 0 0 6px 0;
+      line-height: 1.13;
+      word-break: break-word;
+      background: rgba(24,24,24,0.45);
+      border-radius: 10px;
+      padding: 7px 20px 6px 10px;
+      max-width: 100vw;
+      display: inline-block;
+    }
+    .manga-author {
+      font-size: 1.04em;
+      color: #ffd700;
+      opacity: 0.85;
+      margin-bottom: 3px;
+      font-weight: 600;
+      text-shadow: 0 2px 8px #000c;
+    }
+    .resume {
+      font-size: 1.11em;
+      color: #fff;
+      background: rgba(20,20,20,0.74);
+      padding: 13px 17px;
+      border-radius: 13px;
+      max-width: 700px;
+      box-shadow: 0 4px 16px #0003;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .lang-btns {
+      display: flex;
+      gap: 13px;
+      margin-top: 6px;
     }
     .lang-btn {
-      width: 100%;
       background: #232323;
       color: #ffd700;
       border: 2px solid #ffd700;
-      padding: 15px 0;
+      padding: 10px 22px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 18px;
-      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      font-size: 1.13em;
+      transition: background 0.25s, color 0.25s, border-color 0.2s;
       user-select: none;
+      box-shadow: 0 2px 10px #0004;
     }
     .lang-btn.active {
       background: #ffd700;
       color: #181818;
       border-color: #ffd700;
+      box-shadow: 0 2px 16px #ffd70066;
     }
     .lang-btn:hover:not(.active) {
       background: #fff333;
       color: #181818;
     }
+    main {
+      padding: 28px 5vw 30px 5vw;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .chapters-list-label {
+      color: #ffd700;
+      font-size: 1.26em;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 10px #0008;
+      padding-left: 6px;
+    }
+    .chapters-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .chapter-card {
+      background: #232323;
+      border-radius: 13px;
+      box-shadow: 0 3px 18px #000c, 0 0 0 2px #ffd70055;
+      padding: 20px 17px 16px 17px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      transition: box-shadow 0.2s, transform 0.16s, background 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .chapter-card:hover {
+      background: #2e2e2e;
+      transform: translateY(-3px) scale(1.025);
+      box-shadow: 0 8px 30px #ffd70033, 0 2px 18px #000b;
+    }
+    .chapter-title {
+      font-size: 1.13em;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 2px;
+      line-height: 1.25;
+      text-shadow: 0 2px 8px #0007;
+    }
+    .chapter-link {
+      text-decoration: none;
+      color: inherit;
+      margin-top: 7px;
+      font-weight: 700;
+      background: #ffd700;
+      color: #181818;
+      padding: 9px 0;
+      border-radius: 8px;
+      text-align: center;
+      transition: background 0.2s, color 0.18s;
+      box-shadow: 0 2px 8px #0004;
+      font-size: 1.08em;
+      letter-spacing: .5px;
+      display:block;
+    }
+    .chapter-link:hover {
+      background: #fff333;
+      color: #181818;
+      text-decoration: underline;
+    }
     @media (max-width: 900px) {
-      header { padding: 18px 10vw; }
-      main { flex-direction: column; }
-      .chapters-list, .right-panel { width: 100%; max-height: 230px; overflow-y: auto; }
-      .right-panel { padding: 18px 10vw; flex-direction: row; justify-content: center; gap: 15px; }
-      .lang-btn { width: auto; padding: 10px 20px; font-size: 16px;}
+      .header-content { flex-direction: column; align-items: center; padding: 18px 3vw 16px 3vw;}
+      .cover-container { margin-right: 0; margin-bottom: 12px;}
+      .infos-container { align-items: center; text-align: center;}
+      main { padding: 18px 2vw 20px 2vw;}
+      .chapters-list { grid-template-columns: 1fr;}
+      .resume { max-width: 98vw;}
+    }
+    @media (max-width: 700px) {
+      .cover-container { width: 130px; height: 190px;}
+      .manga-title { font-size: 1.18em; padding: 4px 10px; }
+      .resume { font-size: 0.98em; }
+      .chapter-card { padding: 13px 10px 11px 10px;}
+    }
+    footer {
+      text-align:right;
+      padding: 10px 5vw 10px 0;
+      font-size: 0.7em;
+      color: #aaa;
+      background: none;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="header-top">
-      <button class="home-btn" onclick="window.location.href='index.html'">🏠</button>
-      <h1 id="manga-title">Chargement…</h1>
+    <div class="header-content">
+      <div class="cover-container">
+        <img id="manga-cover" src="" alt="Couverture manga">
+      </div>
+      <div class="infos-container">
+        <h1 class="manga-title" id="manga-title">Chargement…</h1>
+        <div class="manga-author" id="manga-author"></div>
+        <div class="resume" id="manga-resume">Chargement du résumé…</div>
+        <div class="lang-btns">
+          <button class="lang-btn" id="btn-fr" type="button">Français</button>
+          <button class="lang-btn" id="btn-en" type="button">English</button>
+        </div>
+      </div>
     </div>
-    <div class="resume" id="manga-resume">Chargement du résumé…</div>
   </header>
   <main>
-    <nav class="chapters-list" id="chapter-list" aria-label="Liste des chapitres"></nav>
-    <aside class="right-panel" aria-label="Sélecteur de langue">
-      <button class="lang-btn" id="btn-fr" onclick="changeLang('fr')">Français</button>
-      <button class="lang-btn" id="btn-en" onclick="changeLang('en')">English</button>
-    </aside>
+    <div class="chapters-list-label">Chapitres</div>
+    <div class="chapters-list" id="chapters-list"></div>
   </main>
-  <footer style="text-align:right; padding: 10px; font-size: 0.7em; color: #aaa;">
+  <footer>
     © 2025 LuKR. All rights reserved.
   </footer>
   <script src="manga-data.js"></script>
   <script>
+    // Utilitaire pour obtenir le paramètre d'URL
     function getParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(param);
     }
-    function changeLang(l) {
+    // Gestion de la langue
+    function setLang(l) {
       localStorage.setItem('lang', l);
       location.reload();
     }
+    // Initialisation
     window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('id');
       const lang = localStorage.getItem('lang') || 'fr';
       const manga = mangas.find(m => m.id === mangaId);
       const titleEl = document.getElementById("manga-title");
+      const authorEl = document.getElementById("manga-author");
       const resumeEl = document.getElementById("manga-resume");
-      const chapterList = document.getElementById("chapter-list");
+      const coverEl = document.getElementById("manga-cover");
+      const chaptersList = document.getElementById("chapters-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
+
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
+        coverEl.style.display = "none";
         return;
       }
-      // Ajoute dynamiquement le background du header
+
+      // Header background dynamique
       if (manga.assets?.background) {
         const bgStyle = document.createElement("style");
         bgStyle.innerHTML = `
@@ -226,23 +302,47 @@
         `;
         document.head.appendChild(bgStyle);
       }
+
+      // Remplir les infos
       titleEl.textContent = manga.title;
+      authorEl.textContent = manga.author ? `par ${manga.author}` : "";
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
-      chapterList.innerHTML = '';
-      manga.chapters.forEach(chap => {
-        const link = document.createElement("a");
-          link.className = "chapter-link";
-          link.href = `reader.html?manga=${encodeURIComponent(manga.id)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
-          // Affiche le titre complet (ex: Chapitre 1 : Le Début)
-          let chapNumber = chap.number ? `Chapitre ${chap.number}` : "";
-          let chapTitle = chap.title?.[lang] || "";
-          link.innerHTML = chapNumber && chapTitle
-            ? `<span style="color:#ffd700;font-weight:bold">${chapNumber} :</span> <span style="color:#fff">${chapTitle}</span>`
-            : `<span style="color:#ffd700">${chapTitle || chapNumber}</span>`;
-          chapterList.appendChild(link);
-        });
+      coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
+      coverEl.onerror = () => {
+        coverEl.src = 'assets/cover/default-cover.png';
+      };
+
+      // Boutons de langue
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
+      btnFr.onclick = () => setLang('fr');
+      btnEn.onclick = () => setLang('en');
+
+      // Liste des chapitres
+      chaptersList.innerHTML = '';
+      manga.chapters.forEach(chap => {
+        const card = document.createElement("div");
+        card.className = "chapter-card";
+
+        // Titre complet (numéro et titre)
+        let chapNumber = chap.number ? `Chapitre ${chap.number}` : "";
+        let chapTitle = chap.title?.[lang] || "";
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "chapter-title";
+        titleDiv.innerHTML = chapNumber && chapTitle
+          ? `<span style="color:#ffd700">${chapNumber} :</span> <span style="color:#fff">${chapTitle}</span>`
+          : `<span style="color:#ffd700">${chapTitle || chapNumber}</span>`;
+
+        // Lien de lecture
+        const readLink = document.createElement("a");
+        readLink.className = "chapter-link";
+        readLink.href = `reader.html?manga=${encodeURIComponent(manga.id)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
+        readLink.textContent = "Lire";
+
+        card.appendChild(titleDiv);
+        card.appendChild(readLink);
+        chaptersList.appendChild(card);
+      });
     });
   </script>
 </body>
