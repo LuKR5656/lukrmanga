@@ -5,6 +5,7 @@ const mangas = [
     author: "LuK R.",
     isOneshot: true,
     cover: "assets/covers/bp-cover.png",
+    tags: ["#Oneshot"],
     chapters: [
       {
         id: "bp-1",
@@ -23,6 +24,7 @@ const mangas = [
     author: "LuK R.",
     isOneshot: false,
     cover: "assets/covers/el-cover.png",
+    tags: ["#Series"],
     chapters: [
       {
         id: "el-1",
