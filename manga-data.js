@@ -6,7 +6,7 @@ const mangas = [
     assets: { background: "assets/background/BP-bg.png" },
     author: "LuK R.",
     isOneshot: true,
-    cover: "assets/covers/bp-cover.png",
+    cover: "assets/cover/bp-cover.png",
     chapters: [
       {
         id: "bp-1",
@@ -26,7 +26,7 @@ const mangas = [
     assets: { background: "assets/background/EL-bg.png" },
     author: "LuK R.",
     isOneshot: false,
-    cover: "assets/covers/el-cover.png",
+    cover: "assets/cover/el-cover.png",
     chapters: [
       {
         id: "el-1",
