@@ -258,7 +258,7 @@
     }
 
    window.addEventListener('DOMContentLoaded', () => {
-      const mangaId = getParam('manga');
+      const mangaId = getParam('id');
       const lang = localStorage.getItem('lang') || 'fr';
     
       const manga = mangas.find(m => m.id === mangaId);
