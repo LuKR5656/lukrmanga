@@ -312,8 +312,6 @@
       authorEl.textContent = manga.author ? `par ${manga.author}` : "";
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
       coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
-      coverEl.onerror = () => {
-        coverEl.src = 'assets/covers/default-cover.png';
       };
 
       // Boutons de langue
