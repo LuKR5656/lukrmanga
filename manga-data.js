@@ -11,11 +11,11 @@ const mangas = [
       {
         id: "bp-1",
         number: 1,
-        numPages: 10,
         pages: {
           fr: "/pages/bp/chap1/fr/",
           en: "/pages/bp/chap1/en/"
-        }
+        },
+        numPages: 9
       }
     ]
   },
@@ -30,12 +30,12 @@ const mangas = [
     chapters: [
       {
         id: "el-1",
-        number: 1,
-        numPages: 14,
+        title: { fr: "Chapitre 1", en: "Chapter 1" },
         pages: {
-          fr: "/pages/el/chap1/fr/",
-          en: "/pages/el/chap1/en/"
-        }
+          fr: "pages/el/chap1/fr/",
+          en: "pages/el/chap1/en/"
+        },
+        numPages: 11 // le nombre réel d'images 
       }
     ]
   }
