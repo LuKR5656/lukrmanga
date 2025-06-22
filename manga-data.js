@@ -2,10 +2,11 @@ const mangas = [
   {
     id: "bp",
     title: "BoilingPoint",
+    resume: { fr: "Une baston dans un colisée", en: "A brawl in a coliseum" },
+    assets: { background: "assets/background/BP-bg.png" },
     author: "LuK R.",
     isOneshot: true,
     cover: "assets/covers/bp-cover.png",
-    tags: ["#Oneshot"],
     chapters: [
       {
         id: "bp-1",
@@ -21,10 +22,11 @@ const mangas = [
   {
     id: "el",
     title: "Eldorado",
+    resume: { fr: "Résumé en français", en: "Résumé anglais" },
+    assets: { background: "assets/background/EL-bg.png" },
     author: "LuK R.",
     isOneshot: false,
     cover: "assets/covers/el-cover.png",
-    tags: ["#Series"],
     chapters: [
       {
         id: "el-1",
