@@ -92,9 +92,8 @@
     // 2. Générer la liste des pages
     const numPages = chapter.numPages || 1;
     const pageFolder = chapter.pages[lang];
-    // Corrige le slash final si besoin
     const folder = pageFolder.endsWith('/') ? pageFolder : pageFolder + '/';
-    const pages = Array.from({length: numPages}, (_,i)=>`${folder}${String(i+1).padStart(3,'0')}.jpg`);
+    const pages = Array.from({length: numPages}, (_,i)=>`${folder}${i+1}.png`);
 
     // 3. Reader logic
     let curPage = 0;
@@ -110,7 +109,7 @@
       mainImage.src = pages[idx];
       Array.from(thumbs.children).forEach((thumb,i) => thumb.classList.toggle('selected', i===idx));
       pageindicator.textContent = `Page ${idx+1} / ${pages.length}`;
-      if (scrollThumb) thumbs.children[idx].scrollIntoView({behavior:'smooth',inline:'center'});
+      if (scrollThumb && thumbs.children[idx]) thumbs.children[idx].scrollIntoView({behavior:'smooth',inline:'center'});
     }
 
     mainImage.onclick = () => { overlay.style.display = 'flex'; }
