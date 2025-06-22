@@ -11,8 +11,11 @@
       color: #fff;
       font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
     }
-    body {
-      min-height: 100vh;
+    body { min-height: 100vh; }
+    #loader {
+      color:#ffd700;text-align:center;padding:60px 0 30px 0;
+      font-size:1.4em;
+      letter-spacing:2px;
     }
     header {
       background: #232323;
@@ -234,9 +237,13 @@
       color: #aaa;
       background: none;
     }
+    main, header { display: none; }
+    body.ready main, body.ready header { display: block; }
+    body.ready #loader { display:none; }
   </style>
 </head>
 <body>
+  <div id="loader">Chargement…</div>
   <header>
     <div class="header-content">
       <div class="cover-container">
@@ -260,23 +267,20 @@
   <footer>
     © 2025 LuKR. All rights reserved.
   </footer>
-  <script src="manga-data.js"></script>
+  <script src="manga-data.js" defer></script>
   <script>
-    // Utilitaire pour obtenir le paramètre d'URL
     function getParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(param);
     }
-    // Gestion de la langue
     function setLang(l) {
       localStorage.setItem('lang', l);
       location.reload();
     }
-    // Initialisation
     window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('id');
       const lang = localStorage.getItem('lang') || 'fr';
-      const manga = mangas.find(m => m.id === mangaId);
+      const manga = typeof mangas !== "undefined" ? mangas.find(m => m.id === mangaId) : null;
       const titleEl = document.getElementById("manga-title");
       const authorEl = document.getElementById("manga-author");
       const resumeEl = document.getElementById("manga-resume");
@@ -285,10 +289,12 @@
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
 
+      // Erreur data non chargée
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
         coverEl.style.display = "none";
+        document.body.classList.add("ready");
         return;
       }
 
@@ -296,9 +302,7 @@
       if (manga.assets?.background) {
         const bgStyle = document.createElement("style");
         bgStyle.innerHTML = `
-          header::before {
-            background-image: url('${manga.assets.background}');
-          }
+          header::before { background-image: url('${manga.assets.background}'); }
         `;
         document.head.appendChild(bgStyle);
       }
@@ -309,7 +313,7 @@
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
       coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
       coverEl.onerror = () => {
-        coverEl.src = 'assets/cover/default-cover.png';
+        coverEl.src = 'assets/covers/default-cover.png';
       };
 
       // Boutons de langue
@@ -320,29 +324,30 @@
 
       // Liste des chapitres
       chaptersList.innerHTML = '';
-      manga.chapters.forEach(chap => {
+      manga.chapters.forEach((chap, idx) => {
         const card = document.createElement("div");
         card.className = "chapter-card";
-
         // Titre complet (numéro et titre)
         let chapNumber = chap.number ? `Chapitre ${chap.number}` : "";
         let chapTitle = chap.title?.[lang] || "";
+        if (!chapTitle && !chapNumber) chapTitle = `Chapitre ${idx+1}`;
         const titleDiv = document.createElement("div");
         titleDiv.className = "chapter-title";
         titleDiv.innerHTML = chapNumber && chapTitle
           ? `<span style="color:#ffd700">${chapNumber} :</span> <span style="color:#fff">${chapTitle}</span>`
           : `<span style="color:#ffd700">${chapTitle || chapNumber}</span>`;
-
         // Lien de lecture
         const readLink = document.createElement("a");
         readLink.className = "chapter-link";
         readLink.href = `reader.html?manga=${encodeURIComponent(manga.id)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
         readLink.textContent = "Lire";
-
         card.appendChild(titleDiv);
         card.appendChild(readLink);
         chaptersList.appendChild(card);
       });
+
+      // Affichage progressif
+      document.body.classList.add("ready");
     });
   </script>
 </body>
