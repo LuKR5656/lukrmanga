@@ -59,12 +59,12 @@
       throw new Error("Manga/chapter not found");
     }
 
-    // Génère la liste des pages du chapitre (en supposant un dossier avec des images 001.jpg, 002.jpg, ...)
+    // Génère la liste des pages du chapitre (en supposant un dossier avec des images 001.png, 002.png, ...)
     // Ici, on suppose que chapter.pages[lang] pointe vers le dossier contenant les images
     const numPages = chapter.numPages || 1;
     const pageFolder = chapter.pages[lang];
     const pages = Array.from({length: numPages}, (_,i) =>
-      `${pageFolder}${String(i+1).padStart(3,'0')}.jpg`
+      `${pageFolder}${String(i+1).padStart(3,'0')}.png`
     );
 
     // Affichage et overlay
