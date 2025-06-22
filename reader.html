@@ -5,90 +5,21 @@
   <title>Manga Reader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      width: 100vw; height: 100vh;
-      background: #181818;
-      color: #fff;
-      font-family: sans-serif;
-      overflow: hidden;
-    }
-    #reader-container {
-      position: relative;
-      width: 100vw; height: 100vh;
-      background: #181818;
-      overflow: hidden;
-    }
-    #pages {
-      width: 100%; height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-    }
-    #reader-container.horizontal #pages {
-      flex-direction: row-reverse; /* droite à gauche */
-      gap: 2vw;
-    }
-    #reader-container.vertical #pages {
-      flex-direction: column;
-      overflow-y: auto;
-      gap: 18px;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 4vh 0;
-    }
-    .page-img {
-      max-width: 95vw; max-height: 95vh;
-      object-fit: contain;
-      background: #222;
-      cursor: pointer;
-      box-shadow: 0 0 18px #000a;
-      border-radius: 7px;
-      transition: box-shadow 0.2s;
-    }
-    .page-img:active { box-shadow: 0 0 28px #ffd700aa; }
-    #overlay {
-      position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(34,34,34,0.75);
-      color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 10;
-      transition: opacity 0.2s;
-    }
-    #overlay.hidden { display: none; }
-    .overlay-content {
-      background: rgba(24,24,24,0.97);
-      padding: 32px 26px;
-      border-radius: 18px;
-      min-width: 300px;
-      box-shadow: 0 0 24px #000a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-    .overlay-content h2 { margin: 0 0 8px 0; font-size: 2em; }
-    .overlay-content h3 { margin: 0 0 4px 0; font-size: 1.1em; color: #ffd700; }
-    .overlay-content button {
-      margin: 8px;
-      padding: 12px 20px;
-      font-size: 1.05em;
-      font-weight: bold;
-      border-radius: 7px;
-      background: #ffd700;
-      border: none;
-      cursor: pointer;
-      color: #181818;
-      box-shadow: 0 2px 8px #0007;
-      transition: background 0.2s;
-    }
-    .overlay-content button:hover { background: #fff333; }
-    /* Mobile */
-    @media (max-width: 800px) {
-      .overlay-content { min-width: 90vw; padding: 18px 5vw; }
-      .page-img { max-width: 99vw; max-height: 70vh; }
-    }
+    html, body { margin:0; padding:0; height:100%; width:100vw; background:#181818; color:#fff; font-family:sans-serif; overflow:hidden; }
+    #reader-container { position:relative; width:100vw; height:100vh; background:#181818; overflow:hidden; }
+    #pages { width:100%; height:100%; display:flex; align-items:center; justify-content:center; user-select:none; }
+    #reader-container.horizontal #pages { flex-direction:row-reverse; gap:2vw; }
+    #reader-container.vertical #pages { flex-direction:column; overflow-y:auto; gap:18px; align-items:center; justify-content:flex-start; padding:4vh 0; }
+    .page-img { max-width:95vw; max-height:95vh; object-fit:contain; background:#222; cursor:pointer; border-radius:7px; box-shadow:0 0 18px #000a; transition:box-shadow 0.2s; }
+    .page-img:active { box-shadow:0 0 28px #ffd700aa; }
+    #overlay { position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(34,34,34,0.75); color:#fff; display:flex; align-items:center; justify-content:center; z-index:10; transition:opacity 0.2s; }
+    #overlay.hidden { display:none; }
+    .overlay-content { background:rgba(24,24,24,0.97); padding:32px 26px; border-radius:18px; min-width:300px; box-shadow:0 0 24px #000a; display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .overlay-content h2 { margin:0 0 8px 0; font-size:2em; }
+    .overlay-content h3 { margin:0 0 4px 0; font-size:1.1em; color:#ffd700; }
+    .overlay-content button { margin:8px; padding:12px 20px; font-size:1.05em; font-weight:bold; border-radius:7px; background:#ffd700; border:none; cursor:pointer; color:#181818; box-shadow:0 2px 8px #0007; transition:background 0.2s; }
+    .overlay-content button:hover { background:#fff333; }
+    @media (max-width:800px) { .overlay-content {min-width:90vw; padding:18px 5vw;} .page-img{max-width:99vw; max-height:70vh;} }
   </style>
 </head>
 <body>
@@ -109,48 +40,59 @@
       </div>
     </div>
   </div>
+  <script src="manga-data.js"></script>
   <script>
-    // === CONFIG EXEMPLE (à remplacer par dynamique selon manga/chapitre) ===
-    const mangaTitle = "Eldorado";
-    const chapterTitle = "Chapitre 1";
-    // Génère des pages fictives 001.jpg à 014.jpg
-    const pages = Array.from({length: 14}, (_,i) =>
-      `pages/el/chap1/fr/${String(i+1).padStart(3,'0')}.jpg`
+    function getParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+    // === Récupération dynamique du manga/chapitre ===
+    const mangaId = getParam('manga') || '';
+    const chapId = getParam('chap') || '';
+    const lang = getParam('lang') || 'fr';
+
+    const manga = mangas.find(m => m.id === mangaId);
+    const chapter = manga && manga.chapters.find(c => c.id === chapId);
+
+    if (!manga || !chapter) {
+      document.body.innerHTML = "<h2 style='color:red;text-align:center;margin-top:30vh;'>Erreur : chapitre ou manga non trouvé.</h2>";
+      throw new Error("Manga/chapter not found");
+    }
+
+    // Génère la liste des pages du chapitre (en supposant un dossier avec des images 001.jpg, 002.jpg, ...)
+    // Ici, on suppose que chapter.pages[lang] pointe vers le dossier contenant les images
+    const numPages = chapter.numPages || 1;
+    const pageFolder = chapter.pages[lang];
+    const pages = Array.from({length: numPages}, (_,i) =>
+      `${pageFolder}${String(i+1).padStart(3,'0')}.jpg`
     );
-    // === FIN CONFIG EXEMPLE ===
 
-    let mode = "horizontal"; // ou "vertical"
+    // Affichage et overlay
+    let mode = "horizontal";
     let overlayOpen = false;
-    let currentPage = 0; // index (0-based)
+    let currentPage = 0;
 
-    // Affichage des pages
     function renderPages() {
       const pagesDiv = document.getElementById("pages");
       pagesDiv.innerHTML = "";
       if (mode === "horizontal") {
-        // Affiche UNE seule page à la fois (style manga, droite à gauche)
+        // Affiche une seule page à la fois
         if (pages[currentPage]) {
           const img = document.createElement("img");
           img.src = pages[currentPage];
           img.className = "page-img";
           img.onclick = (e) => {
-            // Clic centre = overlay (zone centrale 40% horizontalement)
+            // Clique centre = overlay (zone centrale 40%)
             const x = e.offsetX / img.width;
             if (!overlayOpen && x > 0.3 && x < 0.7) showOverlay();
-            // Naviguer droite/gauche (hors overlay)
-            else if (!overlayOpen && x <= 0.3 && currentPage < pages.length - 1) {
-              currentPage++;
-              renderPages();
-            }
-            else if (!overlayOpen && x >= 0.7 && currentPage > 0) {
-              currentPage--;
-              renderPages();
-            }
+            // Navigation droite/gauche
+            else if (!overlayOpen && x <= 0.3 && currentPage < pages.length - 1) { currentPage++; renderPages(); }
+            else if (!overlayOpen && x >= 0.7 && currentPage > 0) { currentPage--; renderPages(); }
           };
           pagesDiv.appendChild(img);
         }
       } else {
-        // Affiche toutes les pages en vertical
+        // Toutes les pages en vertical
         pages.forEach((src, idx) => {
           const img = document.createElement("img");
           img.src = src;
@@ -159,35 +101,29 @@
           pagesDiv.appendChild(img);
         });
       }
-      // Désactive scroll page hors mode vertical
       document.getElementById('reader-container').style.overflowY = (mode === "vertical" ? "auto" : "hidden");
     }
 
-    // Overlay
     function showOverlay() {
       overlayOpen = true;
       document.getElementById("overlay").classList.remove("hidden");
-      document.getElementById("manga-title").textContent = mangaTitle;
-      document.getElementById("chapter-title").textContent = chapterTitle;
+      document.getElementById("manga-title").textContent = manga.title;
+      document.getElementById("chapter-title").textContent = chapter.title?.[lang] || "Chapitre";
       document.getElementById("page-indicator").textContent =
         (mode === "horizontal")
         ? `Page ${currentPage+1} / ${pages.length}`
         : `${pages.length} pages`;
       document.getElementById("btn-toggle-mode").textContent =
         mode === "horizontal" ? "🌓 Mode : Horizontal" : "🌓 Mode : Vertical";
-      document.getElementById("chapter-info").innerHTML = "";
+      document.getElementById("chapter-info").innerHTML = chapter.resume?.[lang] || "";
     }
     function hideOverlay() {
       overlayOpen = false;
       document.getElementById("overlay").classList.add("hidden");
     }
-    // Fermer overlay si clic hors overlay-content
     document.getElementById("overlay").onclick = hideOverlay;
-
-    // Empêcher fermeture si clic sur boutons ou overlay-content
     document.querySelector(".overlay-content").onclick = e => e.stopPropagation();
 
-    // Bouton mode
     document.getElementById("btn-toggle-mode").onclick = () => {
       mode = (mode === "horizontal") ? "vertical" : "horizontal";
       document.getElementById("reader-container").className = mode;
@@ -195,35 +131,20 @@
       renderPages();
       showOverlay();
     };
-
-    // Navigation (horizontal uniquement)
     document.getElementById("btn-prev-page").onclick = () => {
       if (mode === "horizontal" && currentPage > 0) {
-        currentPage--;
-        renderPages();
-        showOverlay();
+        currentPage--; renderPages(); showOverlay();
       }
     };
     document.getElementById("btn-next-page").onclick = () => {
       if (mode === "horizontal" && currentPage < pages.length - 1) {
-        currentPage++;
-        renderPages();
-        showOverlay();
+        currentPage++; renderPages(); showOverlay();
       }
     };
-    // Retour
-    document.getElementById("btn-back").onclick = () => {
-      window.location.href = "index.html";
-    };
+    document.getElementById("btn-back").onclick = () => { window.location.href = "manga-hub.html?id=" + encodeURIComponent(manga.id); };
+    window.addEventListener('keydown', e => { if (e.key === "Escape" && overlayOpen) hideOverlay(); });
 
-    // Ferme overlay par touche Echap
-    window.addEventListener('keydown', e => {
-      if (e.key === "Escape" && overlayOpen) hideOverlay();
-    });
-
-    // Lancement initial
     renderPages();
-    // Affiche overlay au 1er chargement
     showOverlay();
   </script>
 </body>
