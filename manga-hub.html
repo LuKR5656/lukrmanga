@@ -24,24 +24,50 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 2px 18px #000a;
+      padding: 0;
       min-height: 20vh;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
     }
-      header::before {
+    header::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center 40%;
-      filter: blur(8px) brightness(0.65) grayscale(0.15);
-      animation: bgScroll 80s linear infinite;
+      z-index: 0;
+      filter: blur(14px) brightness(0.65) grayscale(0.15);
+      transition: background-image 0.25s;
+      animation: bgScroll 60s linear infinite;
     }
     @keyframes bgScroll {
       0% { background-position-x: 0%; }
       100% { background-position-x: 100%; }
+    }
+    .home-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      padding: 0;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+    }
+    .home-icon {
+      height: 40px;
+      width: auto;
+      display: block;
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .home-btn:hover .home-icon {
+      filter: brightness(1.3) drop-shadow(0 0 8px #ffd700cc);
+      transform: scale(1.08) rotate(-3deg);
     }
     .header-content {
       position: relative;
@@ -50,25 +76,6 @@
       align-items: flex-end;
       gap: 32px;
       padding: 32px 5vw 24px 5vw;
-    }
-    .home-btn {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      background: #ffd700;
-      color: #181818;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 1.06em;
-      padding: 9px 18px;
-      cursor: pointer;
-      z-index: 2;
-      transition: background 0.2s, color 0.2s;
-    }
-    .home-btn:hover {
-      background: #fff333;
-      color: #232323;
     }
     .cover-container {
       flex: 0 0 212px;
@@ -90,7 +97,6 @@
       display: block;
       border-radius: 18px;
       background: #232323;
-      /* Lazy loading for performance */
     }
     .infos-container {
       flex: 1 1 0px;
@@ -229,7 +235,8 @@
       main { padding: 18px 2vw 20px 2vw;}
       .chapters-list { grid-template-columns: 1fr;}
       .resume { max-width: 98vw;}
-      .home-btn { top: 8px; left: 8px; font-size: 0.98em; padding: 7px 11px;}
+      .home-btn { top: 8px; left: 8px; }
+      .home-icon { height: 28px; }
     }
     @media (max-width: 700px) {
       .cover-container { width: 130px; height: 190px;}
@@ -252,8 +259,10 @@
 <body>
   <div id="loader">Chargement…</div>
   <header>
+    <a id="btn-home" class="home-btn" href="index.html" title="Retour à l'accueil">
+      <img src="assets/home.png" alt="Accueil" class="home-icon">
+    </a>
     <div class="header-content">
-      <button id="btn-home" class="home-btn" type="button" title="Retour à l'accueil">🏠 Accueil</button>
       <div class="cover-container">
         <img id="manga-cover" src="" alt="Couverture manga" loading="lazy">
       </div>
@@ -296,14 +305,7 @@
       const chaptersList = document.getElementById("chapters-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
-      const btnHome = document.getElementById("btn-home");
 
-      // Navigation Accueil
-      btnHome.addEventListener("click", () => {
-        window.location.href = "index.html";
-      });
-
-      // Erreur data non chargée
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
         resumeEl.textContent = "";
@@ -312,7 +314,6 @@
         return;
       }
 
-      // Header background dynamique
       if (manga.assets?.background) {
         const bgStyle = document.createElement("style");
         bgStyle.innerHTML = `
@@ -321,30 +322,25 @@
         document.head.appendChild(bgStyle);
       }
 
-      // Remplir les infos
       titleEl.textContent = manga.title;
       authorEl.textContent = manga.author ? `par ${manga.author}` : "";
       resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
       coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
-      coverEl.loading = "lazy"; // optimisation pour la performance
+      coverEl.loading = "lazy";
       coverEl.onerror = () => {
         coverEl.src = 'assets/cover/default-cover.png';
       };
 
-      // Boutons de langue
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
       btnFr.onclick = () => setLang('fr');
       btnEn.onclick = () => setLang('en');
 
-      // Liste des chapitres (optimisée)
-      // On utilise un fragment pour limiter les reflows
       chaptersList.innerHTML = '';
       const fragment = document.createDocumentFragment();
       manga.chapters.forEach((chap, idx) => {
         const card = document.createElement("div");
         card.className = "chapter-card";
-        // Titre complet (numéro et titre)
         let chapNumber = chap.number ? `Chapitre ${chap.number}` : "";
         let chapTitle = chap.title?.[lang] || "";
         if (!chapTitle && !chapNumber) chapTitle = `Chapitre ${idx+1}`;
@@ -353,7 +349,6 @@
         titleDiv.innerHTML = chapNumber && chapTitle
           ? `<span style="color:#ffd700">${chapNumber} :</span> <span style="color:#fff">${chapTitle}</span>`
           : `<span style="color:#ffd700">${chapTitle || chapNumber}</span>`;
-        // Lien de lecture
         const readLink = document.createElement("a");
         readLink.className = "chapter-link";
         readLink.href = `reader.html?manga=${encodeURIComponent(manga.id)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
@@ -364,7 +359,6 @@
       });
       chaptersList.appendChild(fragment);
 
-      // Affichage progressif
       document.body.classList.add("ready");
     });
   </script>
