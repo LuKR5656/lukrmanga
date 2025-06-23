@@ -43,6 +43,19 @@
       filter: blur(10px) brightness(0.7) grayscale(0.1);
       animation: banner-scroll 60s linear infinite;
     }
+    .background-banner::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 60px; /* Ajuste selon la hauteur du fondu souhaitée */
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(24,24,24,0) 0%,
+        #181818 100%
+      );
+      z-index: 5;
+    }
     @keyframes banner-scroll {
       0% { object-position: 0% 40%; }
       100% { object-position: 100% 40%; }
