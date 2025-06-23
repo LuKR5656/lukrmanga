@@ -103,20 +103,19 @@
       min-height: 460px;
       width: auto;
     }
-    .cover-container {
-      grid-column: 1 / span 3;  /* colonne 1-3 */
-      grid-row: 1 / span 7;     /* lignes 1-7 (pleine hauteur zone principale) */
+    /* Placement individuel de chaque élément */
+    .cover-container { /* couverture du manga */
+      grid-column: 1 / span 3;
+      grid-row: 1 / span 7;
       position: relative;
       z-index: 4;
       height: 460px;
       margin-top: -120px;
-      margin-left: 0;
-      margin-right: 0;
+      display: flex;
       align-items: flex-start;
       justify-content: center;
-      display: flex;
     }
-    .cover-container img {
+    .cover-container img { /* image de couverture */
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -127,15 +126,9 @@
       z-index: 5;
       display: block;
     }
-    .infos-container {
-      grid-column: 4 / span 4;  /* colonnes 4 à 7 */
-      grid-row: 1 / span 2;     /* lignes 1 et 2 */
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      padding-top: 10px;
-    }
-    .manga-title {
+    .manga-title { /* titre du manga */
+      grid-column: 4 / 8;
+      grid-row: 1 / 2;
       font-size: 2.65em;
       font-weight: 900;
       color: #ffd700;
@@ -149,8 +142,11 @@
       max-width: 100vw;
       display: inline-block;
       box-shadow: 0 2px 10px #0002;
+      align-self: flex-start;
     }
-    .manga-author {
+    .manga-author { /* auteur du manga */
+      grid-column: 4 / 8;
+      grid-row: 2 / 3;
       font-size: 1em;
       color: #ffd700;
       background: rgba(20,20,20,0.74);
@@ -159,10 +155,11 @@
       margin-bottom: 8px;
       margin-top: 0;
       padding-left: 10px;
+      align-self: flex-start;
     }
-    .resume {
-      grid-column: 4 / span 4;  /* colonnes 4 à 7 */
-      grid-row: 3 / span 3;     /* lignes 3 à 5 */
+    .resume { /* résumé du manga */
+      grid-column: 4 / 8;
+      grid-row: 3 / 6;
       font-size: 1.18em;
       color: #fff;
       background: rgba(20,20,20,0.74);
@@ -173,6 +170,52 @@
       max-width: 100%;
       margin-bottom: 10px;
       margin-top: 10px;
+      align-self: flex-start;
+    }
+    .lang-selector-zone { /* zone des boutons de langue */
+      grid-column: 7 / 8;
+      grid-row: 1 / 2;
+      pointer-events: auto;
+      background: rgba(24,24,24,0.95);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0004;
+      padding: 10px 20px;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-right: 0;
+      margin-top: 0;
+      z-index: 12;
+      justify-self: end;
+    }
+    .lang-btns {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      margin-top: 0;
+    }
+    .lang-btn {
+      background: #232323;
+      color: #ffd700;
+      border: 2px solid #ffd700;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.13em;
+      transition: background 0.25s, color 0.25s, border-color 0.2s;
+      user-select: none;
+      margin-bottom: 0;
+    }
+    .lang-btn.active {
+      background: #ffd700;
+      color: #181818;
+      border-color: #ffd700;
+    }
+    .lang-btn:hover:not(.active) {
+      background: #fff333;
+      color: #181818;
     }
 
     /* -------------- BARRE DU BAS -------------- */
@@ -283,52 +326,6 @@
       color: #181818;
       text-decoration: underline;
     }
-    .lang-selector-zone {
-      pointer-events: auto;
-      background: rgba(24,24,24,0.95);
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #0004;
-      padding: 10px 20px;
-      min-width: 120px;
-      margin-bottom: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-right: 2vw;
-      /* Placement sur la grille */
-      position: absolute;
-      right: 7vw;
-      top: calc(5vh + 10px + 2.65em + 40px); /* aligné avec titre, ajuster si besoin */
-      z-index: 12;
-    }
-    .lang-btns {
-      display: flex;
-      flex-direction: row;
-      gap: 14px;
-      margin-top: 0;
-    }
-    .lang-btn {
-      background: #232323;
-      color: #ffd700;
-      border: 2px solid #ffd700;
-      padding: 10px 22px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1.13em;
-      transition: background 0.25s, color 0.25s, border-color 0.2s;
-      user-select: none;
-      margin-bottom: 0;
-    }
-    .lang-btn.active {
-      background: #ffd700;
-      color: #181818;
-      border-color: #ffd700;
-    }
-    .lang-btn:hover:not(.active) {
-      background: #fff333;
-      color: #181818;
-    }
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
@@ -347,13 +344,14 @@
     @media (max-width: 1100px) {
       .main-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto auto auto auto;
+        grid-template-rows: repeat(7, auto);
         margin-left: 0; margin-right: 0; gap: 20px 0;
       }
       .cover-container { grid-column: 1 / 2; grid-row: 1 / 3; margin: 0 auto;}
-      .infos-container { grid-column: 1 / 2; grid-row: 3 / 4; align-items: center; text-align: center;}
-      .resume { grid-column: 1 / 2; grid-row: 4 / 6; }
-      .lang-selector-zone { position: static; margin: 0 0 0 auto; }
+      .manga-title { grid-column: 1 / 2; grid-row: 3 / 4; }
+      .manga-author { grid-column: 1 / 2; grid-row: 4 / 5; }
+      .resume { grid-column: 1 / 2; grid-row: 5 / 7; }
+      .lang-selector-zone { grid-column: 1 / 2; grid-row: 7 / 8; margin: 0 0 0 auto; }
     }
     @media (max-width: 700px) {
       .cover-container { height: 170px; margin-top: 0; }
@@ -385,16 +383,13 @@
     <img src="assets/home.png" alt="Logo" />
   </button>
   <div class="main-grid">
-    <div class="cover-container">
-      <img id="manga-cover" src="" alt="Couverture manga" loading="lazy">
+    <div class="cover-container"> <!-- couverture du manga -->
+      <img id="manga-cover" src="" alt="Couverture manga" loading="lazy"> <!-- image de couverture -->
     </div>
-    <div class="infos-container">
-      <h1 class="manga-title" id="manga-title">Chargement…</h1>
-      <div class="manga-author" id="manga-author"></div>
-    </div>
-    <div class="resume" id="manga-resume">Chargement du résumé…</div>
-    <!-- Le sélecteur de langue dans la grid (absolu sur desktop, inline sur mobile) -->
-    <div class="lang-selector-zone">
+    <h1 class="manga-title" id="manga-title">Chargement…</h1> <!-- titre du manga -->
+    <div class="manga-author" id="manga-author"></div>         <!-- auteur du manga -->
+    <div class="resume" id="manga-resume">Chargement du résumé…</div> <!-- résumé du manga -->
+    <div class="lang-selector-zone"> <!-- zone des boutons de langue -->
       <div class="lang-btns">
         <button class="lang-btn" id="btn-fr" type="button">Français</button>
         <button class="lang-btn" id="btn-en" type="button">English</button>
