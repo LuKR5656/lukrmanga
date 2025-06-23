@@ -61,14 +61,24 @@
       100% { object-position: 100% 40%; }
     }
 
-    .main-grid > * {
-      outline: 1px dashed #ffd700 !important;
-    }
     .main-grid {
-      background-image:
-        repeating-linear-gradient(to right, #444 0 1px, transparent 1px 1fr),
-        repeating-linear-gradient(to bottom, #444 0 1px, transparent 1px 1fr);
-      background-size: calc(100% / 7) calc(100% / 7);
+      /* ...tes autres styles... */
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #232323 0,
+          #232323 14.28%,
+          #333 14.28%,
+          #333 28.56%
+        ),
+        repeating-linear-gradient(
+          180deg,
+          transparent 0,
+          transparent 14.28%,
+          #232323 14.28%,
+          #232323 28.56%
+        );
+      background-size: calc(100%/7) calc(100%/7);
     }
 
     .logo-btn {
