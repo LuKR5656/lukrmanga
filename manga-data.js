@@ -45,6 +45,24 @@ const mangas = [
           en: "pages/el/chap1/en/"
         },
         numPages: 11 // le nombre réel d'images 
+      },
+      {
+        id: "el-3",
+        title: { fr: "Chapitre 3", en: "Chapter 3" },
+        pages: {
+          fr: "pages/el/chap1/fr/",
+          en: "pages/el/chap1/en/"
+        },
+        numPages: 11 // le nombre réel d'images 
+      },
+      {
+        id: "el-4",
+        title: { fr: "Chapitre 4", en: "Chapter 4" },
+        pages: {
+          fr: "pages/el/chap1/fr/",
+          en: "pages/el/chap1/en/"
+        },
+        numPages: 11 // le nombre réel d'images 
       }
     ]
   }
