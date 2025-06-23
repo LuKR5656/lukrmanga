@@ -22,8 +22,10 @@ const mangas = [
   {
     id: "el",
     title: "Eldorado",
-    resume: { fr: "L'histoire se déroule dans une version fictive de l'Ouest américain du XIXe siècle. Elle suit les aventures de Yeon, un jeune homme cupide qui débarque sur le Nouveau Continent en quête de richesse. Il fait la rencontre de Hana, une jeune femme médecin au caractère ambivalent et propriétaire d'un saloon, ainsi que de Caleb, un jeune garçon espiègle ayant grandi dans les rues boueuses du Far West. Ils entreprennent un voyage à travers la côte Ouest, affrontant et croisant divers personnages au cours de leur périple.
-", en: "The story takes place in a made-up version of the Wild West in the 19th century. It follows the adventures of Yeon, a fearless young man who arrives on the new continent in search of wealth. He meets Hana, a young woman with an ambivalent character who is a sawbones and the owner of a saloon, as well as Caleb, a mischievous young boy who has lived on the streets. Together, they embark on a journey across the West Coast, facing various challenges and encountering diverse characters along the way." },
+    resume: {
+      fr: "L'histoire se déroule dans une version fictive de l'Ouest américain du XIXe siècle. Elle suit les aventures de Yeon, un jeune homme cupide qui débarque sur le Nouveau Continent en quête de richesse. Il fait la rencontre de Hana, une jeune femme médecin au caractère ambivalent et propriétaire d'un saloon, ainsi que de Caleb, un jeune garçon espiègle ayant grandi dans les rues boueuses du Far West. Ils entreprennent un voyage à travers la côte Ouest, affrontant et croisant divers personnages au cours de leur périple.",
+      en: "The story takes place in a made-up version of the Wild West in the 19th century. It follows the adventures of Yeon, a fearless young man who arrives on the new continent in search of wealth. He meets Hana, a young woman with an ambivalent character who is a sawbones and the owner of a saloon, as well as Caleb, a mischievous young boy who has lived on the streets. Together, they embark on a journey across the West Coast, facing various challenges and encountering diverse characters along the way."
+    },
     assets: { background: "assets/background/el-bg.webp" },
     author: "LuK R.",
     isOneshot: false,
