@@ -61,6 +61,16 @@
       100% { object-position: 100% 40%; }
     }
 
+    .main-grid > * {
+      outline: 1px dashed #ffd700 !important;
+    }
+    .main-grid {
+      background-image:
+        repeating-linear-gradient(to right, #444 0 1px, transparent 1px 1fr),
+        repeating-linear-gradient(to bottom, #444 0 1px, transparent 1px 1fr);
+      background-size: calc(100% / 7) calc(100% / 7);
+    }
+
     .logo-btn {
       position: fixed;
       top: 18px;
