@@ -24,21 +24,26 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 2px 18px #000a;
-      min-height: 20vh;
+      padding: 0;
+      min-height: 20vh; /* Hauteur réduite ici */
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
     }
-      header::before {
+    /* Si tu veux réactiver le background animé/flouté, dé-commente et adapte
+    header::before {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center 40%;
-      filter: blur(8px) brightness(0.65) grayscale(0.15);
-      animation: bgScroll 80s linear infinite;
+      z-index: 0;
+      filter: blur(14px) brightness(0.65) grayscale(0.15);
+      transition: background-image 0.25s;
+      animation: bgScroll 60s linear infinite;
     }
+    */
     @keyframes bgScroll {
       0% { background-position-x: 0%; }
       100% { background-position-x: 100%; }
@@ -51,24 +56,30 @@
       gap: 32px;
       padding: 32px 5vw 24px 5vw;
     }
+    /* Bouton accueil image */
     .home-btn {
       position: absolute;
       top: 18px;
       left: 18px;
-      background: #ffd700;
-      color: #181818;
+      background: transparent;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
-      font-size: 1.06em;
-      padding: 9px 18px;
+      padding: 0;
       cursor: pointer;
       z-index: 2;
-      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      /* plus besoin de couleur ou de texte */
     }
-    .home-btn:hover {
-      background: #fff333;
-      color: #232323;
+    .home-icon {
+      display: block;
+      width: 40px;   /* ajuste la taille de ton icône ici */
+      height: 40px;
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .home-btn:hover .home-icon {
+      filter: brightness(1.3) drop-shadow(0 0 8px #ffd700cc);
+      transform: scale(1.08) rotate(-3deg);
     }
     .cover-container {
       flex: 0 0 212px;
@@ -90,7 +101,6 @@
       display: block;
       border-radius: 18px;
       background: #232323;
-      /* Lazy loading for performance */
     }
     .infos-container {
       flex: 1 1 0px;
@@ -229,7 +239,8 @@
       main { padding: 18px 2vw 20px 2vw;}
       .chapters-list { grid-template-columns: 1fr;}
       .resume { max-width: 98vw;}
-      .home-btn { top: 8px; left: 8px; font-size: 0.98em; padding: 7px 11px;}
+      .home-btn { top: 8px; left: 8px; }
+      .home-icon { width: 28px; height: 28px; }
     }
     @media (max-width: 700px) {
       .cover-container { width: 130px; height: 190px;}
@@ -253,7 +264,9 @@
   <div id="loader">Chargement…</div>
   <header>
     <div class="header-content">
-      <button id="btn-home" class="home-btn" type="button" title="Retour à l'accueil">🏠 Accueil</button>
+      <a id="btn-home" class="home-btn" href="index.html" title="Retour à l'accueil">
+        <img src="assets/icons/home.png" alt="Accueil" class="home-icon">
+      </a>
       <div class="cover-container">
         <img id="manga-cover" src="" alt="Couverture manga" loading="lazy">
       </div>
@@ -296,12 +309,7 @@
       const chaptersList = document.getElementById("chapters-list");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
-      const btnHome = document.getElementById("btn-home");
-
-      // Navigation Accueil
-      btnHome.addEventListener("click", () => {
-        window.location.href = "index.html";
-      });
+      // plus besoin de btnHome JS, le lien suffit
 
       // Erreur data non chargée
       if (!manga) {
@@ -338,7 +346,6 @@
       btnEn.onclick = () => setLang('en');
 
       // Liste des chapitres (optimisée)
-      // On utilise un fragment pour limiter les reflows
       chaptersList.innerHTML = '';
       const fragment = document.createDocumentFragment();
       manga.chapters.forEach((chap, idx) => {
