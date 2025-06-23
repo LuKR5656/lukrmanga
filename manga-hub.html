@@ -70,10 +70,11 @@
       /* plus besoin de couleur ou de texte */
     }
     .home-icon {
+      max-width: 40px;
+      max-height: 40px;
+      width: auto;
+      height: auto;
       display: block;
-      width: 40px;   /* ajuste la taille de ton icône ici */
-      height: 40px;
-      transition: filter 0.2s, transform 0.2s;
     }
     .home-btn:hover .home-icon {
       filter: brightness(1.3) drop-shadow(0 0 8px #ffd700cc);
@@ -261,10 +262,10 @@
 <body>
   <div id="loader">Chargement…</div>
   <header>
+    <a id="btn-home" class="home-btn" href="index.html" title="Retour à l'accueil">
+      <img src="assets/home.png" alt="Accueil" class="home-icon">
+    </a>
     <div class="header-content">
-      <a id="btn-home" class="home-btn" href="index.html" title="Retour à l'accueil">
-        <img src="assets/home.png" alt="Accueil" class="home-icon">
-      </a>
       <div class="cover-container">
         <img id="manga-cover" src="" alt="Couverture manga" loading="lazy">
       </div>
