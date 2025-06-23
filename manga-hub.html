@@ -182,9 +182,9 @@
       border-radius: 14px;
       padding: 14px 16px 12px 16px;
       box-shadow: 0 2px 8px #0004;
-      min-width: 220px;
+      min-width: 320px;
       margin-bottom: 0;
-      max-height: 38vh;
+      max-height: 52vh;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -229,8 +229,8 @@
       padding: 0;
       list-style: none;
       overflow-y: auto;
-      max-height: 25vh;
-      width: 240px;
+      max-height: 38vh;
+      width: 340px;
     }
     .chapter-card {
       background: #232323;
@@ -309,7 +309,13 @@
       background: #fff333;
       color: #181818;
     }
-
+    .chapters-list {
+      scrollbar-width: none;    /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+    .chapters-list::-webkit-scrollbar {
+      display: none;            /* Chrome/Safari */
+    }
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
