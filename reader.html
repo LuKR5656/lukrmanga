@@ -35,7 +35,7 @@
     #sidebar {
       position: fixed;
       top: 0; right: 0;
-      width: 340px; max-width: 98vw; height: 100vh;
+      width: 340px; max-width: 98vw; height: 99.6%;
       background: #232323;
       box-shadow: -12px 0 32px #000c;
       border-radius: 18px 0 0 18px;
@@ -44,6 +44,7 @@
       z-index:12;
       display:flex; flex-direction:column; justify-content:center; align-items:center;
       gap: 18px;
+      border: 2.5px solid #a084ff;
     }
     #sidebar.open { transform: translateX(0); }
     #overlay-gradient.open { display:block; }
@@ -70,11 +71,11 @@
     }
     #sidebar button:hover {background:##ffd700;}
     #mode-btn {
-      background: #232323; color:#a084ff; border:2px solid #ffd700; font-size:1.08em; box-shadow:none;
+      background:#232323; color:#a084ff; border:2px solid #ffd700; font-size:1.08em; box-shadow:none;
       padding:10px 24px;
     }
     #mode-btn:hover {
-      background:#ffd700; color:#181818;
+      background:#a084ff; color:#181818;
     }
     #sidebar .resume {
       color:#ccc; font-size:.97em; margin-top:8px; text-align:justify;
