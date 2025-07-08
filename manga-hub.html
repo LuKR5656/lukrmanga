@@ -162,7 +162,6 @@
       font-size: 1em;
       font-weight: 700;
       color: var(--accent-violet2);
-      background: rgba(80,60,100,0.10);
       padding: 5px 13px 5px 13px;
       border-radius: 16px;
       margin-right: 12px;
@@ -218,6 +217,8 @@
       display: flex; flex-direction: column; align-items: center;
       backdrop-filter: blur(10px);
       transition: max-width 0.22s, width 0.22s, padding 0.22s;
+      overflow-x: auto;
+      box-sizing: border-box;
     }
     .chapters-list-label-row {
       display: flex;
@@ -226,6 +227,7 @@
       width: 100%;
       gap: 14px;
       margin-bottom: 22px;
+      box-sizing: border-box;
     }
     .chapters-list-label {
       color: var(--accent-violet2);
@@ -258,6 +260,7 @@
       gap: 18px;
       width: 100%;
       margin: 0; padding: 0; list-style: none;
+      box-sizing: border-box;
     }
     .chapter-card {
       background: linear-gradient(128deg,#271f43 65%,#ffd70022 120%);
@@ -272,6 +275,7 @@
       position: relative;
       transition: transform 0.17s, box-shadow 0.15s, background 0.22s;
       animation: ticket-in 0.4s cubic-bezier(.5,1.7,.42,.98);
+      box-sizing: border-box;
     }
     @keyframes ticket-in {
       0% { opacity: 0; transform: translateY(16px) scale(0.97);}
@@ -388,7 +392,7 @@
       }
     }
 
-    /* --- Glassmorphism Home Button --- */
+    /* --- Glassmorphism Home Button amélioré avec glow progressif --- */
     .logo-btn {
       position: fixed;
       top: 22px;
@@ -403,13 +407,28 @@
       box-shadow: 0 4px 20px #a084ff33, 0 2px 12px #000b;
       padding: 10px 14px;
       cursor: pointer;
-      transition: background 0.18s, box-shadow 0.18s, border-color 0.18s;
+      transition: background 0.34s cubic-bezier(.4,.4,0,1), box-shadow 0.34s cubic-bezier(.4,.4,0,1), border-color 0.28s;
       backdrop-filter: blur(20px) saturate(120%);
+      overflow: visible;
+    }
+    .logo-btn::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      opacity: 0;
+      transition: opacity 0.55s cubic-bezier(.4,.4,0,1);
+      background: radial-gradient(ellipse at center, #ffd70099 0%, #ffd70033 60%, transparent 100%);
+      z-index: -1;
     }
     .logo-btn:hover, .logo-btn:focus {
       background: var(--gold-t);
       border-color: var(--gold);
-      box-shadow: 0 6px 28px #ffd70055, 0 2px 14px #000c;
+      box-shadow: 0 6px 28px #ffd70066, 0 2px 14px #000c;
+    }
+    .logo-btn:hover::after, .logo-btn:focus::after {
+      opacity: 1;
     }
     .logo-btn img {
       height: 56px;
@@ -541,27 +560,4 @@
         return;
       }
       if (manga.assets?.background) {
-        bgBanner.innerHTML = `<img src="${manga.assets.background}" alt="background manga" /><div class="banner-halo"></div>`;
-      }
-      titleEl.textContent = manga.title;
-      authorEl.textContent = manga.author ? `par ${manga.author}` : "";
-      resumeEl.textContent = manga.resume?.[lang] || "Pas de résumé disponible.";
-      coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
-      coverEl.loading = "lazy";
-      coverEl.onerror = () => { coverEl.src = 'assets/cover/default-cover.png'; };
-      btnFr.classList.toggle("active", lang === "fr");
-      btnEn.classList.toggle("active", lang === "en");
-      btnFr.onclick = () => { setLang('fr'); };
-      btnEn.onclick = () => { setLang('en'); };
-      renderChapters(manga.chapters, lang, manga.id, orderDesc);
-      orderBtn.textContent = orderDesc ? "↓" : "↑";
-      orderBtn.onclick = () => {
-        orderDesc = !orderDesc;
-        orderBtn.textContent = orderDesc ? "↓" : "↑";
-        renderChapters(manga.chapters, lang, manga.id, orderDesc);
-      };
-      document.body.classList.add("ready");
-    });
-  </script>
-</body>
-</html>
+        bgBanner.innerHTML = `<img src="${manga.assets.background}" alt="background manga" /><div class="banner-halo"></div
