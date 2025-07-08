@@ -47,7 +47,7 @@
       content: "";
       position: absolute;
       left: 0; right: 0; bottom: 0;
-      height: 60px; /* Ajuste selon la hauteur du fondu souhaitée */
+      height: 60px;
       pointer-events: none;
       background: linear-gradient(
         to bottom,
@@ -101,9 +101,9 @@
       position: relative;
       z-index: 4;
       width: 100%;
-      max-width: 320px; /* ou la taille max de ta cover */
+      max-width: 320px;
       aspect-ratio: 2/3;
-      margin-top: -120px; /* Fait dépasser sur la bannière */
+      margin-top: -120px;
       margin-left: 0;
       margin-right: 0;
       align-items: flex-start;
@@ -132,7 +132,7 @@
       font-weight: 900;
       color: #ffd700;
       letter-spacing: 1px;
-      margin-bottom: 0px
+      margin-bottom: 0px;
       line-height: 1.1;
       word-break: break-word;
       background: rgba(20,20,20,0.74);
@@ -161,28 +161,30 @@
       line-height: 1.5;
     }
 
+    /* --- BOTTOM BAR FIXED CORNERS --- */
     .bottom-bar {
-      bottom: 0;
+      position: fixed;
       left: 0;
+      bottom: 0;
       width: 100vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      z-index: 20;
-      padding: 0 0 30px 0px;
+      height: 0; /* Pas de hauteur, juste conteneur de positionnement */
       pointer-events: none;
+      z-index: 20;
     }
+
     .chapters-zone {
+      position: absolute;
+      left: 2vw;
+      bottom: 30px;
       pointer-events: auto;
       border-radius: 14px;
       box-shadow: 0 2px 8px #0004;
-      min-width: 320px;
-      margin-left: 2vw;
-      margin-bottom: 0;
+      min-width: 220px;
       max-height: 52vh;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      background: transparent;
     }
     .chapters-list-label-row {
       display: flex;
@@ -226,6 +228,11 @@
       overflow-y: auto;
       max-height: 32vh;
       width: 650px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .chapters-list::-webkit-scrollbar {
+      display: none;
     }
     .chapter-card {
       background: #232323;
@@ -264,14 +271,15 @@
       text-decoration: underline;
     }
     .lang-selector-zone {
+      position: absolute;
+      right: 2vw;
+      bottom: 30px;
       pointer-events: auto;
       background: rgba(24,24,24,0.95);
       border-radius: 12px;
       box-shadow: 0 2px 8px #0004;
       padding: 10px 20px;
       min-width: 120px;
-      margin-right: 2vw;  
-      margin-bottom: 0;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -304,25 +312,18 @@
       background: #fff333;
       color: #181818;
     }
-    .chapters-list {
-      scrollbar-width: none;    /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-    }
-    .chapters-list::-webkit-scrollbar {
-      display: none;            /* Chrome/Safari */
-    }
+
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
       font-size: 0.90em;
       color: #aaa;
-      background: none;
+      background: rgba(24,24,24,0.90);
       position: fixed;
       left: 0;
       bottom: 0;
       width: 100vw;
       z-index: 50;
-      background: rgba(24,24,24,0.90);
       letter-spacing: 0.5px;
     }
 
@@ -337,19 +338,32 @@
       .cover-container { width: 180px; height: 240px; margin-top: -60px;}
       .manga-title { font-size: 1.6em; }
       .manga-author { font-size: 1.1em; }
+      .chapters-zone { min-width: 140px; max-width: 96vw; }
+      .chapters-list { width: 95vw; max-width: 95vw; }
     }
     @media (max-width: 700px) {
-      .cover-container { width: 120px; height: 170px; margin-top: -30px;}
-      .manga-title { font-size: 1.18em; padding: 4px 10px; }
-      .resume { font-size: 0.98em; }
       .main-block { margin-top: 8vh; }
       .logo-btn img { height: 32px; width: 32px; }
       .background-banner { height: 19vh; }
-      .chapters-list { width: 150px; }
-      .chapters-zone { min-width: 130px; padding: 8px; }
-      .bottom-bar { flex-direction: column; align-items: stretch; padding: 0 0 18vw 0; gap: 10px; }
-      .chapters-zone, .lang-selector-zone { margin: 0 auto; min-width: unset; width: 90vw; align-items: stretch; }
-      .lang-selector-zone { align-items: flex-end;}
+      .chapters-zone,
+      .lang-selector-zone {
+        position: static !important;
+        left: unset !important;
+        right: unset !important;
+        bottom: unset !important;
+        margin: 12px auto 0 auto;
+        width: 94vw;
+        min-width: unset;
+        max-width: 98vw;
+        transform: none !important;
+      }
+      .lang-selector-zone {
+        align-items: flex-end;
+        margin-bottom: 6vw;
+      }
+      .chapters-list { width: 90vw; max-width: 96vw; }
+      .manga-title { font-size: 1.18em; padding: 4px 10px; }
+      .resume { font-size: 0.98em; }
     }
     .ready .main-block,
     .ready .bottom-bar,
