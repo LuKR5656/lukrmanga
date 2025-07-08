@@ -84,6 +84,7 @@
       padding: 0 0 35px 0;
       border: 2.5px solid #fff2;
       animation: cardin .65s cubic-bezier(.42,.2,.13,.99);
+      transition: max-width 0.22s, width 0.22s;
     }
     @keyframes cardin {
       0% { opacity: 0; transform: translateY(66px) scale(.97);}
@@ -100,7 +101,7 @@
       width: 202px; min-height: 260px;
       display: flex; align-items: center; justify-content: center;
       z-index: 5;
-      transition: transform 0.18s cubic-bezier(.5,1.7,.42,.98);
+      transition: transform 0.18s cubic-bezier(.5,1.7,.42,.98), width 0.22s, min-height 0.22s;
     }
     .cover-container:hover {
       transform: translateY(-4px) rotate(-2deg) scale(1.04);
@@ -111,6 +112,7 @@
       border-radius: 17px; display: block;
       box-shadow: 0 2px 16px #000c;
       background: #232344;
+      transition: width 0.22s, height 0.22s;
     }
     .manga-title {
       font-size: 2em;
@@ -199,6 +201,7 @@
       padding: 25px 25px 22px 25px;
       display: flex; flex-direction: column; align-items: center;
       backdrop-filter: blur(10px);
+      transition: max-width 0.22s, width 0.22s, padding 0.22s;
     }
     .chapters-list-label-row {
       display: flex;
@@ -318,6 +321,48 @@
       .chapters-list { grid-template-columns: 1fr; }
       .chapters-zone { padding: 12px 3vw 11px 3vw;}
     }
+
+    /* --- Desktop ONLY: agrandit cover & main card --- */
+    @media (min-width: 900px) {
+      .main-card {
+        max-width: 760px;
+        width: 86vw;
+        padding-bottom: 45px;
+      }
+      .cover-container {
+        width: 338px;
+        min-height: 420px;
+        padding: 18px;
+      }
+      .cover-container img {
+        width: 300px;
+        height: 405px;
+      }
+      .chapters-zone {
+        max-width: 1200px;
+        width: 92vw;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+    }
+
+    /* Optionnel : tablette intermédiaire */
+    @media (min-width: 701px) and (max-width: 899px) {
+      .main-card {
+        max-width: 560px;
+        width: 92vw;
+      }
+      .cover-container {
+        width: 250px;
+        min-height: 340px;
+        padding: 12px;
+      }
+      .cover-container img {
+        width: 210px;
+        height: 280px;
+      }
+    }
+
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
