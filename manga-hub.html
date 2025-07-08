@@ -64,7 +64,6 @@
       z-index: 1;
       pointer-events: none;
     }
-
     /* --- MAIN CARD --- */
     .main-card {
       position: relative;
@@ -156,7 +155,6 @@
       max-width: 87vw;
       word-break: break-word;
     }
-
     /* --- LANG SELECTOR --- */
     .lang-selector-label {
       font-size: 1em;
@@ -203,11 +201,9 @@
       color: #4828a8;
       box-shadow: 0 0 0 3px #ffd70055;
     }
-
     /* --- CHAPTERS ZONE --- */
     .chapters-zone {
       margin: 0 auto;
-      width: 98vw; max-width: 980px;
       margin-bottom: 38px;
       background: var(--glass-light);
       border-radius: 23px;
@@ -219,6 +215,8 @@
       transition: max-width 0.22s, width 0.22s, padding 0.22s;
       overflow-x: auto;
       box-sizing: border-box;
+      width: 96vw;
+      max-width: 470px;
     }
     .chapters-list-label-row {
       display: flex;
@@ -253,10 +251,34 @@
       box-shadow: 0 2px 10px #ffd70044;
     }
     .order-btn:hover { background: var(--accent-violet); color: #fff; }
-
+    .chapter-search-bar {
+      width: 100%;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .chapter-search-bar input[type="text"] {
+      width: 100%;
+      max-width: 280px;
+      padding: 8px 14px;
+      border-radius: 13px;
+      border: 1.5px solid var(--accent-violet);
+      background: var(--glass);
+      color: #fff;
+      outline: none;
+      font-size: 1em;
+      margin-left: auto;
+      transition: border-color 0.18s, background 0.18s;
+      box-sizing: border-box;
+    }
+    .chapter-search-bar input[type="text"]:focus {
+      border-color: var(--gold);
+      background: var(--glass-light);
+    }
     .chapters-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+      display: flex;
+      flex-direction: column;
       gap: 18px;
       width: 100%;
       margin: 0; padding: 0; list-style: none;
@@ -330,7 +352,6 @@
       box-shadow: 0 2px 16px #ffd70066;
       text-decoration: none;
     }
-
     /* --- Responsive --- */
     @media (max-width: 700px) {
       .main-card, .chapters-zone { max-width: 99vw; }
@@ -338,8 +359,8 @@
       .cover-container { width: 96vw; min-height: unset;}
       .cover-container img { width: 72vw; height: auto;}
       .resume { font-size: 0.97em; }
-      .chapters-list { grid-template-columns: 1fr; }
-      .chapters-zone { padding: 12px 3vw 11px 3vw;}
+      .chapters-zone { padding: 12px 3vw 11px 3vw; width: 99vw; max-width: 99vw;}
+      .chapters-list { width: 100%; }
       .logo-btn {
         top: 10px;
         left: 10px;
@@ -349,14 +370,15 @@
         height: 40px !important;
         width: 60px !important;
       }
+      .chapter-search-bar input[type="text"] {
+        max-width: unset;
+      }
     }
-
-    /* --- Desktop ONLY: agrandit cover & main card --- */
+    /* --- Desktop ONLY: zone chapitres = zone infos --- */
     @media (min-width: 900px) {
-      .main-card {
-        max-width: 760px;
-        width: 86vw;
-        padding-bottom: 45px;
+      .main-card, .chapters-zone {
+        max-width: 470px;
+        width: 470px;
       }
       .cover-container {
         width: 338px;
@@ -367,17 +389,9 @@
         width: 300px;
         height: 405px;
       }
-      .chapters-zone {
-        max-width: 1200px;
-        width: 92vw;
-        padding-left: 60px;
-        padding-right: 60px;
-      }
     }
-
-    /* Optionnel : tablette intermédiaire */
     @media (min-width: 701px) and (max-width: 899px) {
-      .main-card {
+      .main-card, .chapters-zone {
         max-width: 560px;
         width: 92vw;
       }
@@ -391,7 +405,6 @@
         height: 280px;
       }
     }
-
     /* --- Glassmorphism Home Button amélioré avec glow progressif --- */
     .logo-btn {
       position: fixed;
@@ -439,7 +452,6 @@
       background: #232344;
       transition: filter 0.18s;
     }
-
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
@@ -482,6 +494,9 @@
       <span class="chapters-list-label">Chapitres</span>
       <button class="order-btn" id="order-btn" type="button" title="Inverser l'ordre">↑</button>
     </div>
+    <div class="chapter-search-bar">
+      <input type="text" id="chapter-search-input" placeholder="Rechercher un chapitre...">
+    </div>
     <div class="chapters-list" id="chapters-list"></div>
   </div>
   <footer>
@@ -497,11 +512,22 @@
       localStorage.setItem('lang', l);
       location.reload();
     }
-    function renderChapters(chapters, lang, mangaId, orderDesc) {
+    let allChapters = [];
+    let lang = 'fr';
+    function renderChapters(chapters, lang, mangaId, orderDesc, filter = "") {
       const chaptersList = document.getElementById("chapters-list");
       chaptersList.innerHTML = '';
+      let filtered = chapters;
+      if (filter && filter.trim().length > 0) {
+        const f = filter.trim().toLowerCase();
+        filtered = chapters.filter(chap =>
+          (chap.title && chap.title[lang] && chap.title[lang].toLowerCase().includes(f)) ||
+          (chap.number && String(chap.number).toLowerCase().includes(f)) ||
+          (chap.id && String(chap.id).toLowerCase().includes(f))
+        );
+      }
       const fragment = document.createDocumentFragment();
-      const list = orderDesc ? [...chapters].reverse() : chapters;
+      const list = orderDesc ? [...filtered].reverse() : filtered;
       list.forEach((chap, idx) => {
         const card = document.createElement("div");
         card.className = "chapter-card";
@@ -531,7 +557,7 @@
     }
     window.addEventListener('DOMContentLoaded', () => {
       const mangaId = getParam('id');
-      const lang = localStorage.getItem('lang') || 'fr';
+      lang = localStorage.getItem('lang') || 'fr';
       const manga = typeof mangas !== "undefined" ? mangas.find(m => m.id === mangaId) : null;
       const titleEl = document.getElementById("manga-title");
       const authorEl = document.getElementById("manga-author");
@@ -542,6 +568,7 @@
       const langLabel = document.getElementById("lang-label");
       const bgBanner = document.getElementById("background-banner");
       const orderBtn = document.getElementById("order-btn");
+      const searchInput = document.getElementById("chapter-search-input");
 
       // Par défaut : mode croissant (du plus ancien au plus récent)
       let orderDesc = false;
@@ -572,13 +599,21 @@
       btnEn.classList.toggle("active", lang === "en");
       btnFr.onclick = () => { setLang('fr'); };
       btnEn.onclick = () => { setLang('en'); };
-      renderChapters(manga.chapters, lang, manga.id, orderDesc);
+
+      allChapters = manga.chapters;
+      renderChapters(allChapters, lang, manga.id, orderDesc);
+
       orderBtn.textContent = orderDesc ? "↓" : "↑";
       orderBtn.onclick = () => {
         orderDesc = !orderDesc;
         orderBtn.textContent = orderDesc ? "↓" : "↑";
-        renderChapters(manga.chapters, lang, manga.id, orderDesc);
+        renderChapters(allChapters, lang, manga.id, orderDesc, searchInput.value);
       };
+
+      searchInput.addEventListener('input', () => {
+        renderChapters(allChapters, lang, manga.id, orderDesc, searchInput.value);
+      });
+
       document.body.classList.add("ready");
     });
   </script>
