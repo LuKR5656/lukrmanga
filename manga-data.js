@@ -39,7 +39,7 @@ const mangas = [
           en: "pages/el/chap1/en/"
         },
         numPages: 11 // le nombre réel d'images 
-      },
+      }/*,
       {
         id: "el-2",
         title: { fr: "Chapitre 2", en: "Chapter 2" },
