@@ -163,8 +163,8 @@
       curPage = idx;
       // Animation slide
       if(animDir !== 0){
-        mainImage.style.transform = `translateX(${animDir*60}px) scale(0.98)`;
-        mainImage.style.filter = "brightness(0.8)";
+        mainImage.style.transform = `translateX(${animDir*30}px) scale(0.98)`;
+        mainImage.style.filter = "brightness(0.7)";
         setTimeout(()=>{
           mainImage.src = pages[idx];
           mainImage.style.transform = "translateX(0) scale(1)";
