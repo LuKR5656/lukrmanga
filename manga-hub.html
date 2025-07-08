@@ -158,9 +158,25 @@
     }
 
     /* --- LANG SELECTOR --- */
+    .lang-selector-label {
+      font-size: 1em;
+      font-weight: 700;
+      color: var(--accent-violet2);
+      background: rgba(80,60,100,0.10);
+      padding: 5px 13px 5px 13px;
+      border-radius: 16px;
+      margin-right: 12px;
+      letter-spacing: 0.5px;
+      user-select: none;
+      transition: color 0.18s, background 0.18s;
+      display: inline-block;
+      min-width: 82px;
+      text-align: right;
+    }
     .lang-selector-zone {
       margin: 0 auto 18px auto;
       display: flex;
+      flex-direction: row;
       gap: 18px;
       background: rgba(80,60,100,0.24);
       border-radius: 30px;
@@ -320,6 +336,15 @@
       .resume { font-size: 0.97em; }
       .chapters-list { grid-template-columns: 1fr; }
       .chapters-zone { padding: 12px 3vw 11px 3vw;}
+      .logo-btn {
+        top: 10px;
+        left: 10px;
+        padding: 7px 10px;
+      }
+      .logo-btn img {
+        height: 40px !important;
+        width: 60px !important;
+      }
     }
 
     /* --- Desktop ONLY: agrandit cover & main card --- */
@@ -363,6 +388,39 @@
       }
     }
 
+    /* --- Glassmorphism Home Button --- */
+    .logo-btn {
+      position: fixed;
+      top: 22px;
+      left: 22px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--glass);
+      border: 2.5px solid var(--accent-violet);
+      border-radius: 18px;
+      box-shadow: 0 4px 20px #a084ff33, 0 2px 12px #000b;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.18s, box-shadow 0.18s, border-color 0.18s;
+      backdrop-filter: blur(20px) saturate(120%);
+    }
+    .logo-btn:hover, .logo-btn:focus {
+      background: var(--gold-t);
+      border-color: var(--gold);
+      box-shadow: 0 6px 28px #ffd70055, 0 2px 14px #000c;
+    }
+    .logo-btn img {
+      height: 56px;
+      width: 84px;
+      display: block;
+      filter: drop-shadow(0 2px 8px #0006);
+      border-radius: 10px;
+      background: #232344;
+      transition: filter 0.18s;
+    }
+
     footer {
       text-align: right;
       padding: 9px 5vw 9px 0;
@@ -384,8 +442,8 @@
   <div class="background-banner" id="background-banner">
     <div class="banner-halo"></div>
   </div>
-  <button class="logo-btn" onclick="location.href='index.html'" style="position:fixed;top:18px;left:18px;background:rgba(20,20,20,0.74);border:none;border-radius:14px;padding:6px 8px;z-index:10;cursor:pointer;box-shadow:0 2px 8px #0009;transition:background 0.18s;display:flex;align-items:center;">
-    <img src="assets/home.png" alt="Logo" style="height:60px;width:90px;display:block;" />
+  <button class="logo-btn" onclick="location.href='index.html'" aria-label="Accueil">
+    <img src="assets/home.png" alt="Accueil" />
   </button>
   <div class="main-card">
     <div class="cover-container">
@@ -395,6 +453,7 @@
     <div class="manga-author" id="manga-author"></div>
     <div class="resume" id="manga-resume">Chargement du résumé…</div>
     <div class="lang-selector-zone">
+      <span class="lang-selector-label" id="lang-label">Langue</span>
       <button class="lang-btn" id="btn-fr" type="button">FR</button>
       <button class="lang-btn" id="btn-en" type="button">EN</button>
     </div>
@@ -402,12 +461,12 @@
   <div class="chapters-zone">
     <div class="chapters-list-label-row">
       <span class="chapters-list-label">Chapitres</span>
-      <button class="order-btn" id="order-btn" type="button" title="Inverser l'ordre">↓</button>
+      <button class="order-btn" id="order-btn" type="button" title="Inverser l'ordre">↑</button>
     </div>
     <div class="chapters-list" id="chapters-list"></div>
   </div>
   <footer>
-    © 2025 LuK R. All rights reserved.
+    © 2025 LuKR. All rights reserved.
   </footer>
   <script src="manga-data.js" defer></script>
   <script>
@@ -461,10 +520,18 @@
       const coverEl = document.getElementById("manga-cover");
       const btnFr = document.getElementById("btn-fr");
       const btnEn = document.getElementById("btn-en");
+      const langLabel = document.getElementById("lang-label");
       const bgBanner = document.getElementById("background-banner");
       const orderBtn = document.getElementById("order-btn");
 
-      let orderDesc = true;
+      // Par défaut : mode croissant (du plus ancien au plus récent)
+      let orderDesc = false;
+
+      // Affichage du label langue/language
+      function updateLangLabel() {
+        langLabel.textContent = (lang === "fr") ? "Langue" : "Language";
+      }
+      updateLangLabel();
 
       if (!manga) {
         titleEl.textContent = "Erreur : aucun manga spécifié.";
@@ -484,9 +551,10 @@
       coverEl.onerror = () => { coverEl.src = 'assets/cover/default-cover.png'; };
       btnFr.classList.toggle("active", lang === "fr");
       btnEn.classList.toggle("active", lang === "en");
-      btnFr.onclick = () => setLang('fr');
-      btnEn.onclick = () => setLang('en');
+      btnFr.onclick = () => { setLang('fr'); };
+      btnEn.onclick = () => { setLang('en'); };
       renderChapters(manga.chapters, lang, manga.id, orderDesc);
+      orderBtn.textContent = orderDesc ? "↓" : "↑";
       orderBtn.onclick = () => {
         orderDesc = !orderDesc;
         orderBtn.textContent = orderDesc ? "↓" : "↑";
