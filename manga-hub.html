@@ -511,7 +511,7 @@
         badge.textContent = chap.number || (idx+1);
         // Titre
         let chapTitle = chap.title?.[lang] || "";
-        if (!chapTitle) chapTitle = `Chapitre ${chap.number || (idx+1)}`;
+        if (!chapTitle) chapTitle = (lang === "en" ? `Chapter ${chap.number || (idx+1)}` : `Chapitre ${chap.number || (idx+1)}`);
         const titleDiv = document.createElement("div");
         titleDiv.className = "chapter-title";
         titleDiv.textContent = chapTitle;
@@ -519,7 +519,7 @@
         const readLink = document.createElement("a");
         readLink.className = "chapter-link";
         readLink.href = `reader.html?manga=${encodeURIComponent(mangaId)}&chap=${encodeURIComponent(chap.id)}&lang=${encodeURIComponent(lang)}`;
-        readLink.title = "Lire ce chapitre";
+        readLink.title = lang === "en" ? "Read this chapter" : "Lire ce chapitre";
         readLink.innerHTML = "&#9658;"; // triangle play
         // Assemble
         card.appendChild(badge);
@@ -560,4 +560,27 @@
         return;
       }
       if (manga.assets?.background) {
-        bgBanner.innerHTML = `<img src="${manga.assets.background}" alt="background manga" /><div class="banner-halo"></div
+        bgBanner.innerHTML = `<img src="${manga.assets.background}" alt="background manga" /><div class="banner-halo"></div>`;
+      }
+      titleEl.textContent = manga.title;
+      authorEl.textContent = manga.author ? (lang === "en" ? `by ${manga.author}` : `par ${manga.author}`) : "";
+      resumeEl.textContent = manga.resume?.[lang] || (lang === "en" ? "No summary available." : "Pas de résumé disponible.");
+      coverEl.src = manga.cover || `assets/cover/${manga.id}-cover.png`;
+      coverEl.loading = "lazy";
+      coverEl.onerror = () => { coverEl.src = 'assets/cover/default-cover.png'; };
+      btnFr.classList.toggle("active", lang === "fr");
+      btnEn.classList.toggle("active", lang === "en");
+      btnFr.onclick = () => { setLang('fr'); };
+      btnEn.onclick = () => { setLang('en'); };
+      renderChapters(manga.chapters, lang, manga.id, orderDesc);
+      orderBtn.textContent = orderDesc ? "↓" : "↑";
+      orderBtn.onclick = () => {
+        orderDesc = !orderDesc;
+        orderBtn.textContent = orderDesc ? "↓" : "↑";
+        renderChapters(manga.chapters, lang, manga.id, orderDesc);
+      };
+      document.body.classList.add("ready");
+    });
+  </script>
+</body>
+</html>
