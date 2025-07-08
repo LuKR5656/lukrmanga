@@ -69,7 +69,7 @@ const mangas = [
       },
       {
         id: "el-5",
-        title: { fr: "Chapitre 4", en: "Chapter 4" },
+        title: { fr: "Chapitre 5", en: "Chapter 4" },
         pages: {
           fr: "pages/el/chap1/fr/",
           en: "pages/el/chap1/en/"
