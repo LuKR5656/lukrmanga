@@ -284,12 +284,12 @@
       seriesColumn.innerHTML = '<span class="column-label">Mes Séries</span>';
 
       function getCoverUrl(manga) {
-        return manga.cover ? manga.cover : assets/cover/${manga.id}-cover.png;
+        return manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`;
       }
 
       mangas.filter(m => m.isOneshot)
         .forEach(manga => {
-          oneshotColumn.innerHTML += 
+          oneshotColumn.innerHTML += `
             <div class="manga-card">
               <a href="manga-hub.html?id=${manga.id}">
                 <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
@@ -301,11 +301,11 @@
                 </div>
               </a>
             </div>
-          ;
+          `;
         });
       mangas.filter(m => !m.isOneshot)
         .forEach(manga => {
-          seriesColumn.innerHTML += 
+          seriesColumn.innerHTML += `
             <div class="manga-card">
               <a href="manga-hub.html?id=${manga.id}">
                 <img src="${getCoverUrl(manga)}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
@@ -317,7 +317,7 @@
                 </div>
               </a>
             </div>
-          ;
+          `;
         });
     });
   </script>
