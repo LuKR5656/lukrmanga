@@ -8,151 +8,164 @@
   <style>
     :root {
       --violet1: #a084ff;
-      --violet2: #4f3569;
-      --violet3: #2d1836;
+      --violet2: #533f73;
+      --violet3: #19112b;
       --gold: #ffd700;
       --white: #f9f7fe;
-      --card-radius: 19px;
-      --shadow: 0 4px 22px #a084ff44, 0 2px 10px #0007;
+      --card-radius: 15px;
+      --shadow: 0 8px 38px #a084ff33, 0 2px 10px #0008;
+      --star: #fffbe7;
     }
     body {
       margin: 0;
       font-family: 'Inter', Arial, sans-serif;
-      background: linear-gradient(125deg, var(--violet3) 0%, var(--violet2) 100%);
+      background: radial-gradient(ellipse 110% 65% at 40% 0%, #a084ff20 0%, #19112b 65%);
       min-height: 100vh;
       color: var(--white);
       overflow-x: hidden;
     }
-
-    /* HERO HEADER */
-    .hero {
-      width: 100%;
-      padding: 46px 0 22px 0;
-      background: radial-gradient(circle at 65% 25%, var(--violet1) 0%, transparent 70%);
-      text-align: center;
+    /* Fond étoilé dynamique */
+    .stars {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      background: transparent;
+    }
+    .stars span {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--star);
+      opacity: .5;
+      width: 2.2px; height: 2.2px;
+      animation: starblink 2.8s infinite alternate;
+    }
+    @keyframes starblink {
+      0% { opacity: .4;}
+      100% { opacity: 1;}
+    }
+    /* HEADER */
+    .header {
+      width: 100vw;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 17px 19px 11px 19px;
+      background: linear-gradient(90deg, #19112bdd 65%, #a084ff22 98%);
+      box-shadow: 0 2px 15px #a084ff11;
+      backdrop-filter: blur(4px);
+    }
+    .brand {
+      font-size: 1.25em;
+      font-weight: bold;
+      color: var(--gold);
+      letter-spacing: 1.2px;
+      text-shadow: 0 2px 14px #2d1836, 0 2px 2px #fff2;
+    }
+    .discover-btn {
+      background: var(--violet1);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1em;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 23px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #a084ff44;
+      transition: background 0.16s, color 0.16s, transform 0.14s;
+    }
+    .discover-btn:hover {
+      background: var(--gold);
+      color: var(--violet2);
+      transform: scale(1.06);
+    }
+    /* CAROUSEL BULLE */
+    .carousel-bubble {
+      margin: 34px auto 0 auto;
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 60% 40%, #a084ff33 0%, #533f7366 80%, transparent 100%);
+      box-shadow: 0 0 100px #a084ff22;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       z-index: 2;
-    }
-    .hero-title {
-      font-size: 2.4em;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: var(--gold);
-      margin: 0 0 8px 0;
-      text-shadow: 0 2px 24px #2d1836, 0 2px 2px #fff2;
-    }
-    .hero-desc {
-      font-size: 1.15em;
-      color: var(--white);
-      margin: 0 auto 0.5em auto;
-      max-width: 520px;
-      opacity: 0.92;
-      text-shadow: 0 1px 14px #2d183677;
-    }
-    .hero-socials {
-      margin-top: 17px;
-      display: flex;
-      justify-content: center;
-      gap: 22px;
-    }
-    .hero-socials a {
-      color: var(--gold);
-      background: var(--violet2);
-      border-radius: 50%;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.35em;
-      box-shadow: 0 2px 8px #a084ff55;
-      transition: background 0.18s, color 0.18s, transform 0.16s;
-      text-decoration: none;
-    }
-    .hero-socials a:hover {
-      color: #fff;
-      background: var(--violet1);
-      transform: translateY(-4px) scale(1.06);
-    }
-
-    /* CAROUSEL */
-    .carousel-zone {
-      width: 100vw;
-      max-width: 540px;
-      margin: 32px auto 0 auto;
-      border-radius: 22px;
       overflow: hidden;
-      box-shadow: var(--shadow);
-      position: relative;
-      aspect-ratio: 2.3/1;
-      min-height: 120px;
-      background: var(--violet3);
     }
-    .carousel-zone img {
-      width: 100%;
-      height: 100%;
+    .carousel-bubble img {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 0.8s;
       position: absolute;
-      left: 0; top: 0;
-      z-index: 1;
-      background: var(--violet3);
-    }
-    .carousel-zone img.active {
-      opacity: 1;
+      left: 15px; top: 15px;
+      transition: opacity 0.8s;
+      box-shadow: 0 8px 32px #a084ff66;
       z-index: 2;
     }
-
-    /* SECTION LABELS */
-    .section-label {
-      font-size: 1.23em;
-      font-weight: 700;
+    .carousel-bubble img.active { opacity: 1; z-index: 3;}
+    /* ÉTAGÈRES */
+    .library-section {
+      margin: 38px 0 0 0;
+      position: relative;
+      z-index: 3;
+    }
+    .section-title {
+      font-size: 1.22em;
+      font-weight: bold;
       color: var(--violet1);
       letter-spacing: 1.2px;
-      margin: 34px 0 13px 18px;
+      margin: 0 0 13px 22px;
       text-shadow: 0 1px 9px #2d1836aa;
     }
-    .scroll-row {
+    .shelf-row {
       display: flex;
       flex-direction: row;
-      gap: 24px;
+      gap: 28px;
       overflow-x: auto;
-      padding: 0 16px 10px 16px;
+      padding: 0 18px 16px 18px;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
+      margin-bottom: 7px;
     }
-    .scroll-row::-webkit-scrollbar { height: 8px;}
-    .scroll-row::-webkit-scrollbar-thumb { background: #a084ff55; border-radius: 8px;}
-
-    /* CARDS */
+    .shelf-row::-webkit-scrollbar { height: 7px;}
+    .shelf-row::-webkit-scrollbar-thumb { background: #a084ff33; border-radius: 7px;}
     .manga-card {
-      flex: 0 0 180px;
-      background: linear-gradient(120deg, var(--violet2) 70%, var(--violet1) 100%);
+      flex: 0 0 152px;
+      background: linear-gradient(120deg, #a084ff44 0%, #533f73 70%);
       border-radius: var(--card-radius);
-      box-shadow: 0 4px 24px #a084ff2a, 0 2px 8px #0009;
+      box-shadow: var(--shadow);
       overflow: hidden;
       position: relative;
-      min-height: 260px;
+      min-height: 244px;
       max-height: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
       scroll-snap-align: start;
       transition: transform 0.16s, box-shadow 0.16s;
-      border: 2.5px solid #a084ff55;
+      border: 2.5px solid #a084ff33;
       cursor: pointer;
     }
     .manga-card:hover {
-      transform: scale(1.04) translateY(-6px) rotate(-1deg);
-      box-shadow: 0 8px 34px #ffd70022, 0 4px 18px #a084ff3a;
+      transform: scale(1.06) translateY(-7px) rotate(-1.5deg);
+      box-shadow: 0 8px 34px #ffd70044, 0 4px 18px #a084ff3a;
       border-color: var(--gold);
     }
     .manga-cover-bg {
       width: 100%;
-      height: 180px;
+      height: 172px;
       object-fit: cover;
       border-top-left-radius: var(--card-radius);
       border-top-right-radius: var(--card-radius);
       background: #fff1;
-      border-bottom: 2px solid #a084ff88;
+      border-bottom: 2px solid #a084ff77;
       box-shadow: 0 4px 14px #2d1836a9;
     }
     .manga-infos {
@@ -162,11 +175,11 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-end;
-      padding: 13px 17px 14px 17px;
+      padding: 11px 13px 13px 13px;
       min-height: 0;
     }
     .manga-title {
-      font-size: 1.09em;
+      font-size: 1.05em;
       font-weight: bold;
       color: var(--gold);
       text-shadow: 0 2px 10px #000d;
@@ -177,10 +190,10 @@
       letter-spacing: 0.04em;
     }
     .manga-author {
-      font-size: 0.97em;
+      font-size: 0.95em;
       color: #fffbe7;
       text-shadow: 0 1px 8px #000b;
-      opacity: 0.85;
+      opacity: 0.84;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -192,68 +205,66 @@
       text-decoration: none;
       color: inherit;
     }
-
     /* FOOTER */
     .footer {
       text-align: center;
       color: #b2a2e6;
       background: rgba(160,132,255,0.07);
       font-size: 0.95em;
-      padding: 19px 0 11px 0;
-      margin: 36px 0 0 0;
+      padding: 17px 0 10px 0;
+      margin: 40px 0 0 0;
       border-top: 2px solid #a084ff33;
       letter-spacing: 0.5px;
+      z-index: 5;
+      position: relative;
     }
-
+    /* Responsive */
     @media (max-width: 700px) {
-      .hero-title { font-size: 1.38em;}
-      .carousel-zone, .main-content, .footer {
-        max-width: 99vw;
-        border-radius: 10px;
-        margin-left: 1vw;
-        margin-right: 1vw;
-      }
-      .manga-card {
-        flex: 0 0 65vw;
-        min-width: 170px;
-        min-height: 200px;
-      }
-      .section-label { margin-left: 10px;}
+      .header { font-size: 0.99em; padding: 9px 7vw 7px 7vw;}
+      .carousel-bubble { width: 92vw; height: 92vw; min-width: 210px; min-height: 210px; }
+      .carousel-bubble img { width: 86vw; height: 86vw; min-width: 170px; min-height: 170px; left: 3vw; top: 3vw;}
+      .section-title { margin-left: 12px;}
+      .manga-card { min-width: 44vw; max-width: 54vw;}
+      .footer { font-size: .92em; }
     }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="hero-title">LuK R. Manga Hub</div>
-    <div class="hero-desc">
-      Le portail officiel pour lire et explorer les mangas et oneshots de LuK R.<br>
-      Découvre, partage et vis l’aventure !
-    </div>
-    <div class="hero-socials">
-      <a href="https://x.com/LuKRvl" target="_blank" title="Twitter" aria-label="Twitter"><span>🐦</span></a>
-      <a href="https://instagram.com/lucasrvl_" target="_blank" title="Instagram" aria-label="Instagram"><span>📸</span></a>
-    </div>
-  </section>
-  <div class="carousel-zone" id="carousel">
+  <div class="stars"></div>
+  <div class="header">
+    <span class="brand">LuK R. Manga Hub</span>
+    <button class="discover-btn" onclick="window.scrollTo({top: document.querySelector('.library-section').offsetTop-30, behavior:'smooth'});">Découvrir</button>
+  </div>
+  <div class="carousel-bubble" id="carousel">
     <img src="assets/carousel/car1.png" class="active" alt="slide 1">
     <img src="assets/carousel/car2.png" alt="slide 2">
     <img src="assets/carousel/car3.png" alt="slide 3">
   </div>
-  <main class="main-content">
-    <div>
-      <div class="section-label">Mes Séries</div>
-      <div class="scroll-row" id="series-row"></div>
-    </div>
-    <div>
-      <div class="section-label">Mes Oneshots</div>
-      <div class="scroll-row" id="oneshot-row"></div>
-    </div>
-  </main>
+  <section class="library-section">
+    <div class="section-title">Mes Séries</div>
+    <div class="shelf-row" id="series-row"></div>
+    <div class="section-title">Mes Oneshots</div>
+    <div class="shelf-row" id="oneshot-row"></div>
+  </section>
   <footer class="footer">
-    © 2025 LuK R. Manga Hub. Tous droits réservés.
+    © 2025 LuK R. Manga Hub. Tous droits réservés. · <a href="https://x.com/LuKRvl" target="_blank" style="color:var(--gold)">Twitter</a> · <a href="https://instagram.com/lucasrvl_" target="_blank" style="color:var(--gold)">Instagram</a>
   </footer>
   <script src="manga-data.js"></script>
   <script>
+    // Stars background
+    (function stars(){
+      const stars=document.querySelector(".stars");
+      let html="";
+      for(let i=0;i<56;i++){
+        const top=Math.random()*100;
+        const left=Math.random()*100;
+        const d=0.7+Math.random()*2;
+        const delay=Math.random()*2;
+        html+=`<span style="top:${top}vh;left:${left}vw;width:${d}px;height:${d}px;animation-delay:${delay}s"></span>`;
+      }
+      stars.innerHTML=html;
+    })();
+
     // Carousel d'images
     document.addEventListener("DOMContentLoaded", function() {
       const carousel = document.getElementById("carousel");
