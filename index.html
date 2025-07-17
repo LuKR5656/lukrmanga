@@ -12,56 +12,60 @@
       --violet3: #19112b;
       --gold: #ffd700;
       --white: #f9f7fe;
-      --card-radius: 16px;
+      --card-radius: 18px;
+      --shadow: 0 4px 22px #a084ff33, 0 2px 10px #0007;
     }
     html, body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(ellipse 110% 65% at 40% 0%, #a084ff20 0%, #19112b 65%);
+      background: linear-gradient(135deg, var(--violet3) 0%, var(--violet2) 100%);
       font-family: 'Inter', Arial, sans-serif;
       color: var(--white);
       min-height: 100vh;
-      width: 100vw;
       box-sizing: border-box;
       overflow-x: hidden;
     }
-    body {
+    /* HEADER */
+    .header {
       width: 100vw;
-      max-width: 100vw;
-      min-height: 100vh;
-      box-sizing: border-box;
+      background: linear-gradient(90deg, var(--violet2) 60%, var(--violet1) 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 3px 15px #2d183677;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      margin-bottom: 0.6em;
+      user-select: none;
+      position: sticky;
+      top: 0; z-index:10;
     }
     /* NAVBAR */
     .navbar {
-      width: 100%;
-      background: linear-gradient(90deg, #19112bdd 65%, #a084ff22 98%);
-      box-shadow: 0 2px 15px #a084ff11;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      gap: 1em;
+      background: #1c1331cc;
+      padding: 0.5em 1.5em 0.5em 1.5em;
+      border-radius: 0 0 14px 14px;
       position: sticky;
-      top: 0;
-      z-index: 20;
-      padding: 0 0.7em 0 1em;
-      height: 62px;
-    }
-    .navbar-brand {
-      font-size: 1.18em;
-      font-weight: bold;
-      color: var(--gold);
-      letter-spacing: 1.2px;
-      text-shadow: 0 2px 14px #2d1836, 0 2px 2px #fff2;
-      flex: 0 0 auto;
+      top: 0; z-index:12;
+      box-shadow: 0 4px 14px #a084ff22;
     }
     .navbar-search {
+      flex: 1;
+      max-width: 370px;
       position: relative;
-      flex: 1 1 auto;
-      max-width: 420px;
-      margin: 0 0.7em 0 1.5em;
     }
     .navbar-search input {
       width: 100%;
-      padding: 8px 35px 8px 14px;
+      padding: 9px 34px 9px 14px;
       border-radius: 999px;
       border: none;
       background: #2d1836cc;
@@ -86,125 +90,150 @@
     }
     .navbar-links {
       display: flex;
-      gap: 13px;
+      gap: 0.7em;
       align-items: center;
-      margin-right: 10px;
     }
     .navbar-links a {
       color: var(--gold);
       text-decoration: none;
-      padding: 6px 13px;
+      padding: 6px 11px;
       font-weight: bold;
       border-radius: 10px;
       transition: background 0.18s, color 0.16s;
+      font-size: 1em;
     }
     .navbar-links a:hover {
       background: var(--violet1);
       color: #fff;
     }
-
-    /* MAIN CONTENT */
-    .main-content {
+    /* CAROUSEL */
+    .carousel {
+      width: 100vw;
+      max-width: 810px;
+      margin: 2em auto 1.7em auto;
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--violet2);
+      box-shadow: 0 8px 32px #a084ff33, 0 2px 16px #000c;
+      position: relative;
+      aspect-ratio: 2.45/1;
+      min-height: 135px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel img {
       width: 100%;
-      max-width: 900px;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.8s;
+      position: absolute;
+      left: 0; top: 0;
+      z-index: 1;
+      background: var(--violet2);
+    }
+    .carousel img.active {
+      opacity: 1;
+      z-index: 2;
+    }
+    /* SECTIONS */
+    .main-content {
+      width: 100vw;
+      max-width: 810px;
       margin: 0 auto;
       padding: 0 1vw;
-      margin-top: 32px;
       box-sizing: border-box;
     }
     .section-title {
-      font-size: 1.22em;
-      font-weight: bold;
+      font-size: 1.18em;
+      font-weight: 700;
       color: var(--violet1);
-      letter-spacing: 1.2px;
-      margin: 0 0 18px 12px;
+      letter-spacing: 1.1px;
+      margin: 1.5em 0 1em 0.2em;
       text-shadow: 0 1px 9px #2d1836aa;
     }
+    /* GRILLE MANGA */
     .manga-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 32px 26px;
-      justify-items: center;
+      gap: 27px 22px;
       width: 100%;
       margin-bottom: 30px;
     }
-    /* Responsive : 1 colonne sur mobile */
     @media (max-width: 700px) {
-      .main-content {
+      .main-content, .carousel {
         max-width: 99vw;
-        padding: 0 4vw;
+        border-radius: 10px;
+        margin-left: 1vw;
+        margin-right: 1vw;
+        padding: 0;
       }
       .manga-grid {
         grid-template-columns: 1fr;
-        gap: 23px 0;
+        gap: 19px 0;
       }
-      .navbar-search {
-        min-width: 0;
-        margin: 0 0 0 0.6em;
-      }
+      .header { font-size: 1.18em; height: 42px;}
+      .navbar { flex-direction: column; align-items: stretch; gap: 0.5em; font-size: 0.97em;}
     }
-    /* MANGA CARDS */
+    /* MANGA CARD */
     .manga-card {
-      width: 97%;
-      max-width: 370px;
+      width: 99%;
+      max-width: 360px;
       background: linear-gradient(120deg, #a084ff44 0%, #533f73 90%);
       border-radius: var(--card-radius);
-      box-shadow: 0 6px 26px #a084ff33, 0 2px 10px #0008;
+      box-shadow: 0 6px 24px #a084ff33, 0 2px 10px #0007;
       overflow: hidden;
       position: relative;
-      min-height: 262px;
+      min-height: 226px;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       transition: transform 0.16s, box-shadow 0.16s;
       border: 2.5px solid #a084ff33;
       cursor: pointer;
     }
     .manga-card:hover {
-      transform: scale(1.03) translateY(-7px) rotate(-1.5deg);
-      box-shadow: 0 8px 34px #ffd70044, 0 4px 18px #a084ff3a;
+      transform: scale(1.025) translateY(-4px);
+      box-shadow: 0 8px 32px #ffd70033, 0 4px 14px #a084ff3a;
       border-color: var(--gold);
     }
     .manga-cover-bg {
-      width: 96%;
-      margin-top: 11px;
-      border-radius: 14px;
-      aspect-ratio: 1/1;
+      width: 110px;
+      min-width: 110px;
+      height: 110px;
+      border-radius: 16px;
       object-fit: cover;
+      margin: 0 0 0 11px;
       background: #fff1;
-      border-bottom: 2px solid #a084ff77;
+      border: 2px solid #a084ff77;
       box-shadow: 0 4px 14px #2d1836a9;
-      min-height: 0;
-      max-width: 310px;
-      max-height: 310px;
       display: block;
     }
     .manga-infos {
-      width: 100%;
       flex: 1 1 0;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 15px 16px 16px 16px;
-      min-height: 0;
+      justify-content: center;
+      min-width: 0;
+      padding: 0 1.1em 0 1.2em;
     }
     .manga-title {
-      font-size: 1.13em;
+      font-size: 1.15em;
       font-weight: bold;
       color: var(--gold);
       text-shadow: 0 2px 10px #000d;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.04em;
     }
     .manga-author {
-      font-size: 0.97em;
+      font-size: 0.98em;
       color: #fffbe7;
       text-shadow: 0 1px 8px #000b;
-      opacity: 0.84;
+      opacity: 0.8;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -212,7 +241,7 @@
     .manga-card a {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       text-decoration: none;
       color: inherit;
     }
@@ -221,8 +250,8 @@
       text-align: center;
       color: #b2a2e6;
       background: rgba(160,132,255,0.07);
-      font-size: 0.95em;
-      padding: 17px 0 10px 0;
+      font-size: 0.98em;
+      padding: 20px 0 12px 0;
       margin: 40px 0 0 0;
       border-top: 2px solid #a084ff33;
       letter-spacing: 0.5px;
@@ -235,8 +264,8 @@
   </style>
 </head>
 <body>
+  <div class="header">LuK R. Manga Hub</div>
   <nav class="navbar">
-    <span class="navbar-brand">LuK R. Manga Hub</span>
     <div class="navbar-search">
       <input id="searchInput" type="text" placeholder="Rechercher un manga, un auteur...">
     </div>
@@ -247,6 +276,11 @@
       <a href="https://instagram.com/lucasrvl_" target="_blank">Instagram</a>
     </div>
   </nav>
+  <div class="carousel" id="carousel">
+    <img src="assets/carousel/car1.png" class="active" alt="slide 1">
+    <img src="assets/carousel/car2.png" alt="slide 2">
+    <img src="assets/carousel/car3.png" alt="slide 3">
+  </div>
   <div class="main-content">
     <div id="series">
       <div class="section-title">Mes Séries</div>
@@ -262,11 +296,19 @@
   </footer>
   <script src="manga-data.js"></script>
   <script>
-    // Correct any horizontal overflow
-    document.documentElement.style.overflowX = "hidden";
-    document.body.style.overflowX = "hidden";
+    // Carousel d'images
+    document.addEventListener("DOMContentLoaded", function() {
+      const carousel = document.getElementById("carousel");
+      const images = carousel.querySelectorAll("img");
+      let idx = 0;
+      setInterval(() => {
+        images[idx].classList.remove("active");
+        idx = (idx + 1) % images.length;
+        images[idx].classList.add("active");
+      }, 5000);
+    });
 
-    // Affichage des mangas en grille 2 colonnes, carré/large cover
+    // Affichage des mangas en grille, recherche live
     function renderMangas() {
       const oneshotGrid = document.getElementById("oneshot-grid");
       const seriesGrid = document.getElementById("series-grid");
