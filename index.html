@@ -4,388 +4,219 @@
   <meta charset="UTF-8" />
   <title>LuK R. Manga Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --violet1: #a084ff;
-      --violet2: #533f73;
-      --violet3: #19112b;
+      --main-bg: linear-gradient(120deg, #3c2a6a 0%, #171322 100%);
+      --glass: rgba(40,34,55,0.85);
+      --glass-light: rgba(65,55,90,0.45);
+      --accent-violet: #a084ff;
+      --accent-violet2: #5f41c8;
       --gold: #ffd700;
-      --white: #f9f7fe;
-      --card-radius: 18px;
+      --card-radius: 28px;
     }
     html, body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, var(--violet3) 0%, var(--violet2) 100%);
-      font-family: 'Inter', Arial, sans-serif;
-      color: var(--white);
+      margin: 0; padding: 0;
+      background: #18142b;
+      color: #f7f7f7;
+      font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
       min-height: 100vh;
-      box-sizing: border-box;
       overflow-x: hidden;
     }
-    /* HEADER */
-    .header {
-      width: 100vw;
-      background: linear-gradient(90deg, var(--violet2) 60%, var(--violet1) 100%);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 56px;
-      font-size: 2em;
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-shadow: 0 3px 15px #2d183677;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-      margin-bottom: 0.6em;
-      user-select: none;
-      position: sticky;
-      top: 0; z-index:10;
+    .background-banner {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 45vh;
+      background: var(--main-bg);
+      z-index: 0; overflow: hidden;
+      animation: gradientmove 30s ease-in-out infinite alternate;
     }
-    /* NAVBAR */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1em;
-      background: #1c1331cc;
-      padding: 0.5em 1.5em 0.5em 1.5em;
-      border-radius: 0 0 14px 14px;
-      position: sticky;
-      top: 0; z-index:12;
-      box-shadow: 0 4px 14px #a084ff22;
+    @keyframes gradientmove {
+      0% {background-position: 0% 40%;}
+      100% {background-position: 100% 50%;}
     }
-    .navbar-search {
-      flex: 1;
-      max-width: 370px;
-      position: relative;
+    .background-banner::after {
+      content: "";
+      position: absolute; left:0; right:0; bottom:0; height:120px;
+      background: linear-gradient(0deg,#18142b 0%,rgba(24,24,24,0) 100%);
+      z-index: 3; pointer-events: none;
     }
-    .navbar-search input {
-      width: 100%;
-      padding: 9px 34px 9px 14px;
-      border-radius: 999px;
-      border: none;
-      background: #2d1836cc;
-      color: var(--white);
-      outline: none;
-      font-size: 1em;
-      box-shadow: 0 2px 8px #a084ff22;
-      transition: box-shadow 0.16s, background 0.14s;
-    }
-    .navbar-search input:focus {
-      background: #3b2571dd;
-      box-shadow: 0 4px 20px #a084ff33;
-    }
-    .navbar-search::after {
-      content: "🔍";
-      position: absolute;
-      right: 13px; top: 7px;
-      font-size: 1.1em;
-      color: var(--violet1);
-      opacity: 0.7;
+    .banner-halo {
+      position: absolute; left:50%; top:53%;
+      transform: translate(-50%,-50%);
+      width: 80vw; height: 26vw;
+      background: radial-gradient(ellipse at center, #a084ff44 0%, #ffd70022 60%, transparent 100%);
+      opacity: 0.5;
+      filter: blur(24px);
+      z-index: 1;
       pointer-events: none;
     }
-    .navbar-links {
-      display: flex;
-      gap: 0.7em;
-      align-items: center;
-    }
-    .navbar-links a {
-      color: var(--gold);
-      text-decoration: none;
-      padding: 6px 11px;
-      font-weight: bold;
-      border-radius: 10px;
-      transition: background 0.18s, color 0.16s;
-      font-size: 1em;
-    }
-    .navbar-links a:hover {
-      background: var(--violet1);
-      color: #fff;
-    }
-
-    /* HERO/BANNER */
-    .hero {
-      width: 100vw;
-      max-width: 900px;
-      margin: 1.2em auto 2.2em auto;
-      border-radius: 22px;
-      background: linear-gradient(100deg, #a084ff33 40%, #ffd70022 100%);
-      box-shadow: 0 6px 40px #a084ff22;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 124px;
-      padding: 0.8em 2em 0.8em 2em;
-      gap: 2em;
+    .main-card {
       position: relative;
-      overflow: hidden;
-    }
-    .hero-text h1 {
-      font-size: 1.8em;
-      color: var(--gold);
-      margin: 0 0 0.2em 0;
-      font-weight: 900;
-      text-shadow: 0 2px 14px #433c7c99;
-    }
-    .hero-text p {
-      color: var(--white);
-      font-size: 1.13em;
-      margin: 0;
-      opacity: 0.87;
-      font-weight: 500;
-      max-width: 380px;
-    }
-    .hero-illu {
-      flex: 0 0 145px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-illu img {
-      width: 120px; height: 120px;
-      border-radius: 18px;
-      object-fit: cover;
-      box-shadow: 0 6px 32px #a084ff33;
-      background: #fff1;
-      border: 2.5px solid var(--violet1);
-    }
-    @media (max-width: 700px) {
-      .hero {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1.3em 1em 1em 1em;
-        gap: 1.2em;
-      }
-      .hero-illu { align-self: center; }
-      .hero-illu img { width: 80px; height: 80px;}
-    }
-
-    /* SECTIONS */
-    .main-content {
-      width: 100vw;
-      max-width: 900px;
+      z-index: 4;
       margin: 0 auto;
-      padding: 0 1vw;
-      box-sizing: border-box;
-    }
-    .section-title {
-      font-size: 1.18em;
-      font-weight: 700;
-      color: var(--violet1);
-      letter-spacing: 1.1px;
-      margin: 1.5em 0 1em 0.2em;
-      text-shadow: 0 1px 9px #2d1836aa;
-    }
-    .manga-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 27px 22px;
-      width: 100%;
-      margin-bottom: 30px;
-    }
-    @media (max-width: 700px) {
-      .main-content, .hero {
-        max-width: 99vw;
-        border-radius: 10px;
-        margin-left: 1vw;
-        margin-right: 1vw;
-        padding: 0;
-      }
-      .manga-grid {
-        grid-template-columns: 1fr;
-        gap: 19px 0;
-      }
-      .header { font-size: 1.18em; height: 42px;}
-      .navbar { flex-direction: column; align-items: stretch; gap: 0.5em; font-size: 0.97em;}
-    }
-    /* MANGA CARD */
-    .manga-card {
-      width: 99%;
-      max-width: 360px;
-      background: linear-gradient(120deg, #a084ff44 0%, #533f73 90%);
+      margin-top: 13vh;
+      margin-bottom: 3vh;
+      background: var(--glass);
       border-radius: var(--card-radius);
-      box-shadow: 0 6px 24px #a084ff33, 0 2px 10px #0007;
-      overflow: hidden;
-      position: relative;
-      min-height: 226px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      transition: transform 0.16s, box-shadow 0.16s;
-      border: 2.5px solid #a084ff33;
-      cursor: pointer;
-    }
-    .manga-card:hover {
-      transform: scale(1.025) translateY(-4px);
-      box-shadow: 0 8px 32px #ffd70033, 0 4px 14px #a084ff3a;
-      border-color: var(--gold);
-    }
-    .manga-cover-bg {
-      width: 110px;
-      min-width: 110px;
-      height: 110px;
-      border-radius: 16px;
-      object-fit: cover;
-      margin: 0 0 0 11px;
-      background: #fff1;
-      border: 2px solid #a084ff77;
-      box-shadow: 0 4px 14px #2d1836a9;
-      display: block;
-    }
-    .manga-infos {
-      flex: 1 1 0;
+      max-width: 490px;
+      width: 97vw;
+      box-shadow: 0 12px 50px #000b, 0 1px 0 #fff1 inset;
+      backdrop-filter: blur(20px) saturate(118%);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      min-width: 0;
-      padding: 0 1.1em 0 1.2em;
+      align-items: center;
+      padding: 50px 0 38px 0;
+      border: 2.5px solid #fff2;
+      animation: cardin .65s cubic-bezier(.42,.2,.13,.99);
     }
-    .manga-title {
-      font-size: 1.15em;
-      font-weight: bold;
+    @keyframes cardin {
+      0% { opacity: 0; transform: translateY(66px) scale(.97);}
+      100% { opacity: 1; transform: none;}
+    }
+    .logo-container {
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      border-radius: 22px;
+      background: #232344;
+      padding: 10px;
+      border: 2.5px solid var(--accent-violet);
+      box-shadow: 0 8px 32px #a084ff33, 0 2px 16px #000c;
+      width: 115px; height: 115px;
+    }
+    .logo-container img {
+      width: 92px; height: 92px; object-fit: cover;
+      border-radius: 17px; display: block;
+      box-shadow: 0 2px 16px #000c;
+      background: #232344;
+    }
+    .main-title {
+      font-size: 1.8em;
+      font-weight: 900;
       color: var(--gold);
-      text-shadow: 0 2px 10px #000d;
-      margin-bottom: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: 0.04em;
-    }
-    .manga-author {
-      font-size: 0.98em;
-      color: #fffbe7;
-      text-shadow: 0 1px 8px #000b;
-      opacity: 0.8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .manga-card a {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      text-decoration: none;
-      color: inherit;
-    }
-    /* FOOTER */
-    .footer {
+      letter-spacing: 1.2px;
       text-align: center;
-      color: #b2a2e6;
-      background: rgba(160,132,255,0.07);
-      font-size: 0.98em;
-      padding: 20px 0 12px 0;
-      margin: 40px 0 0 0;
-      border-top: 2px solid #a084ff33;
-      letter-spacing: 0.5px;
-      z-index: 5;
-      position: relative;
+      margin-bottom: 12px; margin-top: 5px;
+      text-shadow: 0 2px 16px #000b;
+      background: rgba(55,34,90,0.10);
+      padding: 6px 18px 4px 18px;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 92vw;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    .main-desc {
+      font-size: 1.12em;
+      color: #fff;
+      background: var(--glass-light);
+      padding: 13px 17px;
+      border-radius: 13px;
+      line-height: 1.5;
+      margin: 21px 0 20px 0;
+      box-shadow: 0 2px 10px #0004;
+      font-weight: 400;
+      text-align: center;
+      max-width: 87vw;
+      word-break: break-word;
+    }
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      margin: 10px 0 0 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav-links a {
+      background: var(--accent-violet);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 8px 22px;
+      text-decoration: none;
+      box-shadow: 0 2px 10px #a084ff22;
+      font-size: 1em;
+      transition: background 0.18s, color 0.14s, transform 0.13s;
+      border: none;
+      outline: none;
+      margin-bottom: 8px;
+    }
+    .nav-links a:hover {
+      background: var(--gold);
+      color: var(--accent-violet2);
+      transform: translateY(-2px) scale(1.04);
+    }
+    .socials {
+      display: flex;
+      gap: 20px;
+      margin-top: 22px;
+      justify-content: center;
+    }
+    .socials a {
+      color: var(--gold);
+      font-size: 1.3em;
+      background: rgba(80,60,100,0.20);
+      border-radius: 50%;
+      padding: 11px 13px;
+      text-decoration: none;
+      transition: background 0.14s, color 0.17s;
+    }
+    .socials a:hover {
+      color: #fff;
+      background: var(--accent-violet);
+    }
+    footer {
+      text-align: center;
+      padding: 21px 0 12px 0;
+      font-size: 0.97em;
+      color: #b4b4b4;
+      background: rgba(24,24,24,0.90);
       width: 100vw;
-      max-width: 100vw;
-      overflow: hidden;
+      border-top: 1.5px solid #ffd70033;
+      box-shadow: 0 -2px 18px #0008;
+      letter-spacing: 0.5px;
+      margin-top: 44px;
+    }
+    @media (max-width: 700px) {
+      .main-card {
+        max-width: 98vw; margin-top: 7vh;
+        padding: 23px 0 22px 0;
+      }
+      .logo-container { width: 70px; height: 70px; padding: 6px;}
+      .logo-container img { width: 54px; height: 54px;}
+      .main-title { font-size: 1.15em;}
+      .main-desc { font-size: 0.99em;}
+      .nav-links { flex-direction: column; gap: 10px;}
+      .socials { gap: 13px; }
+      footer { font-size: 0.91em;}
     }
   </style>
 </head>
 <body>
-  <div class="header">LuK R. Manga Hub</div>
-  <nav class="navbar">
-    <div class="navbar-search">
-      <input id="searchInput" type="text" placeholder="Rechercher un manga, un auteur...">
+  <div class="background-banner">
+    <div class="banner-halo"></div>
+  </div>
+  <div class="main-card">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="LuK R. Manga Hub">
     </div>
-    <div class="navbar-links">
-      <a href="#series">Séries</a>
-      <a href="#oneshots">Oneshots</a>
-      <a href="https://x.com/LuKRvl" target="_blank">Twitter</a>
-      <a href="https://instagram.com/lucasrvl_" target="_blank">Instagram</a>
+    <div class="main-title">LuK R. Manga Hub</div>
+    <div class="main-desc">
+      Bienvenue sur mon espace centralisé ! <br>
+      Découvre toutes mes séries, oneshots, actus et univers originaux.<br>
+      <b>Explore, lis, partage.</b>
     </div>
-  </nav>
-  <!-- HERO BANNER (image à remplacer si tu veux) -->
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Bienvenue sur le Hub !</h1>
-      <p>Retrouve toutes les œuvres de LuK R. au même endroit : séries, oneshots, actus et plus.<br>
-        Bonne lecture et belle découverte !</p>
+    <div class="nav-links">
+      <a href="series.html">Séries</a>
+      <a href="oneshots.html">Oneshots</a>
+      <a href="nouveautes.html">Nouveautés</a>
+      <a href="manga-hub.html">Accès direct lecteur</a>
     </div>
-    <div class="hero-illu">
-      <img src="assets/logo.png" alt="Logo ou illustration" />
-    </div>
-  </section>
-  <div class="main-content">
-    <div id="series">
-      <div class="section-title">Mes Séries</div>
-      <div class="manga-grid" id="series-grid"></div>
-    </div>
-    <div id="oneshots">
-      <div class="section-title">Mes Oneshots</div>
-      <div class="manga-grid" id="oneshot-grid"></div>
+    <div class="socials">
+      <a href="https://x.com/LuKRvl" target="_blank" title="Twitter">🐦</a>
+      <a href="https://instagram.com/lucasrvl_" target="_blank" title="Instagram">📸</a>
     </div>
   </div>
-  <footer class="footer">
+  <footer>
     © 2025 LuK R. Manga Hub. Tous droits réservés.
   </footer>
-  <script src="manga-data.js"></script>
-  <script>
-    // Affichage des mangas en grille, recherche live
-    function renderMangas() {
-      const oneshotGrid = document.getElementById("oneshot-grid");
-      const seriesGrid = document.getElementById("series-grid");
-      if (typeof mangas === "undefined") {
-        oneshotGrid.innerHTML = "<li>Erreur : mangas non chargé.</li>";
-        seriesGrid.innerHTML = "<li>Erreur : mangas non chargé.</li>";
-        return;
-      }
-      const search = (document.getElementById("searchInput").value || "").toLowerCase();
-
-      function mangaFilter(m) {
-        return (
-          m.title.toLowerCase().includes(search) ||
-          (m.author && m.author.toLowerCase().includes(search))
-        );
-      }
-
-      // Séries
-      let series = mangas.filter(m => !m.isOneshot && mangaFilter(m));
-      seriesGrid.innerHTML = "";
-      if (!series.length) seriesGrid.innerHTML = "<div style='grid-column:1/-1;text-align:center;opacity:0.7'>Aucune série trouvée.</div>";
-      series.forEach(manga => {
-        seriesGrid.innerHTML += `
-          <div class="manga-card">
-            <a href="manga-hub.html?id=${manga.id}"></a>
-            <img src="${manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
-              onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
-            <div class="manga-infos">
-              <span class="manga-title">${manga.title}</span>
-              <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
-            </div>
-          </div>
-        `;
-      });
-      // Oneshots
-      let oneshots = mangas.filter(m => m.isOneshot && mangaFilter(m));
-      oneshotGrid.innerHTML = "";
-      if (!oneshots.length) oneshotGrid.innerHTML = "<div style='grid-column:1/-1;text-align:center;opacity:0.7'>Aucun oneshot trouvé.</div>";
-      oneshots.forEach(manga => {
-        oneshotGrid.innerHTML += `
-          <div class="manga-card">
-            <a href="manga-hub.html?id=${manga.id}"></a>
-            <img src="${manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`}" alt="Couverture de ${manga.title}" class="manga-cover-bg"
-              onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
-            <div class="manga-infos">
-              <span class="manga-title">${manga.title}</span>
-              <span class="manga-author">${manga.author || "Auteur inconnu"}</span>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // Recherche live
-    document.addEventListener("DOMContentLoaded", function(){
-      renderMangas();
-      document.getElementById("searchInput").addEventListener("input", renderMangas);
-    });
-  </script>
 </body>
 </html>
