@@ -102,15 +102,36 @@
       font-size: 1.18em;
       color: #fff;
       background: var(--glass-light);
-      padding: 15px 20px;
-      border-radius: 13px;
-      line-height: 1.5;
+      padding: 22px 20px 22px 20px;
+      border-radius: 18px;
+      line-height: 1.55;
       margin: 21px 0 20px 0;
       box-shadow: 0 2px 10px #0004;
       font-weight: 400;
       text-align: center;
-      max-width: 87vw;
+      max-width: 90vw;
       word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+    .main-desc-title {
+      font-size:1.32em;
+      font-weight:700;
+      color:var(--accent-violet);
+      margin-bottom:7px;
+    }
+    .main-desc-hr {
+      border:0;height:2px;background:var(--accent-violet2);width:44px;margin:0 auto 18px auto;opacity:0.5;
+    }
+    .main-desc-fr, .main-desc-en {
+      display:block;
+      margin-bottom:7px;
+      line-height:1.45;
+    }
+    .main-desc-fr span, .main-desc-en span {
+      color:var(--gold);
     }
     .nav-links {
       display: flex;
@@ -185,7 +206,7 @@
       width: 97%;
       display: flex;
       flex-direction: column;
-      gap: 42px;
+      gap: 54px;
       margin-bottom: 8px;
       margin-left: auto;
       margin-right: auto;
@@ -205,16 +226,13 @@
       cursor: pointer;
       min-height: 110px;
       overflow: visible;
-    }
-    .manga-card:hover {
-      background: linear-gradient(120deg, #a084ff66 0%, #ffd70022 100%);
-      transform: scale(1.025);
-      box-shadow: 0 8px 32px #ffd70044;
-      border-color: var(--gold);
+      padding-left: 84px;
     }
     .manga-cover {
-      position: relative;
-      left: 0;
+      position: absolute;
+      left: -34px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 100px; height: 100px;
       border-radius: 16px;
       object-fit: cover;
@@ -222,13 +240,14 @@
       border: 2.5px solid var(--accent-violet);
       box-shadow: 0 8px 32px #a084ff33, 0 2px 18px #000c;
       z-index: 5;
-      transition: 
-        transform 0.18s cubic-bezier(.5,1.7,.42,.98), 
+      transition:
+        transform 0.18s cubic-bezier(.5,1.7,.42,.98),
         box-shadow 0.22s,
         border-color 0.18s;
+      aspect-ratio: 1 / 1;
     }
     .manga-card:hover .manga-cover {
-      transform: scale(1.09) rotate(-2deg);
+      transform: scale(1.09) rotate(-2deg) translateY(-50%);
       box-shadow: 0 20px 56px #ffd70055, 0 2px 16px #000c;
       border-color: var(--gold);
     }
@@ -237,7 +256,7 @@
       flex-direction: column;
       min-width: 0;
       flex: 1;
-      margin-left: 28px;
+      margin-left: 18px;
       gap: 12px;
     }
     .manga-title {
@@ -330,22 +349,20 @@
       .main-title { font-size: 1.18em;}
       .main-desc { font-size: 0.99em;}
       .nav-links { flex-direction: column; gap: 8px;}
-      .manga-list { width: 99%; gap: 26px;}
+      .manga-list { width: 99%; gap: 34px;}
       .manga-title { max-width: 72vw;}
       .manga-author { max-width: 56vw;}
       .manga-cover {
-        width: 62px; height: 62px; border-radius: 10px;
+        width: 62px; height: 62px; border-radius: 10px; left:-18px;
       }
-      .manga-info { margin-left: 14px;}
+      .manga-info { margin-left: 4px;}
       .manga-tag { font-size: 0.93em; padding: 5px 12px;}
+      .main-desc { padding: 15px 6px 15px 6px;}
       footer { font-size: 0.91em;}
     }
   </style>
 </head>
 <body>
-  <div class="background-banner">
-    <div class="banner-halo"></div>
-  </div>
   <!-- CAROUSEL EN HAUT, format 16/9, centré -->
   <div class="main-carousel-zone" id="main-carousel">
     <img src="assets/carousel/car1.png" class="active" alt="slide 1">
@@ -355,10 +372,18 @@
   <div class="main-card">
     <div class="main-title">LuK R. Manga Hub</div>
     <div class="main-desc">
-      Bienvenue sur mon <b>Manga Hub!</b> !
-      Découvre toutes mes séries et oneshots originaux.
-      Welcome to my <b>Manga Hub</b> !
-      Discover all my original series and one-shots.<br>
+      <div class="main-desc-title">Bienvenue / Welcome</div>
+      <div class="main-desc-hr"></div>
+      <div class="main-desc-fr">
+        Bienvenue sur mon <b>Manga Hub</b> !<br>
+        Découvre toutes mes <b>séries</b> et <b>oneshots</b> originaux.<br>
+        <span>Explore, lis, partage.</span>
+      </div>
+      <div class="main-desc-en">
+        Welcome to my <b>Manga Hub</b>!<br>
+        Discover all my original <b>series</b> and <b>one-shots</b>.<br>
+        <span>Enjoy reading and sharing.</span>
+      </div>
     </div>
     <div class="nav-links">
       <a href="#series-list">Mangas</a>
@@ -413,7 +438,6 @@
           <div class="manga-card">
             <a href="manga-hub.html?id=${manga.id}"></a>
             <img src="${manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`}" alt="Couverture de ${manga.title}" class="manga-cover"
-              style="aspect-ratio:1/1;"
               onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
             <div class="manga-info">
               <span class="manga-title">${manga.title}</span>
