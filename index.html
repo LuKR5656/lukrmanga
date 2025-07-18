@@ -12,9 +12,8 @@
       --accent-violet: #a084ff;
       --accent-violet2: #5f41c8;
       --gold: #ffd700;
-      --gold-t: #ffd70033;
       --card-radius: 36px;
-      --card-radius-sm: 20px;
+      --card-radius-sm: 18px;
     }
     html, body {
       margin: 0;
@@ -54,13 +53,13 @@
     }
     /* --- CAROUSEL --- */
     .main-carousel-zone {
-      width: min(960px, 99vw);
-      height: 260px;
+      width: min(960px, 98vw);
+      aspect-ratio: 16 / 9;
       border-radius: var(--card-radius);
       overflow: hidden;
       margin: 0 auto;
       margin-top: 6vh;
-      margin-bottom: -90px;
+      margin-bottom: -80px;
       background: #232344;
       box-shadow: 0 12px 48px #a084ff33, 0 2px 18px #000a;
       display: flex;
@@ -93,7 +92,7 @@
       margin-bottom: 3vh;
       background: var(--glass);
       border-radius: var(--card-radius);
-      max-width: 590px;
+      max-width: 600px;
       width: 97vw;
       box-shadow: 0 12px 48px #a084ff33, 0 1px 0 #fff1 inset;
       backdrop-filter: blur(22px) saturate(120%);
@@ -203,16 +202,16 @@
       font-size: 1.18em;
       color: var(--accent-violet);
       font-weight: bold;
-      margin: 30px 0 12px 18px;
+      margin: 36px 0 12px 18px;
       letter-spacing: 1px;
       text-align: left;
       align-self: flex-start;
     }
     .manga-list {
-      width: 96%;
+      width: 97%;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 42px;
       margin-bottom: 8px;
       margin-left: auto;
       margin-right: auto;
@@ -224,13 +223,13 @@
       background: linear-gradient(120deg, #a084ff33 0%, #533f73 90%);
       border-radius: var(--card-radius-sm);
       box-shadow: 0 4px 22px #a084ff11, 0 2px 12px #0007;
-      padding: 12px 22px 12px 0;
-      gap: 14px;
+      padding: 16px 26px 16px 0;
+      gap: 18px;
       position: relative;
       transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
       border: 1.5px solid #a084ff33;
       cursor: pointer;
-      min-height: 106px;
+      min-height: 110px;
       overflow: visible;
     }
     .manga-card:hover {
@@ -240,12 +239,10 @@
       border-color: var(--gold);
     }
     .manga-cover {
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 120px; height: 170px;
-      border-radius: 18px;
+      position: relative;
+      left: 0;
+      width: 100px; height: 100px;
+      border-radius: 16px;
       object-fit: cover;
       background: #fff1;
       border: 2.5px solid var(--accent-violet);
@@ -257,7 +254,7 @@
         border-color 0.18s;
     }
     .manga-card:hover .manga-cover {
-      transform: translateY(-52%) scale(1.09) rotate(-2deg);
+      transform: scale(1.09) rotate(-2deg);
       box-shadow: 0 20px 56px #ffd70055, 0 2px 16px #000c;
       border-color: var(--gold);
     }
@@ -266,11 +263,11 @@
       flex-direction: column;
       min-width: 0;
       flex: 1;
-      margin-left: 100px;
-      gap: 9px;
+      margin-left: 28px;
+      gap: 12px;
     }
     .manga-title {
-      font-size: 1.15em;
+      font-size: 1.18em;
       font-weight: bold;
       color: var(--gold);
       text-shadow: 0 2px 10px #000d;
@@ -279,26 +276,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.04em;
-      max-width: 210px;
+      max-width: 260px;
     }
     .manga-author {
-      font-size: 0.99em;
+      font-size: 1.01em;
       color: #fffbe7;
       opacity: 0.76;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 160px;
+      max-width: 210px;
     }
     .manga-tag {
       display: inline-block;
-      padding: 5px 19px;
+      padding: 7px 24px;
       border-radius: 999px;
       font-size: 1em;
       font-weight: 700;
       background: var(--accent-violet2);
       color: #fff;
-      margin-top: 6px;
+      margin-top: 4px;
       margin-right: 8px;
       letter-spacing: 0.7px;
       box-shadow: 0 2px 8px #a084ff55;
@@ -346,8 +343,9 @@
     @media (max-width: 700px) {
       .main-carousel-zone {
         max-width: 99vw;
-        height: 38vw;
-        min-height: 142px;
+        min-width: 98vw;
+        aspect-ratio: 16/9;
+        height: auto;
         border-radius: 18px;
         margin-bottom: -40px;
       }
@@ -358,14 +356,14 @@
       .main-title { font-size: 1.18em;}
       .main-desc { font-size: 0.99em;}
       .nav-links { flex-direction: column; gap: 8px;}
-      .manga-list { width: 99%; }
+      .manga-list { width: 99%; gap: 26px;}
       .manga-title { max-width: 72vw;}
       .manga-author { max-width: 56vw;}
       .manga-cover {
-        width: 62px; height: 88px; left: -18px; border-radius: 10px;
+        width: 62px; height: 62px; border-radius: 10px;
       }
-      .manga-info { margin-left: 43px;}
-      .manga-tag { font-size: 0.93em; padding: 4px 12px;}
+      .manga-info { margin-left: 14px;}
+      .manga-tag { font-size: 0.93em; padding: 5px 12px;}
       footer { font-size: 0.91em;}
     }
   </style>
@@ -374,7 +372,7 @@
   <div class="background-banner">
     <div class="banner-halo"></div>
   </div>
-  <!-- CAROUSEL EN HAUT, plus large que la carte -->
+  <!-- CAROUSEL EN HAUT, format 16/9, centré -->
   <div class="main-carousel-zone" id="main-carousel">
     <img src="assets/carousel/car1.png" class="active" alt="slide 1">
     <img src="assets/carousel/car2.png" alt="slide 2">
@@ -440,6 +438,7 @@
           <div class="manga-card">
             <a href="manga-hub.html?id=${manga.id}"></a>
             <img src="${manga.cover ? manga.cover : `assets/cover/${manga.id}-cover.png`}" alt="Couverture de ${manga.title}" class="manga-cover"
+              style="aspect-ratio:1/1;"
               onerror="this.onerror=null;this.src='assets/cover/${manga.id}-cover.png';">
             <div class="manga-info">
               <span class="manga-title">${manga.title}</span>
