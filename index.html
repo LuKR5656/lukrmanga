@@ -24,33 +24,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    .background-banner {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 45vh;
-      background: var(--main-bg);
-      z-index: 0; overflow: hidden;
-      animation: gradientmove 30s ease-in-out infinite alternate;
-    }
-    @keyframes gradientmove {
-      0% {background-position: 0% 40%;}
-      100% {background-position: 100% 50%;}
-    }
-    .background-banner::after {
-      content: "";
-      position: absolute; left:0; right:0; bottom:0; height:120px;
-      background: linear-gradient(0deg,#18142b 0%,rgba(24,24,24,0) 100%);
-      z-index: 3; pointer-events: none;
-    }
-    .banner-halo {
-      position: absolute; left:50%; top:53%;
-      transform: translate(-50%,-50%);
-      width: 80vw; height: 26vw;
-      background: radial-gradient(ellipse at center, #a084ff44 0%, #ffd70022 60%, transparent 100%);
-      opacity: 0.5;
-      filter: blur(24px);
-      z-index: 1;
-      pointer-events: none;
-    }
     /* --- CAROUSEL --- */
     .main-carousel-zone {
       width: min(960px, 98vw);
@@ -67,6 +40,7 @@
       justify-content: center;
       position: relative;
       z-index: 10;
+      border: 2.5px solid #fff2;
     }
     .main-carousel-zone img {
       width: 100%;
@@ -88,7 +62,7 @@
       position: relative;
       z-index: 4;
       margin: 0 auto;
-      margin-top: 0;
+      margin-top: 3vh;
       margin-bottom: 3vh;
       background: var(--glass);
       border-radius: var(--card-radius);
@@ -381,9 +355,10 @@
   <div class="main-card">
     <div class="main-title">LuK R. Manga Hub</div>
     <div class="main-desc">
-      Bienvenue sur mon espace centralisé ! <br>
-      Découvre toutes mes séries, oneshots, actus et univers originaux.<br>
-      <b>Explore, lis, partage.</b>
+      Bienvenue sur mon <b>Manga Hub!</b> !
+      Découvre toutes mes séries et oneshots originaux.
+      Welcome to my <b>Manga Hub</b> !
+      Discover all my original series and one-shots.<br>
     </div>
     <div class="nav-links">
       <a href="#series-list">Mangas</a>
